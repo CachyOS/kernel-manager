@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.16)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
@@ -24,7 +24,7 @@ include(Sanitizers)
 include(FetchContent)
 
 find_package(Threads REQUIRED)
-find_package(Qt5 COMPONENTS Widgets Svg Multimedia REQUIRED)
+find_package(Qt6 COMPONENTS Widgets REQUIRED)
 
 FetchContent_Declare(fmt
   GIT_REPOSITORY "https://github.com/fmtlib/fmt.git"
@@ -86,7 +86,7 @@ enable_sanitizers(project_options)
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE project_warnings project_options Qt5::Widgets Qt5::Svg Qt5::Multimedia spdlog::spdlog fmt::fmt cpr::cpr)
+target_link_libraries(${PROJECT_NAME} PRIVATE project_warnings project_options Qt6::Widgets spdlog::spdlog fmt::fmt cpr::cpr)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
    target_link_libraries(${PROJECT_NAME} PRIVATE range-v3::range-v3)

@@ -44,7 +44,6 @@ auto main(int argc, char** argv) -> std::int32_t {
     QCoreApplication::setApplicationName("CachyOS-KM");
 
     // Set application attributes
-    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv);
 
     MainWindow w;
