@@ -1,8 +1,13 @@
-build.sh
 *.DS_Store
 *.dump
+*.ctu-info
+.cache
 .idea
 build
+build.sh
+cmake-build-release
+cmake-build-debug
+CMakeLists.txt.user
 
 # Prerequisites
 *.d

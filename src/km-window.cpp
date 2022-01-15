@@ -17,7 +17,7 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "km-window.hpp"
-
+#include "kernel.hpp"
 #include <iostream>
 
 #include <QByteArray>
@@ -37,6 +37,9 @@ MainWindow::MainWindow(QWidget* parent)
     m_process = std::make_unique<QProcess>(this);
 
     setAttribute(Qt::WA_NativeWindow);
+
+    connect(m_ui->cancel, SIGNAL(clicked()), this, SLOT(on_cancel()));
+    connect(m_ui->ok, SIGNAL(clicked()), this, SLOT(on_execute()));
 }
 
 void MainWindow::closeEvent(QCloseEvent* event) {
@@ -44,3 +47,9 @@ void MainWindow::closeEvent(QCloseEvent* event) {
 
     QWidget::closeEvent(event);
 }
+
+void MainWindow::on_cancel() noexcept {
+    close();
+}
+
+void MainWindow::on_execute() noexcept { }

@@ -36,8 +36,9 @@ bool IsInstanceAlreadyRunning(QSharedMemory& memoryLock) {
 
 auto main(int argc, char** argv) -> std::int32_t {
     QSharedMemory sharedMemoryLock("CachyOS-KM-lock");
-    if (IsInstanceAlreadyRunning(sharedMemoryLock))
+    if (IsInstanceAlreadyRunning(sharedMemoryLock)) {
         return -1;
+    }
 
     // Set application info
     QCoreApplication::setOrganizationName("CachyOS");

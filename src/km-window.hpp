@@ -31,17 +31,19 @@
 
 class MainWindow final : public QMainWindow {
     Q_OBJECT
-    Q_DISABLE_COPY(MainWindow)
+    Q_DISABLE_COPY_MOVE(MainWindow)
  public:
     explicit MainWindow(QWidget* parent = nullptr);
-    virtual ~MainWindow() = default;
+    ~MainWindow() override = default;
+
+ private slots:
+    void on_cancel() noexcept;
+    void on_execute() noexcept;
 
  protected:
-    void closeEvent(QCloseEvent*) override;
+    void closeEvent(QCloseEvent* event) override;
 
  private:
-    std::array<std::uint8_t, 2> m_activated{};
-
     std::unique_ptr<QProcess> m_process;
     std::unique_ptr<Ui::MainWindow> m_ui = std::make_unique<Ui::MainWindow>();
 };
