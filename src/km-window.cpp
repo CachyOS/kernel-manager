@@ -36,6 +36,7 @@ namespace ranges = std::ranges;
 
 #include <fmt/core.h>
 
+/*
 static inline void stop_process(QProcess* proc) {
     if (proc->state() == QProcess::Running) {
         proc->terminate();
@@ -43,12 +44,12 @@ static inline void stop_process(QProcess* proc) {
             std::cerr << "Process failed to terminate\n";
         }
     }
-}
+}*/
 
 MainWindow::MainWindow(QWidget* parent)
   : QMainWindow(parent) {
     m_ui->setupUi(this);
-    m_process = std::make_unique<QProcess>(this);
+    // m_process = std::make_unique<QProcess>(this);
 
     auto* model = new QStandardItemModel(m_ui->list);
     m_ui->list->setModel(model);
@@ -59,17 +60,17 @@ MainWindow::MainWindow(QWidget* parent)
 
     std::mutex m;
 
-
     // TODO(vnepogodin): parallelize it
     auto a2 = std::async(std::launch::deferred, [&] {
         std::lock_guard<std::mutex> guard(m);
         for (size_t i = 0; i < m_kernels.size(); ++i) {
-            auto* item = new QStandardItem();
+            const auto& kernel = m_kernels[i];
+            auto* item         = new QStandardItem();
             item->setCheckable(true);
             item->setEditable(false);
-            item->setText(m_kernels[i].get_raw());
+            item->setText(kernel.get_raw());
 
-            if (m_kernels[i].is_installed()) {
+            if (kernel.is_installed()) {
                 item->setData(Qt::Checked, Qt::CheckStateRole);
             }
 
@@ -84,7 +85,8 @@ MainWindow::MainWindow(QWidget* parent)
 }
 
 void MainWindow::closeEvent(QCloseEvent* event) {
-    stop_process(m_process.get());
+    // stop_process(m_process.get());
+    alpm_release(m_handle);
 
     QWidget::closeEvent(event);
 }

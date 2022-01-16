@@ -27,8 +27,10 @@
 #include <memory>
 #include <vector>
 
+#include <alpm.h>
+
 #include <QMainWindow>
-#include <QProcess>
+//#include <QProcess>
 #include <QStandardItemModel>
 
 class MainWindow final : public QMainWindow {
@@ -46,8 +48,10 @@ class MainWindow final : public QMainWindow {
     void closeEvent(QCloseEvent* event) override;
 
  private:
-    std::unique_ptr<QProcess> m_process;
-    const std::vector<Kernel> m_kernels  = Kernel::get_kernels();
+    // std::unique_ptr<QProcess> m_process;
+    alpm_errno_t m_err;
+    alpm_handle_t* m_handle              = alpm_initialize("/", "/var/lib/pacman/", &m_err);
+    const std::vector<Kernel> m_kernels  = Kernel::get_kernels(m_handle);
     std::unique_ptr<Ui::MainWindow> m_ui = std::make_unique<Ui::MainWindow>();
 };
 

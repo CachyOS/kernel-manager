@@ -17,43 +17,50 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "kernel.hpp"
+#include "ini.hpp"
 #include "utils.hpp"
 
 #include <QProcess>
 #include <fmt/core.h>
 
+namespace {
+void parse_repos(alpm_handle_t* handle) noexcept {
+    static constexpr auto pacman_conf_path = "/etc/pacman.conf";
+    static constexpr auto ignored_repo     = "testing";
+
+    mINI::INIFile file(pacman_conf_path);
+    // next, create a structure that will hold data
+    mINI::INIStructure ini;
+
+    // now we can read the file
+    file.read(ini);
+    for (const auto& it : ini) {
+        const auto& section = it.first;
+        if ((section == "options") || (section == ignored_repo)) {
+            continue;
+        }
+        alpm_register_syncdb(handle, section.c_str(), ALPM_SIG_USE_DEFAULT);
+    }
+}
+}  // namespace
+
 std::string Kernel::version() const noexcept {
     if (!is_installed()) {
         return "Not installed";
     }
-    const auto& ext_cmd = fmt::format("pacman -Q {0} | {1}", m_name, "awk '{ print $2 }'");
 
-    QProcess pacman;
-    QStringList args = {"-c", ext_cmd.c_str()};
-    pacman.start("bash", args);
-    if (!pacman.waitForStarted())
-        return {};
+    auto* db  = alpm_get_localdb(m_handle);
+    auto* pkg = alpm_db_get_pkg(db, m_name.c_str());
 
-    if (!pacman.waitForFinished())
-        return {};
-
-    const auto& output = pacman.readAll();
-    return output.data();
+    return alpm_pkg_get_version(pkg);
 }
 
 // Name must be without any repo name (e.g. core/linux)
 bool Kernel::is_installed() const noexcept {
-    QProcess pacman;
-    QStringList args = {"-Q", m_name.c_str()};
-    pacman.start("pacman", args);
-    if (!pacman.waitForStarted())
-        return false;
+    auto* db  = alpm_get_localdb(m_handle);
+    auto* pkg = alpm_db_get_pkg(db, m_name.c_str());
 
-    if (!pacman.waitForFinished())
-        return false;
-
-    const auto& ret_code = pacman.exitCode();
-    return ret_code == 0;
+    return pkg != NULL;
 }
 
 bool Kernel::install() const noexcept {
@@ -90,24 +97,39 @@ bool Kernel::update() const noexcept {
 //    reponame/linux-xxx reponame/linux-xxx-headers
 //    reponame/linux-yyy reponame/linux-yyy-headers
 //    ...
-std::vector<Kernel> Kernel::get_kernels() noexcept {
-    static constexpr auto ext_cmd = "pacman -Sl | awk '{printf(\"%s/%s\\n\", $1, $2)}' | grep \"/linux[^ ]*-headers$\" | grep -Pv '^testing/|/linux-api-headers$' | sed 's|-headers$||'";
-
-    QProcess pacman;
-    pacman.start("bash", {"-c", ext_cmd});
-    if (!pacman.waitForStarted())
-        return {};
-
-    if (!pacman.waitForFinished())
-        return {};
-
-    const auto& output      = pacman.readAll();
-    const auto& kernel_list = utils::make_multiline(output.data());
+std::vector<Kernel> Kernel::get_kernels(alpm_handle_t* handle) noexcept {
+    static constexpr std::string_view ignored_pkg  = "linux-api-headers";
+    static constexpr std::string_view replace_part = "-headers";
     std::vector<Kernel> kernels{};
-    kernels.reserve(kernel_list.size());
-    for (const auto& kernel : kernel_list) {
-        const auto& info = utils::make_multiline(kernel, false, "/");
-        kernels.emplace_back(Kernel{info[1], info[0], kernel});
+
+    parse_repos(handle);
+
+    auto* dbs = alpm_get_syncdbs(handle);
+    for (alpm_list_t* i = dbs; i != nullptr; i = i->next) {
+        static constexpr auto needle = "linux[^ ]*-headers";
+        alpm_list_t* needles         = nullptr;
+        alpm_list_t* ret_list        = nullptr;
+        needles                      = alpm_list_add(needles, const_cast<void*>(reinterpret_cast<const void*>(needle)));
+
+        auto* db            = reinterpret_cast<alpm_db_t*>(i->data);
+        const char* db_name = alpm_db_get_name(db);
+        alpm_db_search(db, needles, &ret_list);
+
+        for (alpm_list_t* j = ret_list; j != nullptr; j = j->next) {
+            auto* pkg            = reinterpret_cast<alpm_pkg_t*>(j->data);
+            std::string pkg_name = alpm_pkg_get_name(pkg);
+
+            const auto& found = ranges::search(pkg_name, ignored_pkg);
+            if (!found.empty()) {
+                continue;
+            }
+
+            utils::remove_all(pkg_name, replace_part);
+            kernels.emplace_back(Kernel{handle, pkg_name, db_name, fmt::format("{}/{}", db_name, pkg_name)});
+        }
+
+        alpm_list_free(needles);
+        alpm_list_free(ret_list);
     }
 
     return kernels;

@@ -24,7 +24,13 @@ include(Sanitizers)
 include(FetchContent)
 
 find_package(Threads REQUIRED)
+find_package(PkgConfig REQUIRED)
 find_package(Qt6 COMPONENTS Widgets REQUIRED)
+pkg_check_modules(
+  LIBALPM
+  REQUIRED
+  IMPORTED_TARGET
+  libalpm>=13.0.0)
 
 FetchContent_Declare(fmt
   GIT_REPOSITORY "https://github.com/fmtlib/fmt.git"
@@ -70,6 +76,7 @@ target_compile_features(project_options INTERFACE cxx_std_20)
 ## Target
 ##
 add_executable(${PROJECT_NAME}
+    src/ini.hpp
     src/utils.hpp src/utils.cpp
     src/kernel.hpp src/kernel.cpp
     src/km-window.hpp src/km-window.cpp
@@ -89,7 +96,7 @@ enable_sanitizers(project_options)
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE project_warnings project_options Qt6::Widgets spdlog::spdlog fmt::fmt cpr::cpr)
+target_link_libraries(${PROJECT_NAME} PRIVATE project_warnings project_options Qt6::Widgets spdlog::spdlog fmt::fmt cpr::cpr PkgConfig::LIBALPM)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
    target_link_libraries(${PROJECT_NAME} PRIVATE range-v3::range-v3)

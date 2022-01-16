@@ -36,11 +36,14 @@
 namespace ranges = std::ranges;
 #endif
 
+#include <alpm.h>
+
 class Kernel {
  public:
-    explicit Kernel(const std::string_view& name) : m_name(name) { }
-    explicit Kernel(const std::string_view& name, const std::string_view& repo) : m_name(name), m_repo(repo) { }
-    explicit Kernel(const std::string_view& name, const std::string_view& repo, const std::string_view& raw) : m_name(name), m_repo(repo), m_raw(raw) { }
+    consteval Kernel() = default;
+    explicit Kernel(alpm_handle_t* handle, const std::string_view& name) : m_name(name), m_handle(handle) { }
+    explicit Kernel(alpm_handle_t* handle, const std::string_view& name, const std::string_view& repo) : m_name(name), m_repo(repo), m_handle(handle) { }
+    explicit Kernel(alpm_handle_t* handle, const std::string_view& name, const std::string_view& repo, const std::string_view& raw) : m_name(name), m_repo(repo), m_raw(raw), m_handle(handle) { }
 
     consteval std::string_view category() const noexcept {
         constexpr std::string_view lto{"lto"};
@@ -93,12 +96,14 @@ class Kernel {
     { return m_raw.c_str(); }
     /* clang-format on */
 
-    static std::vector<Kernel> get_kernels() noexcept;
+    static std::vector<Kernel> get_kernels(alpm_handle_t* handle) noexcept;
 
  private:
     std::string m_name{};
     std::string m_repo{"local"};
     std::string m_raw{};
+
+    alpm_handle_t* m_handle;
 };
 
 #endif  // KERNEL_HPP
