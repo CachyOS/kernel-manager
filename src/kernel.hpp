@@ -21,6 +21,7 @@
 
 #include <string>
 #include <string_view>
+#include <vector>
 
 #if defined(__clang__)
 #pragma clang diagnostic push
@@ -39,6 +40,7 @@ class Kernel {
  public:
     explicit Kernel(const std::string_view& name) : m_name(name) { }
     explicit Kernel(const std::string_view& name, const std::string_view& repo) : m_name(name), m_repo(repo) { }
+    explicit Kernel(const std::string_view& name, const std::string_view& repo, const std::string_view& raw) : m_name(name), m_repo(repo), m_raw(raw) { }
 
     consteval std::string_view category() const noexcept {
         constexpr std::string_view lto{"lto"};
@@ -86,9 +88,17 @@ class Kernel {
     bool install() const noexcept;
     bool update() const noexcept;
 
+    /* clang-format off */
+    inline const char* get_raw() const noexcept
+    { return m_raw.c_str(); }
+    /* clang-format on */
+
+    static std::vector<Kernel> get_kernels() noexcept;
+
  private:
     std::string m_name{};
     std::string m_repo{"local"};
+    std::string m_raw{};
 };
 
 #endif  // KERNEL_HPP

@@ -17,6 +17,7 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "kernel.hpp"
+#include "utils.hpp"
 
 #include <QProcess>
 #include <fmt/core.h>
@@ -36,7 +37,7 @@ std::string Kernel::version() const noexcept {
     if (!pacman.waitForFinished())
         return {};
 
-    auto output = pacman.readAll();
+    const auto& output = pacman.readAll();
     return output.data();
 }
 
@@ -73,4 +74,41 @@ bool Kernel::install() const noexcept {
 
 bool Kernel::update() const noexcept {
     return install();
+}
+
+// Find kernel packages by finding packages which have words 'linux' and 'headers'.
+// From the output of 'pacman -Sl'
+// - find lines that have words: 'linux' and 'headers'
+// - drop lines containing 'testing' (=testing repo, causes duplicates) and 'linux-api-headers' (=not a kernel header)
+// - show the (header) package names
+// Now we have names of the kernel headers.
+// Then add the kernel packages to proper places and output the result.
+// Then display possible kernels and headers added by the user.
+
+// The output consists of a list of reponame and a package name formatted as: "reponame/pkgname"
+// For example:
+//    reponame/linux-xxx reponame/linux-xxx-headers
+//    reponame/linux-yyy reponame/linux-yyy-headers
+//    ...
+std::vector<Kernel> Kernel::get_kernels() noexcept {
+    static constexpr auto ext_cmd = "pacman -Sl | awk '{printf(\"%s/%s\\n\", $1, $2)}' | grep \"/linux[^ ]*-headers$\" | grep -Pv '^testing/|/linux-api-headers$' | sed 's|-headers$||'";
+
+    QProcess pacman;
+    pacman.start("bash", {"-c", ext_cmd});
+    if (!pacman.waitForStarted())
+        return {};
+
+    if (!pacman.waitForFinished())
+        return {};
+
+    const auto& output      = pacman.readAll();
+    const auto& kernel_list = utils::make_multiline(output.data());
+    std::vector<Kernel> kernels{};
+    kernels.reserve(kernel_list.size());
+    for (const auto& kernel : kernel_list) {
+        const auto& info = utils::make_multiline(kernel, false, "/");
+        kernels.emplace_back(Kernel{info[1], info[0], kernel});
+    }
+
+    return kernels;
 }

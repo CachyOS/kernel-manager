@@ -21,13 +21,15 @@
 
 #include <ui_km-window.h>
 
+#include "kernel.hpp"
+
 #include <array>
 #include <memory>
+#include <vector>
 
-#include <QAction>
 #include <QMainWindow>
-#include <QMenu>
 #include <QProcess>
+#include <QStandardItemModel>
 
 class MainWindow final : public QMainWindow {
     Q_OBJECT
@@ -45,6 +47,7 @@ class MainWindow final : public QMainWindow {
 
  private:
     std::unique_ptr<QProcess> m_process;
+    const std::vector<Kernel> m_kernels  = Kernel::get_kernels();
     std::unique_ptr<Ui::MainWindow> m_ui = std::make_unique<Ui::MainWindow>();
 };
 

@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>CachyOS Kernel Manager</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background: #212121;
+color: #f2f2f2;</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
@@ -35,17 +39,14 @@ p, li { white-space: pre-wrap; }
      </widget>
     </item>
     <item>
-     <spacer name="verticalSpacer">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string>&lt;code&gt;Choose&lt;/code&gt;</string>
       </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
+     </widget>
+    </item>
+    <item>
+     <widget class="QListView" name="list"/>
     </item>
     <item>
      <widget class="QWidget" name="widget" native="true">

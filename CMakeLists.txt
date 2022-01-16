@@ -70,6 +70,7 @@ target_compile_features(project_options INTERFACE cxx_std_20)
 ## Target
 ##
 add_executable(${PROJECT_NAME}
+    src/utils.hpp src/utils.cpp
     src/kernel.hpp src/kernel.cpp
     src/km-window.hpp src/km-window.cpp
     src/km-window.ui
