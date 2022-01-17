@@ -41,9 +41,9 @@ namespace ranges = std::ranges;
 class Kernel {
  public:
     consteval Kernel() = default;
-    explicit Kernel(alpm_handle_t* handle, const std::string_view& name) : m_name(name), m_handle(handle) { }
-    explicit Kernel(alpm_handle_t* handle, const std::string_view& name, const std::string_view& repo) : m_name(name), m_repo(repo), m_handle(handle) { }
-    explicit Kernel(alpm_handle_t* handle, const std::string_view& name, const std::string_view& repo, const std::string_view& raw) : m_name(name), m_repo(repo), m_raw(raw), m_handle(handle) { }
+    explicit Kernel(alpm_handle_t* handle, alpm_pkg_t* pkg) : m_name(alpm_pkg_get_name(pkg)), m_pkg(pkg), m_handle(handle) { }
+    explicit Kernel(alpm_handle_t* handle, alpm_pkg_t* pkg, const std::string_view& repo) : m_name(alpm_pkg_get_name(pkg)), m_repo(repo), m_pkg(pkg), m_handle(handle) { }
+    explicit Kernel(alpm_handle_t* handle, alpm_pkg_t* pkg, const std::string_view& repo, const std::string_view& raw) : m_name(alpm_pkg_get_name(pkg)), m_repo(repo), m_raw(raw), m_pkg(pkg), m_handle(handle) { }
 
     consteval std::string_view category() const noexcept {
         constexpr std::string_view lto{"lto"};
@@ -89,6 +89,7 @@ class Kernel {
 
     bool is_installed() const noexcept;
     bool install() const noexcept;
+    bool remove() const noexcept;
     bool update() const noexcept;
 
     /* clang-format off */
@@ -103,6 +104,7 @@ class Kernel {
     std::string m_repo{"local"};
     std::string m_raw{};
 
+    alpm_pkg_t* m_pkg;
     alpm_handle_t* m_handle;
 };
 

@@ -45,14 +45,22 @@ void parse_repos(alpm_handle_t* handle) noexcept {
 }  // namespace
 
 std::string Kernel::version() const noexcept {
+    const char* sync_pkg_ver = alpm_pkg_get_version(m_pkg);
     if (!is_installed()) {
-        return "Not installed";
+        return sync_pkg_ver;
     }
 
-    auto* db  = alpm_get_localdb(m_handle);
-    auto* pkg = alpm_db_get_pkg(db, m_name.c_str());
+    auto* db                  = alpm_get_localdb(m_handle);
+    auto* local_pkg           = alpm_db_get_pkg(db, m_name.c_str());
+    const char* local_pkg_ver = alpm_pkg_get_version(local_pkg);
+    const int32_t ret         = alpm_pkg_vercmp(local_pkg_ver, sync_pkg_ver);
+    if (ret == 1) {
+        return fmt::format("∨{}", local_pkg_ver);
+    } else if (ret == -1) {
+        return fmt::format("∧{}", sync_pkg_ver);
+    }
 
-    return alpm_pkg_get_version(pkg);
+    return sync_pkg_ver;
 }
 
 // Name must be without any repo name (e.g. core/linux)
@@ -64,19 +72,37 @@ bool Kernel::is_installed() const noexcept {
 }
 
 bool Kernel::install() const noexcept {
-    const auto& ext_cmd = fmt::format("yes | pacman -S --noconfirm {0} {0}-headers", m_name);
+    return alpm_add_pkg(m_handle, m_pkg) == 0;
+    //    const auto& ext_cmd = fmt::format("yes | pacman -S --noconfirm {0} {0}-headers", m_name);
 
-    QProcess pacman;
-    QStringList args = {"-c", ext_cmd.c_str()};
-    pacman.start("bash", args);
-    if (!pacman.waitForStarted())
-        return false;
+    //    QProcess pacman;
+    //    QStringList args = {"-c", ext_cmd.c_str()};
+    //    pacman.start("bash", args);
+    //    if (!pacman.waitForStarted())
+    //        return false;
 
-    if (!pacman.waitForFinished())
-        return false;
+    //    if (!pacman.waitForFinished())
+    //        return false;
 
-    const auto& ret_code = pacman.exitCode();
-    return ret_code == 0;
+    //    const auto& ret_code = pacman.exitCode();
+    //    return ret_code == 0;
+}
+
+bool Kernel::remove() const noexcept {
+    return alpm_remove_pkg(m_handle, m_pkg) == 0;
+    //    const auto& ext_cmd = fmt::format("yes | pacman -Rsn --noconfirm {0} {0}-headers", m_name);
+
+    //    QProcess pacman;
+    //    QStringList args = {"-c", ext_cmd.c_str()};
+    //    pacman.start("bash", args);
+    //    if (!pacman.waitForStarted())
+    //        return false;
+
+    //    if (!pacman.waitForFinished())
+    //        return false;
+
+    //    const auto& ret_code = pacman.exitCode();
+    //    return ret_code == 0;
 }
 
 bool Kernel::update() const noexcept {
@@ -125,7 +151,9 @@ std::vector<Kernel> Kernel::get_kernels(alpm_handle_t* handle) noexcept {
             }
 
             utils::remove_all(pkg_name, replace_part);
-            kernels.emplace_back(Kernel{handle, pkg_name, db_name, fmt::format("{}/{}", db_name, pkg_name)});
+
+            pkg = alpm_db_get_pkg(db, pkg_name.c_str());
+            kernels.emplace_back(Kernel{handle, pkg, db_name, fmt::format("{}/{}", db_name, pkg_name)});
         }
 
         alpm_list_free(needles);
