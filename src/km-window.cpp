@@ -146,6 +146,8 @@ void MainWindow::on_execute() noexcept {
     if (alpm_trans_prepare(m_handle, &trans_data) == -1) {
         alpm_list_free(trans_data);
         alpm_trans_release(m_handle);
+
+        close();
         return;
     }
 
@@ -168,10 +170,14 @@ void MainWindow::on_execute() noexcept {
         fmt::print(stderr, "failed to commit transaction ({})\n", alpm_strerror(alpm_errno(m_handle)));
         alpm_list_free(trans_data);
         alpm_trans_release(m_handle);
+
+        close();
         return;
     }
 
     /* Step 4: release transaction resources */
     FREELIST(trans_data);
     alpm_trans_release(m_handle);
+
+    close();
 }
