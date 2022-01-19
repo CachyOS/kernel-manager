@@ -257,10 +257,6 @@ static void install_packages(alpm_handle_t* handle, const std::vector<Kernel>& k
         print_packages(inst_packages);
     }
 
-    if (trans_data == nullptr) {
-        fmt::print(stderr, fmt::emphasis::bold | fg(fmt::color::red), "smth is wrong here 👀\n");
-    }
-
     if (alpm_trans_commit(handle, &trans_data) == -1) {
         fmt::print(stderr, "failed to commit transaction ({})\n", alpm_strerror(alpm_errno(handle)));
         alpm_list_free(trans_data);
@@ -322,10 +318,6 @@ static void remove_packages(alpm_handle_t* handle, const std::vector<Kernel>& ke
         return;
     } else {
         print_packages(remove_packages);
-    }
-
-    if (trans_data == nullptr) {
-        fmt::print(stderr, fmt::emphasis::bold | fg(fmt::color::red), "smth is wrong here 👀\n");
     }
 
     if (alpm_trans_commit(handle, &trans_data) == -1) {
