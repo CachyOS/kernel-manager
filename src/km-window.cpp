@@ -48,6 +48,9 @@ static inline void stop_process(QProcess* proc) {
     }
 }*/
 
+QProgressBar* g_progress_bar;
+QLabel* g_label;
+
 /* callback to handle display of progress */
 void cb_progress(void* ctx, alpm_progress_t event, const char* pkgname,
     int percent, size_t howmany, size_t remain);
@@ -95,6 +98,8 @@ void cb_progress(void* ctx, alpm_progress_t event, const char* pkgname,
         return;
     }
 
+    g_progress_bar->setValue(percent);
+    g_label->setText(opr.c_str());
     if (percent == 100) {
         fmt::print("pkg_name={}, status=done\n", pkgname);
     } else {
@@ -108,7 +113,7 @@ void cb_log(void* ctx, alpm_loglevel_t level, const char* fmt, va_list args) {
         return;
     }
 
-#ifdef NDEVENV
+#ifndef ALPM_DEBUG
     if (level == ALPM_LOG_DEBUG) {
         return;
     }
@@ -123,6 +128,9 @@ MainWindow::MainWindow(QWidget* parent)
   : QMainWindow(parent) {
     m_ui->setupUi(this);
     // m_process = std::make_unique<QProcess>(this);
+
+    g_progress_bar = m_ui->progressBar;
+    g_label        = m_ui->progress_status;
 
 #if defined(__GNUC__) && !defined(__clang__)
 #pragma GCC diagnostic push
@@ -336,5 +344,5 @@ void MainWindow::on_execute() noexcept {
     install_packages(m_handle, m_kernels, m_ui->list->model());
     remove_packages(m_handle, m_kernels, m_ui->list->model());
 
-    close();
+    // close();
 }
