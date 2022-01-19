@@ -24,6 +24,28 @@
 #include <fmt/core.h>
 
 namespace {
+
+void parse_includes(alpm_handle_t* handle, alpm_db_t* db, const auto& section, const auto& file) noexcept {
+    const auto* archs = alpm_option_get_architectures(handle);
+    const auto* arch  = reinterpret_cast<const char*>(archs->data);
+
+    mINI::INIFile file_nested(file);
+    // next, create a structure that will hold data
+    mINI::INIStructure mirrorlist;
+
+    // now we can read the file
+    file_nested.read(mirrorlist);
+    for (const auto& mirror : mirrorlist) {
+        auto repo = mirror.second.begin()->second;
+        if (repo.starts_with("/")) {
+            continue;
+        }
+        utils::replace_all(repo, "$arch", arch);
+        utils::replace_all(repo, "$repo", section.c_str());
+        alpm_db_add_server(db, repo.c_str());
+    }
+}
+
 void parse_repos(alpm_handle_t* handle) noexcept {
     static constexpr auto pacman_conf_path = "/etc/pacman.conf";
     static constexpr auto ignored_repo     = "testing";
@@ -36,10 +58,31 @@ void parse_repos(alpm_handle_t* handle) noexcept {
     file.read(ini);
     for (const auto& it : ini) {
         const auto& section = it.first;
-        if ((section == "options") || (section == ignored_repo)) {
+        const auto& nested  = it.second;
+        if (section == ignored_repo) {
             continue;
         }
-        alpm_register_syncdb(handle, section.c_str(), ALPM_SIG_USE_DEFAULT);
+        if (section == "options") {
+            for (const auto& it_nested : nested) {
+                if (it_nested.first != "architecture") {
+                    continue;
+                }
+                const auto& archs = utils::make_multiline(it_nested.second, false, " ");
+                for (const auto& arch : archs) {
+                    alpm_option_add_architecture(handle, arch.c_str());
+                }
+            }
+            continue;
+        }
+        auto* db = alpm_register_syncdb(handle, section.c_str(), ALPM_SIG_USE_DEFAULT);
+
+        for (const auto& it_nested : nested) {
+            const auto& param = it_nested.first;
+            const auto& value = it_nested.second;
+            if (param == "include") {
+                parse_includes(handle, db, section, value);
+            }
+        }
     }
 }
 }  // namespace
@@ -89,7 +132,9 @@ bool Kernel::install() const noexcept {
 }
 
 bool Kernel::remove() const noexcept {
-    return alpm_remove_pkg(m_handle, m_pkg) == 0;
+    auto* db  = alpm_get_localdb(m_handle);
+    auto* pkg = alpm_db_get_pkg(db, m_name.c_str());
+    return alpm_remove_pkg(m_handle, pkg) == 0;
     //    const auto& ext_cmd = fmt::format("yes | pacman -Rsn --noconfirm {0} {0}-headers", m_name);
 
     //    QProcess pacman;

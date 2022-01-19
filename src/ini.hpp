@@ -309,6 +309,7 @@ class INIReader {
         auto fileLines = readFile();
         std::string section{};
         bool inSection = false;
+        int repeated{};
         INIParser::T_ParseValues parseData;
         for (const auto& line : fileLines) {
             const auto& parseResult = INIParser::parseLine(line, parseData);
@@ -319,6 +320,11 @@ class INIReader {
                 const auto& key    = parseData.first;
                 const auto& value  = parseData.second;
                 data[section][key] = value;
+            } else if (parseResult == INIParser::PDataType::PDATA_KEYVALUE) {
+                const auto& key                     = parseData.first;
+                const auto& value                   = parseData.second;
+                data[std::to_string(repeated)][key] = value;
+                ++repeated;
             }
             if (lineData && parseResult != INIParser::PDataType::PDATA_UNKNOWN) {
                 if (parseResult == INIParser::PDataType::PDATA_KEYVALUE && !inSection) {
