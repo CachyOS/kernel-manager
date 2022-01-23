@@ -1,3 +1,21 @@
+// Copyright (C) 2022 Vladislav Nepogodin
+//
+// This file is part of CachyOS kernel manager.
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
+// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
 #include "utils.hpp"
 
 #include <algorithm>  // for transform
@@ -20,26 +38,7 @@
 namespace ranges = std::ranges;
 #endif
 
-#ifdef NDEVENV
-#include <cpr/api.h>
-#include <cpr/response.h>
-#include <cpr/status_codes.h>
-#include <cpr/timeout.h>
-#endif
-
 namespace utils {
-
-bool is_connected() noexcept {
-#ifdef NDEVENV
-    /* clang-format off */
-    auto r = cpr::Get(cpr::Url{"https://duckduckgo.com"},
-             cpr::Timeout{1000});
-    /* clang-format on */
-    return cpr::status::is_success(static_cast<std::int32_t>(r.status_code)) || cpr::status::is_redirect(static_cast<std::int32_t>(r.status_code));
-#else
-    return true;
-#endif
-}
 
 bool check_root() noexcept {
 #ifdef NDEVENV
@@ -61,7 +60,7 @@ auto make_multiline(const std::string_view& str, bool reverse, const std::string
     const auto& view_res = splitted_view
         | ranges::views::transform(functor);
 #else
-    const auto& view_res = str
+    auto view_res = str
         | ranges::views::split(delim)
         | ranges::views::transform(functor);
 #endif

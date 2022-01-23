@@ -20,10 +20,17 @@
 #include "ini.hpp"
 #include "utils.hpp"
 
-#include <QProcess>
 #include <fmt/core.h>
 
 namespace {
+
+void parse_cachedirs(alpm_handle_t* handle) noexcept {
+    static constexpr const char* cachedir = "/var/cache/pacman/pkg/";
+
+    alpm_list_t* cachedirs = nullptr;
+    cachedirs              = alpm_list_add(cachedirs, const_cast<void*>(reinterpret_cast<const void*>(cachedir)));
+    alpm_option_set_cachedirs(handle, cachedirs);
+}
 
 void parse_includes(alpm_handle_t* handle, alpm_db_t* db, const auto& section, const auto& file) noexcept {
     const auto* archs = alpm_option_get_architectures(handle);
@@ -67,6 +74,7 @@ void parse_repos(alpm_handle_t* handle) noexcept {
                 if (it_nested.first != "architecture") {
                     continue;
                 }
+                // add CacheDir
                 const auto& archs = utils::make_multiline(it_nested.second, false, " ");
                 for (const auto& arch : archs) {
                     alpm_option_add_architecture(handle, arch.c_str());
@@ -87,7 +95,7 @@ void parse_repos(alpm_handle_t* handle) noexcept {
 }
 }  // namespace
 
-std::string Kernel::version() const noexcept {
+std::string Kernel::version() noexcept {
     const char* sync_pkg_ver = alpm_pkg_get_version(m_pkg);
     if (!is_installed()) {
         return sync_pkg_ver;
@@ -100,6 +108,7 @@ std::string Kernel::version() const noexcept {
     if (ret == 1) {
         return fmt::format("∨{}", local_pkg_ver);
     } else if (ret == -1) {
+        m_update = true;
         return fmt::format("∧{}", sync_pkg_ver);
     }
 
@@ -115,43 +124,21 @@ bool Kernel::is_installed() const noexcept {
 }
 
 bool Kernel::install() const noexcept {
-    return alpm_add_pkg(m_handle, m_pkg) == 0;
-    //    const auto& ext_cmd = fmt::format("yes | pacman -S --noconfirm {0} {0}-headers", m_name);
-
-    //    QProcess pacman;
-    //    QStringList args = {"-c", ext_cmd.c_str()};
-    //    pacman.start("bash", args);
-    //    if (!pacman.waitForStarted())
-    //        return false;
-
-    //    if (!pacman.waitForFinished())
-    //        return false;
-
-    //    const auto& ret_code = pacman.exitCode();
-    //    return ret_code == 0;
+    if (alpm_add_pkg(m_handle, m_pkg) != 0) {
+        return false;
+    }
+    return alpm_add_pkg(m_handle, m_headers) == 0;
 }
 
 bool Kernel::remove() const noexcept {
     auto* db  = alpm_get_localdb(m_handle);
     auto* pkg = alpm_db_get_pkg(db, m_name.c_str());
-    return alpm_remove_pkg(m_handle, pkg) == 0;
-    //    const auto& ext_cmd = fmt::format("yes | pacman -Rsn --noconfirm {0} {0}-headers", m_name);
 
-    //    QProcess pacman;
-    //    QStringList args = {"-c", ext_cmd.c_str()};
-    //    pacman.start("bash", args);
-    //    if (!pacman.waitForStarted())
-    //        return false;
-
-    //    if (!pacman.waitForFinished())
-    //        return false;
-
-    //    const auto& ret_code = pacman.exitCode();
-    //    return ret_code == 0;
-}
-
-bool Kernel::update() const noexcept {
-    return install();
+    if (alpm_remove_pkg(m_handle, pkg) != 0) {
+        return false;
+    }
+    auto* headers = alpm_db_get_pkg(db, alpm_pkg_get_name(m_headers));
+    return alpm_remove_pkg(m_handle, headers) == 0;
 }
 
 // Find kernel packages by finding packages which have words 'linux' and 'headers'.
@@ -174,6 +161,7 @@ std::vector<Kernel> Kernel::get_kernels(alpm_handle_t* handle) noexcept {
     std::vector<Kernel> kernels{};
 
     parse_repos(handle);
+    parse_cachedirs(handle);
 
     auto* dbs = alpm_get_syncdbs(handle);
     for (alpm_list_t* i = dbs; i != nullptr; i = i->next) {
@@ -194,11 +182,12 @@ std::vector<Kernel> Kernel::get_kernels(alpm_handle_t* handle) noexcept {
             if (!found.empty()) {
                 continue;
             }
+            alpm_pkg_t* headers = alpm_db_get_pkg(db, pkg_name.c_str());
 
             utils::remove_all(pkg_name, replace_part);
-
             pkg = alpm_db_get_pkg(db, pkg_name.c_str());
-            kernels.emplace_back(Kernel{handle, pkg, db_name, fmt::format("{}/{}", db_name, pkg_name)});
+
+            kernels.emplace_back(Kernel{handle, pkg, headers, db_name, fmt::format("{}/{}", db_name, pkg_name)});
         }
 
         alpm_list_free(needles);

@@ -41,9 +41,9 @@ namespace ranges = std::ranges;
 class Kernel {
  public:
     consteval Kernel() = default;
-    explicit Kernel(alpm_handle_t* handle, alpm_pkg_t* pkg) : m_name(alpm_pkg_get_name(pkg)), m_pkg(pkg), m_handle(handle) { }
-    explicit Kernel(alpm_handle_t* handle, alpm_pkg_t* pkg, const std::string_view& repo) : m_name(alpm_pkg_get_name(pkg)), m_repo(repo), m_pkg(pkg), m_handle(handle) { }
-    explicit Kernel(alpm_handle_t* handle, alpm_pkg_t* pkg, const std::string_view& repo, const std::string_view& raw) : m_name(alpm_pkg_get_name(pkg)), m_repo(repo), m_raw(raw), m_pkg(pkg), m_handle(handle) { }
+    explicit Kernel(alpm_handle_t* handle, alpm_pkg_t* pkg, alpm_pkg_t* headers) : m_name(alpm_pkg_get_name(pkg)), m_pkg(pkg), m_headers(headers), m_handle(handle) { }
+    explicit Kernel(alpm_handle_t* handle, alpm_pkg_t* pkg, alpm_pkg_t* headers, const std::string_view& repo) : m_name(alpm_pkg_get_name(pkg)), m_repo(repo), m_pkg(pkg), m_headers(headers), m_handle(handle) { }
+    explicit Kernel(alpm_handle_t* handle, alpm_pkg_t* pkg, alpm_pkg_t* headers, const std::string_view& repo, const std::string_view& raw) : m_name(alpm_pkg_get_name(pkg)), m_repo(repo), m_raw(raw), m_pkg(pkg), m_headers(headers), m_handle(handle) { }
 
     consteval std::string_view category() const noexcept {
         constexpr std::string_view lto{"lto"};
@@ -85,14 +85,15 @@ class Kernel {
 
         return "stable";
     }
-    std::string version() const noexcept;
+    std::string version() noexcept;
 
     bool is_installed() const noexcept;
     bool install() const noexcept;
     bool remove() const noexcept;
-    bool update() const noexcept;
-
     /* clang-format off */
+    constexpr bool is_update_available() const noexcept
+    { return m_update; }
+
     inline const char* get_raw() const noexcept
     { return m_raw.c_str(); }
     /* clang-format on */
@@ -100,11 +101,14 @@ class Kernel {
     static std::vector<Kernel> get_kernels(alpm_handle_t* handle) noexcept;
 
  private:
+    bool m_update{};
+
     std::string m_name{};
     std::string m_repo{"local"};
     std::string m_raw{};
 
     alpm_pkg_t* m_pkg;
+    alpm_pkg_t* m_headers;
     alpm_handle_t* m_handle;
 };
 

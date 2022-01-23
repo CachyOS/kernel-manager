@@ -37,15 +37,6 @@ FetchContent_Declare(fmt
   GIT_TAG "c06bef7273e594bfa91739e29d339fba51fd4e0e"
 )
 FetchContent_MakeAvailable(fmt)
-FetchContent_Declare(spdlog
-  GIT_REPOSITORY "https://github.com/gabime/spdlog.git"
-  GIT_TAG "729d7f6d8837b6693e7b378408518ea1710f80cb"
-)
-FetchContent_Declare(cpr
-  GIT_REPOSITORY "https://github.com/libcpr/cpr.git"
-  GIT_TAG "9b2bda734dffdd76096e1364290c58fe3a30c59a"
-)
-FetchContent_MakeAvailable(spdlog cpr)
 if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
    FetchContent_Declare(range-v3
      GIT_REPOSITORY "https://github.com/ericniebler/range-v3.git"
@@ -96,7 +87,7 @@ enable_sanitizers(project_options)
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE project_warnings project_options Qt6::Widgets spdlog::spdlog fmt::fmt cpr::cpr PkgConfig::LIBALPM)
+target_link_libraries(${PROJECT_NAME} PRIVATE project_warnings project_options Qt6::Widgets fmt::fmt PkgConfig::LIBALPM)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
    target_link_libraries(${PROJECT_NAME} PRIVATE range-v3::range-v3)

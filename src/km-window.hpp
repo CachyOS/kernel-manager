@@ -25,13 +25,30 @@
 
 #include <array>
 #include <memory>
+#include <thread>
 #include <vector>
 
 #include <alpm.h>
 
 #include <QMainWindow>
-//#include <QProcess>
-#include <QStandardItemModel>
+#include <QThread>
+#include <QTimer>
+
+class Work final : public QObject {
+    Q_OBJECT
+
+ public:
+    using function_t = std::function<void()>;
+    Work(function_t func)
+      : m_func(func) { }
+    virtual ~Work() = default;
+
+ public slots:
+    void doHeavyCaclulations();
+
+ private:
+    function_t m_func;
+};
 
 class MainWindow final : public QMainWindow {
     Q_OBJECT
@@ -48,11 +65,20 @@ class MainWindow final : public QMainWindow {
     void closeEvent(QCloseEvent* event) override;
 
  private:
-    // std::unique_ptr<QProcess> m_process;
+    bool m_running{};
+    int32_t m_last_percent{};
+    QString m_last_text{};
+    std::mutex m_mutex{};
+
+    QThread* m_worker_th = new QThread(this);
+    Work* m_worker;
+
     alpm_errno_t m_err;
     alpm_handle_t* m_handle              = alpm_initialize("/", "/var/lib/pacman/", &m_err);
-    const std::vector<Kernel> m_kernels  = Kernel::get_kernels(m_handle);
+    std::vector<Kernel> m_kernels        = Kernel::get_kernels(m_handle);
     std::unique_ptr<Ui::MainWindow> m_ui = std::make_unique<Ui::MainWindow>();
+
+    void paintLoop() noexcept;
 };
 
 #endif  // MAINWINDOW_HPP_
