@@ -27,6 +27,8 @@ Usage: configure.sh [options]
 Options:
   --help                   Display this information.
   --buildtype=, -t=        Specify build type.
+  --prefix=                Specify install prefix.
+  --libdir=                Specify lib directory.
   --path=, -p=             Specify build directory.
 EOF
 exit 0
@@ -34,11 +36,21 @@ fi
 
 
 _buildpath="build"
+_prefix="/usr/local"
+_libdir="lib"
 _buildtype="RelWithDebInfo"
 for i in "$@"; do
   case $i in
     -t=*|--buildtype=*)
       _buildtype="${i#*=}"
+      shift # past argument=value
+      ;;
+    --prefix=*)
+      _prefix="${i#*=}"
+      shift # past argument=value
+      ;;
+    --libdir=*)
+      _libdir="${i#*=}"
       shift # past argument=value
       ;;
     -p=*|--path=*)
@@ -51,7 +63,10 @@ for i in "$@"; do
   esac
 done
 
-cmake -S . -B ${_buildpath}/${_buildtype} -DCMAKE_BUILD_TYPE=${_buildtype}
+cmake -S . -B ${_buildpath}/${_buildtype} \
+    -DCMAKE_BUILD_TYPE=${_buildtype} \
+    -DCMAKE_INSTALL_PREFIX=${_prefix} \
+    -DCMAKE_INSTALL_LIBDIR=${_libdir}
 
 cat > build.sh <<EOF
 #!/bin/bash
