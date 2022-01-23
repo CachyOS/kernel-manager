@@ -12,7 +12,7 @@ Any compiler which support C++20 standard should work.
 ######
 ## Installing from source
 
-This is tested on Arch Linux, but *any* recent Linux with latest C++20 compiler should do:
+This is tested on Arch Linux, but *any* recent Arch Linux based system with latest C++20 compiler should do:
 
 ```sh
 sudo pacman -Sy \
