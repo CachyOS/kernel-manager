@@ -409,6 +409,8 @@ MainWindow::MainWindow(QWidget* parent)
   : QMainWindow(parent) {
     m_ui->setupUi(this);
 
+    setAttribute(Qt::WA_NativeWindow);
+
     // Setup global values
     g_last_text    = &m_last_text;
     g_last_percent = &m_last_percent;
