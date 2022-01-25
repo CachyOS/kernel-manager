@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=CachyOS Kernel Manager
+GenericName=Kernel Manager
+Keywords=cachyos;system;kernel;
+Exec=cachyos-kernel-manager
+Comment=Manage kernels
+Icon=cachyos-kernel-manager
+Terminal=false
+StartupNotify=false
+Categories=Qt;System;
+X-AppStream-Ignore=true

@@ -74,7 +74,6 @@ bool IsInstanceAlreadyRunning(QSharedMemory& memoryLock) {
 }
 
 auto main(int argc, char** argv) -> std::int32_t {
-    // see /usr/include/polkit-1/polkit/polkitauthority.h
     QSharedMemory sharedMemoryLock("CachyOS-KM-lock");
     if (IsInstanceAlreadyRunning(sharedMemoryLock)) {
         return -1;

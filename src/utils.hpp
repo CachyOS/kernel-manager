@@ -27,7 +27,7 @@ namespace utils {
 
 [[nodiscard]] bool check_root() noexcept;
 [[nodiscard]] auto make_multiline(const std::string_view& str, bool reverse = false, const std::string_view&& delim = "\n") noexcept -> std::vector<std::string>;
-[[nodiscard]] auto make_multiline(std::vector<std::string>& multiline, bool reverse = false, const std::string_view&& delim = "\n") noexcept -> std::string;
+[[nodiscard]] auto make_multiline(const std::vector<std::string_view>& multiline, bool reverse = false, const std::string_view&& delim = "\n") noexcept -> std::string;
 
 inline std::size_t replace_all(std::string& inout, const std::string_view& what, const std::string_view& with) {
     std::size_t count{};

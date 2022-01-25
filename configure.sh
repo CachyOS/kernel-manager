@@ -92,7 +92,7 @@ set -e
 
 cd "\`dirname "\$0"\`"
 
-cmake --build ${_buildpath}/${_buildtype} --parallel 10
+cmake --build ${_buildpath}/${_buildtype} --parallel $(nproc)
 EOF
 
 chmod +x ./build.sh

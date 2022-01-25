@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC "-//freedesktop//DTD polkit Policy Configuration 1.0//EN"
+"http://www.freedesktop.org/software/polkit/policyconfig-1.dtd">
+<policyconfig>
+
+  <vendor>cachyos-kernel-manager</vendor>
+  <vendor_url>https://github.com/CachyOS/kernel-manager</vendor_url>
+
+  <action id="org.cachyos.cachyos-kernel-manager.pkexec.policy.run-root-terminal">
+    <description>Run kernel installation/removal</description>
+    <message>Authentication is required to run the instalation/removal</message>
+    <icon_name>cachyos-kernel-manager</icon_name>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/lib/cachyos-kernel-manager/rootshell.sh</annotate>
+  </action>
+
+</policyconfig>

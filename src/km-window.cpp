@@ -286,6 +286,20 @@ void cb_log(void* ctx, alpm_loglevel_t level, const char* fmt, va_list args) {
 }
 
 void install_packages(alpm_handle_t* handle, const std::vector<Kernel>& kernels, const QAbstractItemModel* model) {
+#ifdef PKG_DUMMY_IMPL
+    const auto& rows = model->rowCount();
+    for (int i = 0; i < rows; ++i) {
+        const auto& kernel      = kernels[static_cast<size_t>(i)];
+        auto vIndex             = model->index(i, 0);
+        const auto& is_selected = model->data(vIndex, Qt::CheckStateRole).toBool();
+        if (is_selected && (!kernel.is_installed() || kernel.is_update_available())) {
+            if (!kernel.install()) {
+                fmt::print(stderr, "failed to add package to be installed ({})\n", alpm_strerror(alpm_errno(handle)));
+            }
+        }
+    }
+
+#else
     /* Step 0: create a new transaction */
     if (alpm_trans_init(handle, ALPM_TRANS_FLAG_ALLDEPS | ALPM_TRANS_FLAG_ALLEXPLICIT) != 0) {
         fmt::print(stderr, "failed to create a new transaction ({})\n", alpm_strerror(alpm_errno(handle)));
@@ -343,9 +357,24 @@ void install_packages(alpm_handle_t* handle, const std::vector<Kernel>& kernels,
     /* Step 4: release transaction resources */
     FREELIST(trans_data);
     alpm_trans_release(handle);
+#endif
 }
 
 void remove_packages(alpm_handle_t* handle, const std::vector<Kernel>& kernels, const QAbstractItemModel* model) {
+#ifdef PKG_DUMMY_IMPL
+    const auto& rows = model->rowCount();
+    for (int i = 0; i < rows; ++i) {
+        const auto& kernel      = kernels[static_cast<size_t>(i)];
+        auto vIndex             = model->index(i, 0);
+        const auto& is_selected = model->data(vIndex, Qt::CheckStateRole).toBool();
+        if (!is_selected && kernel.is_installed()) {
+            if (!kernel.remove()) {
+                fmt::print(stderr, "failed to add package to be removed ({})\n", alpm_strerror(alpm_errno(handle)));
+            }
+        }
+    }
+
+#else
     /* Step 0: create a new transaction */
     if (alpm_trans_init(handle, ALPM_TRANS_FLAG_ALLDEPS) != 0) {
         fmt::print(stderr, "failed to create a new transaction ({})\n", alpm_strerror(alpm_errno(handle)));
@@ -403,6 +432,7 @@ void remove_packages(alpm_handle_t* handle, const std::vector<Kernel>& kernels, 
     /* Step 4: release transaction resources */
     FREELIST(trans_data);
     alpm_trans_release(handle);
+#endif
 }
 
 MainWindow::MainWindow(QWidget* parent)
@@ -415,15 +445,21 @@ MainWindow::MainWindow(QWidget* parent)
     g_last_text    = &m_last_text;
     g_last_percent = &m_last_percent;
 
+#ifdef PKG_DUMMY_IMPL
+    m_ui->progress_status->hide();
+    m_ui->progressBar->hide();
+#endif
+
     // Create worker thread
     m_worker = new Work([&]() {
         while (m_running) {
-            // setuid(getuid());
             install_packages(m_handle, m_kernels, m_ui->list->model());
             remove_packages(m_handle, m_kernels, m_ui->list->model());
-            // setuid(getuid());
 
-            m_last_percent = 0;
+#ifdef PKG_DUMMY_IMPL
+            Kernel::commit_transaction();
+#endif
+            m_last_percent = 100;
             m_last_text    = "Done";
 
             m_running = false;
@@ -531,6 +567,7 @@ void MainWindow::on_execute() noexcept {
     m_running = false;
     if (m_worker_th->isRunning()) {
         m_worker_th->terminate();
+        m_worker_th->wait(1500);
     }
     m_running = true;
     m_ui->ok->setEnabled(false);

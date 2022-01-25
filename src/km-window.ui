@@ -14,7 +14,7 @@
    <string>CachyOS Kernel Manager</string>
   </property>
   <property name="windowIcon">
-      <iconset theme="cachyos"/>
+   <iconset theme="cachyos-kernel-manager"/>
   </property>
   <widget class="QWidget" name="centralwidget" native="true">
    <layout class="QVBoxLayout" name="verticalLayout">

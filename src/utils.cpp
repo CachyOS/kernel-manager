@@ -73,7 +73,7 @@ auto make_multiline(const std::string_view& str, bool reverse, const std::string
     return lines;
 }
 
-auto make_multiline(std::vector<std::string>& multiline, bool reverse, const std::string_view&& delim) noexcept -> std::string {
+auto make_multiline(const std::vector<std::string_view>& multiline, bool reverse, const std::string_view&& delim) noexcept -> std::string {
     std::string res{};
     for (const auto& line : multiline) {
         res += line;

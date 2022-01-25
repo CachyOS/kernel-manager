@@ -59,3 +59,10 @@ option(ENABLE_DEVENV "Enable dev environment" ON)
 if(NOT ENABLE_DEVENV)
   add_definitions(-DNDEVENV)
 endif()
+
+# Choose pkg operation implementation.
+# Note: temporal fix
+option(PKG_DUMMY_IMPL "Use dummy implementation of install/uninstall operations" ON)
+if(PKG_DUMMY_IMPL)
+    add_definitions(-DPKG_DUMMY_IMPL)
+endif()

@@ -45,6 +45,8 @@ if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
    FetchContent_MakeAvailable(range-v3)
 endif()
 
+find_package(PolkitQt5-1 REQUIRED)
+
 ##
 ## CONFIGURATION
 ##
@@ -87,7 +89,7 @@ enable_sanitizers(project_options)
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE project_warnings project_options Qt5::Widgets fmt::fmt PkgConfig::LIBALPM)
+target_link_libraries(${PROJECT_NAME} PRIVATE project_warnings project_options Qt5::Widgets Threads::Threads fmt::fmt PkgConfig::LIBALPM)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
    target_link_libraries(${PROJECT_NAME} PRIVATE range-v3::range-v3)
@@ -102,4 +104,28 @@ endif()
 install(
    TARGETS ${PROJECT_NAME}
    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
+install(
+   PROGRAMS ${CMAKE_SOURCE_DIR}/src/terminal-helper
+   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cachyos-kernel-manager
+)
+
+install(
+   PROGRAMS ${CMAKE_SOURCE_DIR}/src/rootshell.sh
+   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cachyos-kernel-manager
+)
+
+install(
+   FILES org.cachyos.cachyos-kernel-manager.pkexec.policy
+   DESTINATION "${POLKITQT-1_POLICY_FILES_INSTALL_DIR}"
+)
+
+install(
+   FILES cachyos-kernel-manager.desktop
+   DESTINATION ${CMAKE_INSTALL_DATADIR}/applications
+)
+install(
+   FILES cachyos-kernel-manager.png
+   DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps
 )

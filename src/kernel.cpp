@@ -21,8 +21,16 @@
 #include "utils.hpp"
 
 #include <fmt/core.h>
+#include <fmt/ranges.h>
+
+#include <QProcess>
 
 namespace {
+
+#ifdef PKG_DUMMY_IMPL
+static std::vector<std::string_view> g_kernel_install_list{};
+static std::vector<std::string_view> g_kernel_removal_list{};
+#endif
 
 void parse_cachedirs(alpm_handle_t* handle) noexcept {
     static constexpr const char* cachedir = "/var/cache/pacman/pkg/";
@@ -124,13 +132,25 @@ bool Kernel::is_installed() const noexcept {
 }
 
 bool Kernel::install() const noexcept {
+#ifdef PKG_DUMMY_IMPL
+    const char* pkg_name    = alpm_pkg_get_name(m_pkg);
+    const char* pkg_headers = alpm_pkg_get_name(m_headers);
+    g_kernel_install_list.insert(g_kernel_install_list.end(), {pkg_name, pkg_headers});
+    return true;
+#else
     if (alpm_add_pkg(m_handle, m_pkg) != 0) {
         return false;
     }
     return alpm_add_pkg(m_handle, m_headers) == 0;
+#endif
 }
 
 bool Kernel::remove() const noexcept {
+#ifdef PKG_DUMMY_IMPL
+    const char* pkg_headers = alpm_pkg_get_name(m_headers);
+    g_kernel_removal_list.insert(g_kernel_removal_list.end(), {m_name, pkg_headers});
+    return true;
+#else
     auto* db  = alpm_get_localdb(m_handle);
     auto* pkg = alpm_db_get_pkg(db, m_name.c_str());
 
@@ -139,6 +159,7 @@ bool Kernel::remove() const noexcept {
     }
     auto* headers = alpm_db_get_pkg(db, alpm_pkg_get_name(m_headers));
     return alpm_remove_pkg(m_handle, headers) == 0;
+#endif
 }
 
 // Find kernel packages by finding packages which have words 'linux' and 'headers'.
@@ -196,3 +217,42 @@ std::vector<Kernel> Kernel::get_kernels(alpm_handle_t* handle) noexcept {
 
     return kernels;
 }
+
+#ifdef PKG_DUMMY_IMPL
+
+// Runs a command in a terminal, escalate's using pkexec if escalate is true
+int runCmdTerminal(QString cmd, bool escalate) {
+    QProcess proc;
+    cmd += "; read -p 'Press enter to exit'";
+    auto paramlist = QStringList();
+    if (escalate) {
+        paramlist << "-s"
+                  << "pkexec /usr/lib/cachyos-kernel-manager/rootshell.sh";
+    }
+    paramlist << cmd;
+
+    std::vector<std::string> verbose{};
+    for (const auto& param : paramlist) {
+        verbose.push_back(param.toStdString());
+    }
+
+    proc.start("/usr/lib/cachyos-kernel-manager/terminal-helper", paramlist);
+    proc.waitForStarted(-1);
+    const auto data = proc.readAllStandardError();
+    fprintf(stderr, "%s\n", data.toStdString().c_str());
+    proc.waitForFinished(-1);
+    return proc.exitCode();
+}
+
+void Kernel::commit_transaction() noexcept {
+    if (!g_kernel_install_list.empty()) {
+        const auto& packages_install = utils::make_multiline(g_kernel_install_list, false, " ");
+        runCmdTerminal(fmt::format("pacman -S --needed {}", packages_install).c_str(), true);
+    }
+
+    if (!g_kernel_removal_list.empty()) {
+        const auto& packages_remove = utils::make_multiline(g_kernel_removal_list, false, " ");
+        runCmdTerminal(fmt::format("pacman -Rsn {}", packages_remove).c_str(), true);
+    }
+}
+#endif
