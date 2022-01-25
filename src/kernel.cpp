@@ -230,11 +230,6 @@ int runCmdTerminal(QString cmd, bool escalate) {
     }
     paramlist << cmd;
 
-    std::vector<std::string> verbose{};
-    for (const auto& param : paramlist) {
-        verbose.push_back(param.toStdString());
-    }
-
     proc.start("/usr/lib/cachyos-kernel-manager/terminal-helper", paramlist);
     proc.waitForStarted(-1);
     const auto data = proc.readAllStandardError();
