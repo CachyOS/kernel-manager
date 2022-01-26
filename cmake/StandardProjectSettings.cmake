@@ -64,5 +64,5 @@ endif()
 # Note: temporal fix
 option(PKG_DUMMY_IMPL "Use dummy implementation of install/uninstall operations" ON)
 if(PKG_DUMMY_IMPL)
-    add_definitions(-DPKG_DUMMY_IMPL)
+  add_definitions(-DPKG_DUMMY_IMPL)
 endif()

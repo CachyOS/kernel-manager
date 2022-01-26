@@ -1,0 +1,2 @@
+option('devenv', type: 'boolean', value: true, description: 'enable dev environment')
+option('pkg_dummy_impl', type: 'boolean', value: true, description: 'choose pkg operation implementation')

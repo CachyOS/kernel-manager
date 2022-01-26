@@ -19,6 +19,19 @@
 #ifndef MAINWINDOW_HPP_
 #define MAINWINDOW_HPP_
 
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wsign-conversion"
+#pragma clang diagnostic ignored "-Wfloat-conversion"
+#pragma clang diagnostic ignored "-Wimplicit-int-float-conversion"
+#pragma clang diagnostic ignored "-Wdeprecated-enum-enum-conversion"
+#elif defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wsign-conversion"
+#pragma GCC diagnostic ignored "-Wconversion"
+#pragma GCC diagnostic ignored "-Wdeprecated-enum-enum-conversion"
+#endif
+
 #include <ui_km-window.h>
 
 #include "kernel.hpp"
@@ -33,6 +46,12 @@
 #include <QMainWindow>
 #include <QThread>
 #include <QTimer>
+
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#elif defined(__GNUC__)
+#pragma GCC diagnostic pop
+#endif
 
 class Work final : public QObject {
     Q_OBJECT

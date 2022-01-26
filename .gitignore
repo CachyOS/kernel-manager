@@ -8,6 +8,8 @@ build.sh
 cmake-build-release
 cmake-build-debug
 CMakeLists.txt.user
+subprojects/fmt
+subprojects/packagecache
 
 # Prerequisites
 *.d
