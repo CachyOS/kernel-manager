@@ -74,7 +74,7 @@ class MainWindow final : public QMainWindow {
     Q_DISABLE_COPY_MOVE(MainWindow)
  public:
     explicit MainWindow(QWidget* parent = nullptr);
-    virtual ~MainWindow() = default;
+    virtual ~MainWindow();
 
  private slots:
     void on_cancel() noexcept;
@@ -85,6 +85,7 @@ class MainWindow final : public QMainWindow {
 
  private:
     bool m_running{};
+    bool m_thread_running{true};
     int32_t m_last_percent{};
     QString m_last_text{};
     std::mutex m_mutex{};
@@ -97,7 +98,9 @@ class MainWindow final : public QMainWindow {
     std::vector<Kernel> m_kernels        = Kernel::get_kernels(m_handle);
     std::unique_ptr<Ui::MainWindow> m_ui = std::make_unique<Ui::MainWindow>();
 
+#ifndef PKG_DUMMY_IMPL
     void paintLoop() noexcept;
+#endif
 };
 
 #endif  // MAINWINDOW_HPP_

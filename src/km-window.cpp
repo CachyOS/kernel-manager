@@ -21,6 +21,7 @@
 #include "utils.hpp"
 
 #include <future>
+#include <thread>
 
 #include <fmt/core.h>
 
@@ -452,20 +453,22 @@ MainWindow::MainWindow(QWidget* parent)
 
     // Create worker thread
     m_worker = new Work([&]() {
-        while (m_running) {
-            m_ui->ok->setEnabled(false);
-            install_packages(m_handle, m_kernels, m_ui->list->model());
-            remove_packages(m_handle, m_kernels, m_ui->list->model());
+        while (m_thread_running) {
+            fmt::print("...");
+            if (m_running) {
+                m_ui->ok->setEnabled(false);
+                install_packages(m_handle, m_kernels, m_ui->list->model());
+                remove_packages(m_handle, m_kernels, m_ui->list->model());
 
 #ifdef PKG_DUMMY_IMPL
-            Kernel::commit_transaction();
-#else
-            m_last_percent = 100;
-            m_last_text    = "Done";
+                Kernel::commit_transaction();
 #endif
+                m_last_percent = 100;
+                m_last_text    = "Done";
 
-            m_running = false;
-            m_ui->ok->setDisabled(false);
+                m_running = false;
+                m_ui->ok->setDisabled(false);
+            }
         }
     });
 
@@ -473,12 +476,14 @@ MainWindow::MainWindow(QWidget* parent)
     // name to appear in ps, task manager, etc.
     m_worker_th->setObjectName("WorkerThread");
 
+#ifndef PKG_DUMMY_IMPL
     static constexpr auto TIMEOUT_MS = 50;
 
     // Set update timer
     auto* timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, QOverload<>::of(&MainWindow::paintLoop));
     timer->start(std::chrono::milliseconds(TIMEOUT_MS));
+#endif
 
 #if defined(__GNUC__) && !defined(__clang__)
 #pragma GCC diagnostic push
@@ -546,24 +551,31 @@ MainWindow::MainWindow(QWidget* parent)
     a2.wait();
 }
 
-void MainWindow::closeEvent(QCloseEvent* event) {
-    // Exit worker thread
-    m_running = false;
+MainWindow::~MainWindow() {
+    std::this_thread::sleep_for(std::chrono::milliseconds(1));
     if (m_worker_th != nullptr) {
         m_worker_th->exit();
     }
 
     // Release libalpm handle
     alpm_release(m_handle);
+}
+
+void MainWindow::closeEvent(QCloseEvent* event) {
+    // Exit worker thread
+    m_running        = false;
+    m_thread_running = false;
 
     // Execute parent function
     QWidget::closeEvent(event);
 }
 
+#ifndef PKG_DUMMY_IMPL
 void MainWindow::paintLoop() noexcept {
     m_ui->progressBar->setValue(m_last_percent);
     m_ui->progress_status->setText(m_last_text);
 }
+#endif
 
 void MainWindow::on_cancel() noexcept {
     close();
