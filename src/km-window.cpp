@@ -453,19 +453,25 @@ MainWindow::MainWindow(QWidget* parent)
     // Create worker thread
     m_worker = new Work([&]() {
         while (m_running) {
+            m_ui->ok->setEnabled(false);
             install_packages(m_handle, m_kernels, m_ui->list->model());
             remove_packages(m_handle, m_kernels, m_ui->list->model());
 
 #ifdef PKG_DUMMY_IMPL
             Kernel::commit_transaction();
-#endif
+#else
             m_last_percent = 100;
             m_last_text    = "Done";
+#endif
 
             m_running = false;
             m_ui->ok->setDisabled(false);
         }
     });
+
+    m_worker->moveToThread(m_worker_th);
+    // name to appear in ps, task manager, etc.
+    m_worker_th->setObjectName("WorkerThread");
 
     static constexpr auto TIMEOUT_MS = 50;
 
@@ -532,6 +538,10 @@ MainWindow::MainWindow(QWidget* parent)
     connect(m_ui->cancel, SIGNAL(clicked()), this, SLOT(on_cancel()));
     connect(m_ui->ok, SIGNAL(clicked()), this, SLOT(on_execute()));
 
+    // Connect worker thread signals
+    connect(m_worker_th, SIGNAL(finished()), m_worker, SLOT(deleteLater()));
+    connect(m_worker_th, SIGNAL(started()), m_worker, SLOT(doHeavyCaclulations()), Qt::QueuedConnection);
+
     // Wait for async function to finish
     a2.wait();
 }
@@ -564,19 +574,8 @@ void Work::doHeavyCaclulations() {
 }
 
 void MainWindow::on_execute() noexcept {
-    m_running = false;
-    if (m_worker_th->isRunning()) {
-        m_worker_th->terminate();
-        m_worker_th->wait(1500);
-    }
+    if (m_running)
+        return;
     m_running = true;
-    m_ui->ok->setEnabled(false);
-    m_worker->moveToThread(m_worker_th);
-    // name to appear in ps, task manager, etc.
-    m_worker_th->setObjectName("WorkerThread");
-
-    connect(m_worker_th, SIGNAL(finished()), m_worker, SLOT(deleteLater()));
-    connect(m_worker_th, SIGNAL(started()), m_worker, SLOT(doHeavyCaclulations()), Qt::QueuedConnection);
-
     m_worker_th->start();
 }

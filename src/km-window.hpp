@@ -74,7 +74,7 @@ class MainWindow final : public QMainWindow {
     Q_DISABLE_COPY_MOVE(MainWindow)
  public:
     explicit MainWindow(QWidget* parent = nullptr);
-    ~MainWindow() override = default;
+    virtual ~MainWindow() = default;
 
  private slots:
     void on_cancel() noexcept;
@@ -90,9 +90,9 @@ class MainWindow final : public QMainWindow {
     std::mutex m_mutex{};
 
     QThread* m_worker_th = new QThread(this);
-    Work* m_worker;
+    Work* m_worker{nullptr};
 
-    alpm_errno_t m_err;
+    alpm_errno_t m_err{};
     alpm_handle_t* m_handle              = alpm_initialize("/", "/var/lib/pacman/", &m_err);
     std::vector<Kernel> m_kernels        = Kernel::get_kernels(m_handle);
     std::unique_ptr<Ui::MainWindow> m_ui = std::make_unique<Ui::MainWindow>();

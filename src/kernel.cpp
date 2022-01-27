@@ -29,6 +29,7 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wuseless-cast"
 #pragma GCC diagnostic ignored "-Wsign-conversion"
+#pragma GCC diagnostic ignored "-Wsuggest-attribute=pure"
 #endif
 
 #include <QProcess>
@@ -246,9 +247,6 @@ int runCmdTerminal(QString cmd, bool escalate) {
     paramlist << cmd;
 
     proc.start("/usr/lib/cachyos-kernel-manager/terminal-helper", paramlist);
-    proc.waitForStarted(-1);
-    const auto data = proc.readAllStandardError();
-    fprintf(stderr, "%s\n", data.toStdString().c_str());
     proc.waitForFinished(-1);
     return proc.exitCode();
 }
@@ -257,11 +255,13 @@ void Kernel::commit_transaction() noexcept {
     if (!g_kernel_install_list.empty()) {
         const auto& packages_install = utils::make_multiline(g_kernel_install_list, false, " ");
         runCmdTerminal(fmt::format("pacman -S --needed {}", packages_install).c_str(), true);
+        g_kernel_install_list.clear();
     }
 
     if (!g_kernel_removal_list.empty()) {
         const auto& packages_remove = utils::make_multiline(g_kernel_removal_list, false, " ");
         runCmdTerminal(fmt::format("pacman -Rsn {}", packages_remove).c_str(), true);
+        g_kernel_removal_list.clear();
     }
 }
 #endif
