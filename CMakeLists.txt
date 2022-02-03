@@ -21,7 +21,7 @@ include(EnableCcache)
 include(Linker)
 include(StaticAnalyzers)
 include(Sanitizers)
-include(FetchContent)
+include(CPM)
 
 find_package(Threads REQUIRED)
 find_package(PkgConfig REQUIRED)
@@ -32,17 +32,19 @@ pkg_check_modules(
   IMPORTED_TARGET
   libalpm>=13.0.0)
 
-FetchContent_Declare(fmt
-  GIT_REPOSITORY "https://github.com/fmtlib/fmt.git"
-  GIT_TAG "ae1aaaee5f5f36ce5303bb140d51b6db21e1af4e"
+CPMAddPackage(
+  NAME fmt
+  GITHUB_REPOSITORY fmtlib/fmt
+  GIT_TAG ae1aaaee5f5f36ce5303bb140d51b6db21e1af4e
+  EXCLUDE_FROM_ALL YES
 )
-FetchContent_MakeAvailable(fmt)
 if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
-   FetchContent_Declare(range-v3
-     GIT_REPOSITORY "https://github.com/ericniebler/range-v3.git"
-     GIT_TAG "9aa032ccd0eb4bd77f58e5b181168f1038c222c6"
+   CPMAddPackage(
+     NAME range-v3
+     GITHUB_REPOSITORY ericniebler/range-v3
+     GIT_TAG 9aa032ccd0eb4bd77f58e5b181168f1038c222c6
+     EXCLUDE_FROM_ALL YES
    )
-   FetchContent_MakeAvailable(range-v3)
 endif()
 
 find_package(PolkitQt5-1 REQUIRED)
