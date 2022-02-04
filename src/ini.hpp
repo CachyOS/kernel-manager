@@ -294,8 +294,8 @@ class INIReader {
     }
 
  public:
-    INIReader(const std::string& filename, bool keepLineData = false) noexcept {
-        fileReadStream.open(filename, std::ios::in | std::ios::binary);
+    explicit INIReader(const std::string_view& filename, bool keepLineData = false) noexcept {
+        fileReadStream.open(filename.data(), std::ios::in | std::ios::binary);
         if (keepLineData) {
             lineData = std::make_shared<T_LineData>();
         }
@@ -342,10 +342,10 @@ class INIReader {
 
 class INIFile {
  private:
-    std::string m_filename{};
+    std::string_view m_filename{};
 
  public:
-    INIFile(const std::string& filename)
+    explicit INIFile(const std::string_view& filename)
       : m_filename(filename) { }
 
     ~INIFile() = default;

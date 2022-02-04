@@ -48,7 +48,7 @@ static std::vector<std::string_view> g_kernel_removal_list{};
 #endif
 
 void parse_cachedirs(alpm_handle_t* handle) noexcept {
-    static constexpr const char* cachedir = "/var/cache/pacman/pkg/";
+    static constexpr auto cachedir = "/var/cache/pacman/pkg/";
 
     alpm_list_t* cachedirs = nullptr;
     cachedirs              = alpm_list_add(cachedirs, const_cast<void*>(reinterpret_cast<const void*>(cachedir)));

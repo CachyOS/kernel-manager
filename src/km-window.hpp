@@ -58,7 +58,7 @@ class Work final : public QObject {
 
  public:
     using function_t = std::function<void()>;
-    Work(function_t func)
+    explicit Work(function_t func)
       : m_func(func) { }
     virtual ~Work() = default;
 
