@@ -35,7 +35,7 @@ pkg_check_modules(
 CPMAddPackage(
   NAME fmt
   GITHUB_REPOSITORY fmtlib/fmt
-  GIT_TAG ae1aaaee5f5f36ce5303bb140d51b6db21e1af4e
+  GIT_TAG a44716f58e943905d1357160b98cae2618d053cf
   EXCLUDE_FROM_ALL YES
 )
 if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
@@ -60,7 +60,7 @@ set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -flto")
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -fwhole-program")
+   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -fwhole-program -fuse-linker-plugin")
 endif()
 
 # Link this 'library' to set the c++ standard / compile-time options requested

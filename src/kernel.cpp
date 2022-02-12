@@ -20,6 +20,7 @@
 #include "ini.hpp"
 #include "utils.hpp"
 
+#include <fmt/compile.h>
 #include <fmt/core.h>
 
 #if defined(__clang__)
@@ -129,10 +130,10 @@ std::string Kernel::version() noexcept {
     const char* local_pkg_ver = alpm_pkg_get_version(local_pkg);
     const int32_t ret         = alpm_pkg_vercmp(local_pkg_ver, sync_pkg_ver);
     if (ret == 1) {
-        return fmt::format("∨{}", local_pkg_ver);
+        return fmt::format(FMT_COMPILE("∨{}"), local_pkg_ver);
     } else if (ret == -1) {
         m_update = true;
-        return fmt::format("∧{}", sync_pkg_ver);
+        return fmt::format(FMT_COMPILE("∧{}"), sync_pkg_ver);
     }
 
     return sync_pkg_ver;
@@ -223,7 +224,7 @@ std::vector<Kernel> Kernel::get_kernels(alpm_handle_t* handle) noexcept {
             utils::remove_all(pkg_name, replace_part);
             pkg = alpm_db_get_pkg(db, pkg_name.c_str());
 
-            kernels.emplace_back(Kernel{handle, pkg, headers, db_name, fmt::format("{}/{}", db_name, pkg_name)});
+            kernels.emplace_back(Kernel{handle, pkg, headers, db_name, fmt::format(FMT_COMPILE("{}/{}"), db_name, pkg_name)});
         }
 
         alpm_list_free(needles);
@@ -254,13 +255,13 @@ int runCmdTerminal(QString cmd, bool escalate) {
 void Kernel::commit_transaction() noexcept {
     if (!g_kernel_install_list.empty()) {
         const auto& packages_install = utils::make_multiline(g_kernel_install_list, false, " ");
-        runCmdTerminal(fmt::format("pacman -S --needed {}", packages_install).c_str(), true);
+        runCmdTerminal(fmt::format(FMT_COMPILE("pacman -S --needed {}"), packages_install).c_str(), true);
         g_kernel_install_list.clear();
     }
 
     if (!g_kernel_removal_list.empty()) {
         const auto& packages_remove = utils::make_multiline(g_kernel_removal_list, false, " ");
-        runCmdTerminal(fmt::format("pacman -Rsn {}", packages_remove).c_str(), true);
+        runCmdTerminal(fmt::format(FMT_COMPILE("pacman -Rsn {}"), packages_remove).c_str(), true);
         g_kernel_removal_list.clear();
     }
 }

@@ -32,6 +32,7 @@
 
 #pragma clang diagnostic pop
 #else
+#include <algorithm>
 #include <ranges>
 namespace ranges = std::ranges;
 #endif
