@@ -1,5 +1,5 @@
 project('cachyos-kernel-manager', 'cpp',
-        version: '0.9.1',
+        version: '0.9.3',
         license: 'GPLv3',
         meson_version: '>=0.59.0',
         default_options: ['cpp_std=c++20',
