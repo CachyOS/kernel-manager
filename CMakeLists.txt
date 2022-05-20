@@ -7,7 +7,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 ## name and version
 ##
 project(cachyos-kernel-manager
-        VERSION 0.9.4
+        VERSION 0.9.5
         LANGUAGES CXX)
 
 
@@ -35,14 +35,14 @@ pkg_check_modules(
 CPMAddPackage(
   NAME fmt
   GITHUB_REPOSITORY fmtlib/fmt
-  GIT_TAG 86477f7ecc1606e15abae1ff784e6b0c55d99619
+  GIT_TAG 147e8ca58076e94cd86430328f6b8b3f844b4439
   EXCLUDE_FROM_ALL YES
 )
 if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
    CPMAddPackage(
      NAME range-v3
      GITHUB_REPOSITORY ericniebler/range-v3
-     GIT_TAG 9aa032ccd0eb4bd77f58e5b181168f1038c222c6
+     GIT_TAG 8527a9741518dd61082bc3e2139aed8ecb5da4f6
      EXCLUDE_FROM_ALL YES
    )
 endif()

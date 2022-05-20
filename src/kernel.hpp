@@ -28,6 +28,7 @@
 #pragma clang diagnostic ignored "-Wold-style-cast"
 
 #include <range/v3/algorithm/copy.hpp>
+#include <range/v3/algorithm/find_if.hpp>
 #include <range/v3/algorithm/search.hpp>
 
 #pragma clang diagnostic pop
@@ -46,7 +47,7 @@ class Kernel {
     explicit Kernel(alpm_handle_t* handle, alpm_pkg_t* pkg, alpm_pkg_t* headers, const std::string_view& repo) : m_name(alpm_pkg_get_name(pkg)), m_repo(repo), m_pkg(pkg), m_headers(headers), m_handle(handle) { }
     explicit Kernel(alpm_handle_t* handle, alpm_pkg_t* pkg, alpm_pkg_t* headers, const std::string_view& repo, const std::string_view& raw) : m_name(alpm_pkg_get_name(pkg)), m_repo(repo), m_raw(raw), m_pkg(pkg), m_headers(headers), m_handle(handle) { }
 
-    consteval std::string_view category() const noexcept {
+    constexpr std::string_view category() const noexcept {
         constexpr std::string_view lto{"lto"};
         constexpr std::string_view lts{"lts"};
         constexpr std::string_view zen{"zen"};

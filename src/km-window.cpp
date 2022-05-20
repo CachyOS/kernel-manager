@@ -25,8 +25,11 @@
 
 #include <fmt/core.h>
 
-#include <QStandardItemModel>
+#include <QCoreApplication>
+#include <QScreen>
+#include <QShortcut>
 #include <QTimer>
+#include <QTreeWidgetItem>
 
 static int32_t* g_last_percent{};
 static QString* g_last_text{};
@@ -286,20 +289,16 @@ void cb_log(void* ctx, alpm_loglevel_t level, const char* fmt, va_list args) {
     }
 }
 
-void install_packages(alpm_handle_t* handle, const std::vector<Kernel>& kernels, const QAbstractItemModel* model) {
+void install_packages(alpm_handle_t* handle, const std::vector<Kernel>& kernels, const std::vector<std::string>& selected_list) {
 #ifdef PKG_DUMMY_IMPL
-    const auto& rows = model->rowCount();
-    for (int i = 0; i < rows; ++i) {
-        const auto& kernel      = kernels[static_cast<size_t>(i)];
-        auto vIndex             = model->index(i, 0);
-        const auto& is_selected = model->data(vIndex, Qt::CheckStateRole).toBool();
-        if (is_selected && (!kernel.is_installed() || kernel.is_update_available())) {
-            if (!kernel.install()) {
+    for (const auto& selected : selected_list) {
+        const auto& kernel = ranges::find_if(kernels, [selected](auto&& el) { return el.get_raw() == selected; });
+        if ((kernel != kernels.end()) && (!kernel->is_installed() || kernel->is_update_available())) {
+            if (!kernel->install()) {
                 fmt::print(stderr, "failed to add package to be installed ({})\n", alpm_strerror(alpm_errno(handle)));
             }
         }
     }
-
 #else
     /* Step 0: create a new transaction */
     if (alpm_trans_init(handle, ALPM_TRANS_FLAG_ALLDEPS | ALPM_TRANS_FLAG_ALLEXPLICIT) != 0) {
@@ -310,13 +309,10 @@ void install_packages(alpm_handle_t* handle, const std::vector<Kernel>& kernels,
 
     /* Step 1: add targets to the created transaction */
     const bool is_root = utils::check_root();
-    const auto& rows   = model->rowCount();
-    for (int i = 0; i < rows; ++i) {
-        const auto& kernel      = kernels[static_cast<size_t>(i)];
-        auto vIndex             = model->index(i, 0);
-        const auto& is_selected = model->data(vIndex, Qt::CheckStateRole).toBool();
-        if (is_root && is_selected && (!kernel.is_installed() || kernel.is_update_available())) {
-            if (!kernel.install()) {
+    for (const auto& selected : selected_list) {
+        const auto& kernel = ranges::find_if(kernels, [selected](auto&& el) { return el.get_raw() == selected; });
+        if (is_root && (kernel != kernels.end()) && (!kernel->is_installed() || kernel->is_update_available())) {
+            if (!kernel->install()) {
                 fmt::print(stderr, "failed to add package to be installed ({})\n", alpm_strerror(alpm_errno(handle)));
             }
         }
@@ -361,15 +357,12 @@ void install_packages(alpm_handle_t* handle, const std::vector<Kernel>& kernels,
 #endif
 }
 
-void remove_packages(alpm_handle_t* handle, const std::vector<Kernel>& kernels, const QAbstractItemModel* model) {
+void remove_packages(alpm_handle_t* handle, const std::vector<Kernel>& kernels, const std::vector<std::string>& selected_list) {
 #ifdef PKG_DUMMY_IMPL
-    const auto& rows = model->rowCount();
-    for (int i = 0; i < rows; ++i) {
-        const auto& kernel      = kernels[static_cast<size_t>(i)];
-        auto vIndex             = model->index(i, 0);
-        const auto& is_selected = model->data(vIndex, Qt::CheckStateRole).toBool();
-        if (!is_selected && kernel.is_installed()) {
-            if (!kernel.remove()) {
+    for (const auto& selected : selected_list) {
+        const auto& kernel = ranges::find_if(kernels, [selected](auto&& el) { return el.get_raw() == selected; });
+        if ((kernel != kernels.end()) && (kernel->is_installed())) {
+            if (!kernel->remove()) {
                 fmt::print(stderr, "failed to add package to be removed ({})\n", alpm_strerror(alpm_errno(handle)));
             }
         }
@@ -385,13 +378,10 @@ void remove_packages(alpm_handle_t* handle, const std::vector<Kernel>& kernels, 
 
     /* Step 1: add targets to the created transaction */
     const bool is_root = utils::check_root();
-    const auto& rows   = model->rowCount();
-    for (int i = 0; i < rows; ++i) {
-        const auto& kernel      = kernels[static_cast<size_t>(i)];
-        auto vIndex             = model->index(i, 0);
-        const auto& is_selected = model->data(vIndex, Qt::CheckStateRole).toBool();
-        if (is_root && !is_selected && kernel.is_installed()) {
-            if (!kernel.remove()) {
+    for (const auto& selected : selected_list) {
+        const auto& kernel = ranges::find_if(kernels, [selected](auto&& el) { return el.get_raw() == selected; });
+        if (is_root && (kernel != kernels.end()) && (kernel->is_installed())) {
+            if (!kernel->remove()) {
                 fmt::print(stderr, "failed to add package to be removed ({})\n", alpm_strerror(alpm_errno(handle)));
             }
         }
@@ -441,6 +431,7 @@ MainWindow::MainWindow(QWidget* parent)
     m_ui->setupUi(this);
 
     setAttribute(Qt::WA_NativeWindow);
+    setWindowFlags(Qt::Window);  // for the close, min and max buttons
 
     // Setup global values
     g_last_text    = &m_last_text;
@@ -454,11 +445,17 @@ MainWindow::MainWindow(QWidget* parent)
     // Create worker thread
     m_worker = new Work([&]() {
         while (m_thread_running) {
-            fmt::print("...");
+            auto smth = fmt::format("...");
             if (m_running) {
                 m_ui->ok->setEnabled(false);
-                install_packages(m_handle, m_kernels, m_ui->list->model());
-                remove_packages(m_handle, m_kernels, m_ui->list->model());
+
+                std::vector<std::string> change_list(size_t(m_change_list.size()));
+                for (size_t i = 0; i < change_list.size(); ++i) {
+                    change_list[i] = m_change_list[int(i)].toStdString();
+                }
+
+                install_packages(m_handle, m_kernels, change_list);
+                remove_packages(m_handle, m_kernels, change_list);
 
 #ifdef PKG_DUMMY_IMPL
                 Kernel::commit_transaction();
@@ -467,7 +464,7 @@ MainWindow::MainWindow(QWidget* parent)
                 m_last_text    = "Done";
 
                 m_running = false;
-                m_ui->ok->setDisabled(false);
+                m_ui->ok->setEnabled(true);
             }
         }
     });
@@ -498,44 +495,34 @@ MainWindow::MainWindow(QWidget* parent)
 #pragma GCC diagnostic pop
 #endif
 
-    auto* model = new QStandardItemModel(0, 3, nullptr);
-    // model->setHeaderData(0, Qt::Horizontal, QObject::tr("Choose"));
-    // model->setHeaderData(1, Qt::Horizontal, QObject::tr("asdsa"));
+    QStringList column_names;
+    column_names << "Choose"
+                 << "PkgName"
+                 << "Version"
+                 << "Category";
+    m_ui->treeKernels->setHeaderLabels(column_names);
+    m_ui->treeKernels->hideColumn(TreeCol::Displayed);  // Displayed status true/false
+    m_ui->treeKernels->hideColumn(TreeCol::Immutable);  // Immutable status true/false
+    m_ui->treeKernels->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
-    // model->setHorizontalHeaderLabels(QStringList() << "Code"
-    //                                                << "Definition");
+    m_ui->treeKernels->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    // m_ui->list->setModelColumn(3);
-    m_ui->list->setModel(model);
-    // model->columnCount(3);
-
-    // In the real code, data is set in each QStandardItem
-    // model->setColumnCount(3);
-    model->setRowCount(static_cast<std::int32_t>(m_kernels.size()));
-
-    QItemSelectionModel* selection = new QItemSelectionModel(model);
-    m_ui->list->setSelectionModel(selection);
-    m_ui->list->activateWindow();
+    m_ui->treeKernels->blockSignals(true);
 
     // TODO(vnepogodin): parallelize it
     auto a2 = std::async(std::launch::deferred, [&] {
         std::lock_guard<std::mutex> guard(m_mutex);
-        for (size_t i = 0; i < m_kernels.size(); ++i) {
-            auto& kernel = m_kernels[i];
-            auto* item   = new QStandardItem();
-            item->setCheckable(true);
-            item->setEditable(false);
-            item->setText(fmt::format("{} \t{}", kernel.get_raw(), kernel.version()).c_str());
-
-            auto* second = new QStandardItem();
-            second->setCheckable(true);
-            second->setText(kernel.get_raw());
-
+        for (auto& kernel : m_kernels) {
+            auto widget_item = new QTreeWidgetItem(m_ui->treeKernels);
+            widget_item->setCheckState(TreeCol::Check, Qt::Unchecked);
+            widget_item->setText(TreeCol::PkgName, kernel.get_raw());
+            widget_item->setText(TreeCol::Version, kernel.version().c_str());
+            widget_item->setText(TreeCol::Category, kernel.category().data());
+            widget_item->setText(TreeCol::Displayed, QStringLiteral("true"));
             if (kernel.is_installed()) {
-                item->setData(Qt::Checked, Qt::CheckStateRole);
+                widget_item->setText(TreeCol::Immutable, QStringLiteral("true"));
+                widget_item->setCheckState(TreeCol::Check, Qt::Checked);
             }
-
-            model->setItem(static_cast<std::int32_t>(i), item);
         }
     });
 
@@ -547,8 +534,18 @@ MainWindow::MainWindow(QWidget* parent)
     connect(m_worker_th, SIGNAL(finished()), m_worker, SLOT(deleteLater()));
     connect(m_worker_th, SIGNAL(started()), m_worker, SLOT(doHeavyCaclulations()), Qt::QueuedConnection);
 
+    // check/uncheck tree items space-bar press or double-click
+    auto* shortcutToggle = new QShortcut(Qt::Key_Space, this);
+    connect(shortcutToggle, &QShortcut::activated, this, &MainWindow::checkUncheckItem);
+
+    // Connect tree widget
+    connect(m_ui->treeKernels, &QTreeWidget::itemChanged, this, &MainWindow::item_changed);
+    connect(m_ui->treeKernels, &QTreeWidget::itemDoubleClicked, [&](QTreeWidgetItem* item) { m_ui->treeKernels->setCurrentItem(item); });
+    connect(m_ui->treeKernels, &QTreeWidget::itemDoubleClicked, this, &MainWindow::checkUncheckItem);
+
     // Wait for async function to finish
     a2.wait();
+    m_ui->treeKernels->blockSignals(false);
 }
 
 MainWindow::~MainWindow() {
@@ -559,6 +556,45 @@ MainWindow::~MainWindow() {
 
     // Release libalpm handle
     alpm_release(m_handle);
+}
+
+void MainWindow::checkUncheckItem() noexcept {
+    if (auto t_widget = qobject_cast<QTreeWidget*>(focusWidget())) {
+        if (t_widget->currentItem() == nullptr || t_widget->currentItem()->childCount() > 0)
+            return;
+        const int col  = static_cast<int>(TreeCol::Check);
+        auto new_state = (t_widget->currentItem()->checkState(col)) ? Qt::Unchecked : Qt::Checked;
+        t_widget->currentItem()->setCheckState(col, new_state);
+    }
+}
+
+// When selecting on item in the list
+void MainWindow::item_changed(QTreeWidgetItem* item, int) noexcept {
+    if (item->checkState(TreeCol::Check) == Qt::Checked)
+        m_ui->treeKernels->setCurrentItem(item);
+    buildChangeList(item);
+}
+
+// Build the change_list when selecting on item in the tree
+void MainWindow::buildChangeList(QTreeWidgetItem* item) noexcept {
+    auto item_text = item->text(TreeCol::PkgName);
+    auto immutable = item->text(TreeCol::Immutable);
+    if (immutable == "true" && item->checkState(0) == Qt::Unchecked) {
+        m_ui->ok->setEnabled(true);
+        m_change_list.append(item_text);
+        return;
+    }
+
+    if (item->checkState(0) == Qt::Checked) {
+        m_ui->ok->setEnabled(true);
+        m_change_list.append(item_text);
+    } else {
+        m_change_list.removeOne(item_text);
+    }
+
+    if (m_change_list.isEmpty()) {
+        m_ui->ok->setEnabled(false);
+    }
 }
 
 void MainWindow::closeEvent(QCloseEvent* event) {

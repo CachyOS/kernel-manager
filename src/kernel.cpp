@@ -240,7 +240,7 @@ std::vector<Kernel> Kernel::get_kernels(alpm_handle_t* handle) noexcept {
 
 #ifdef PKG_DUMMY_IMPL
 
-// Runs a command in a terminal, escalate's using pkexec if escalate is true
+// Runs a command in a terminal, escalates using pkexec if escalate is true
 int runCmdTerminal(QString cmd, bool escalate) {
     QProcess proc;
     cmd += "; read -p 'Press enter to exit'";

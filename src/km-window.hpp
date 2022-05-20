@@ -69,6 +69,15 @@ class Work final : public QObject {
     function_t m_func;
 };
 
+namespace TreeCol {
+enum { Check,
+    PkgName,
+    Version,
+    Category,
+    Displayed,
+    Immutable };
+}
+
 class MainWindow final : public QMainWindow {
     Q_OBJECT
     Q_DISABLE_COPY_MOVE(MainWindow)
@@ -80,6 +89,10 @@ class MainWindow final : public QMainWindow {
     void on_cancel() noexcept;
     void on_execute() noexcept;
 
+    void checkUncheckItem() noexcept;
+
+    void item_changed(QTreeWidgetItem* item, int column) noexcept;
+
  protected:
     void closeEvent(QCloseEvent* event) override;
 
@@ -90,6 +103,8 @@ class MainWindow final : public QMainWindow {
     QString m_last_text{};
     std::mutex m_mutex{};
 
+    QStringList m_change_list{};
+
     QThread* m_worker_th = new QThread(this);
     Work* m_worker{nullptr};
 
@@ -98,6 +113,7 @@ class MainWindow final : public QMainWindow {
     std::vector<Kernel> m_kernels        = Kernel::get_kernels(m_handle);
     std::unique_ptr<Ui::MainWindow> m_ui = std::make_unique<Ui::MainWindow>();
 
+    void buildChangeList(QTreeWidgetItem* item) noexcept;
 #ifndef PKG_DUMMY_IMPL
     void paintLoop() noexcept;
 #endif

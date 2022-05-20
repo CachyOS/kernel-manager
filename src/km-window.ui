@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow" native="true">
+ <widget class="QMainWindow" name="MainWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -14,12 +14,13 @@
    <string>CachyOS Kernel Manager</string>
   </property>
   <property name="windowIcon">
-   <iconset theme="cachyos-kernel-manager"/>
+   <iconset theme="cachyos-kernel-manager">
+    <normaloff>.</normaloff>.</iconset>
   </property>
-  <widget class="QWidget" name="centralwidget" native="true">
+  <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QLabel" name="label" native="true">
+     <widget class="QLabel" name="label">
       <property name="text">
        <string>&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -39,51 +40,63 @@ p, li { white-space: pre-wrap; }
      </widget>
     </item>
     <item>
-     <widget class="QLabel" name="label_2" native="true">
+     <widget class="QLabel" name="label_2">
       <property name="text">
        <string>&lt;code&gt;Choose&lt;/code&gt;</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QListView" name="list" native="true">
+     <spacer name="horizontalSpacer_3">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <widget class="QTreeWidget" name="treeKernels">
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
-      <property name="lineWidth">
-       <number>2</number>
-      </property>
-      <property name="editTriggers">
-       <set>QAbstractItemView::NoEditTriggers</set>
-      </property>
       <property name="tabKeyNavigation">
-       <bool>false</bool>
-      </property>
-      <property name="showDropIndicator" stdset="0">
        <bool>true</bool>
       </property>
       <property name="selectionMode">
-       <enum>QAbstractItemView::NoSelection</enum>
+       <enum>QAbstractItemView::SingleSelection</enum>
       </property>
-      <property name="textElideMode">
-       <enum>Qt::ElideNone</enum>
-      </property>
-      <property name="verticalScrollMode">
-       <enum>QAbstractItemView::ScrollPerPixel</enum>
-      </property>
-      <property name="horizontalScrollMode">
-       <enum>QAbstractItemView::ScrollPerPixel</enum>
-      </property>
-      <property name="uniformItemSizes">
-       <bool>true</bool>
-      </property>
+      <column>
+       <property name="text">
+        <string>Choose</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>PkgName</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Version</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Category</string>
+       </property>
+      </column>
      </widget>
     </item>
     <item>
      <widget class="QWidget" name="widget" native="true">
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="QProgressBar" name="progressBar" native="true">
+        <widget class="QProgressBar" name="progressBar">
          <property name="enabled">
           <bool>true</bool>
          </property>
@@ -96,7 +109,7 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="progress_status" native="true">
+        <widget class="QLabel" name="progress_status">
          <property name="text">
           <string>nothing here..                                                                                      </string>
          </property>
@@ -132,14 +145,14 @@ p, li { white-space: pre-wrap; }
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="cancel" native="true">
+        <widget class="QPushButton" name="cancel">
          <property name="text">
           <string>Cancel</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="ok" native="true">
+        <widget class="QPushButton" name="ok">
          <property name="text">
           <string>Execute</string>
          </property>
