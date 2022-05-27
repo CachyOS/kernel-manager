@@ -33,6 +33,7 @@
 #endif
 
 #include <ui_km-window.h>
+#include <conf-window.hpp>
 
 #include "kernel.hpp"
 
@@ -88,6 +89,7 @@ class MainWindow final : public QMainWindow {
  private slots:
     void on_cancel() noexcept;
     void on_execute() noexcept;
+    void on_configure() noexcept;
 
     void checkUncheckItem() noexcept;
 
@@ -109,9 +111,10 @@ class MainWindow final : public QMainWindow {
     Work* m_worker{nullptr};
 
     alpm_errno_t m_err{};
-    alpm_handle_t* m_handle              = alpm_initialize("/", "/var/lib/pacman/", &m_err);
-    std::vector<Kernel> m_kernels        = Kernel::get_kernels(m_handle);
-    std::unique_ptr<Ui::MainWindow> m_ui = std::make_unique<Ui::MainWindow>();
+    alpm_handle_t* m_handle                  = alpm_initialize("/", "/var/lib/pacman/", &m_err);
+    std::vector<Kernel> m_kernels            = Kernel::get_kernels(m_handle);
+    std::unique_ptr<Ui::MainWindow> m_ui     = std::make_unique<Ui::MainWindow>();
+    std::unique_ptr<ConfWindow> m_confwindow = std::make_unique<ConfWindow>();
 
     void buildChangeList(QTreeWidgetItem* item) noexcept;
 #ifndef PKG_DUMMY_IMPL

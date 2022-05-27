@@ -17,6 +17,7 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "km-window.hpp"
+#include "conf-window.hpp"
 #include "kernel.hpp"
 #include "utils.hpp"
 
@@ -529,6 +530,7 @@ MainWindow::MainWindow(QWidget* parent)
     // Connect buttons signal
     connect(m_ui->cancel, SIGNAL(clicked()), this, SLOT(on_cancel()));
     connect(m_ui->ok, SIGNAL(clicked()), this, SLOT(on_execute()));
+    connect(m_ui->configure, SIGNAL(clicked()), this, SLOT(on_configure()));
 
     // Connect worker thread signals
     connect(m_worker_th, SIGNAL(finished()), m_worker, SLOT(deleteLater()));
@@ -612,6 +614,10 @@ void MainWindow::paintLoop() noexcept {
     m_ui->progress_status->setText(m_last_text);
 }
 #endif
+
+void MainWindow::on_configure() noexcept {
+    m_confwindow->show();
+}
 
 void MainWindow::on_cancel() noexcept {
     close();

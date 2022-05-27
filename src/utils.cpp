@@ -38,6 +38,24 @@
 namespace ranges = std::ranges;
 #endif
 
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wsign-conversion"
+#elif defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wuseless-cast"
+#pragma GCC diagnostic ignored "-Wsign-conversion"
+#pragma GCC diagnostic ignored "-Wsuggest-attribute=pure"
+#endif
+
+#include <QProcess>
+
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#elif defined(__GNUC__)
+#pragma GCC diagnostic pop
+#endif
+
 namespace utils {
 
 bool check_root() noexcept {
@@ -85,6 +103,21 @@ auto make_multiline(const std::vector<std::string_view>& multiline, bool reverse
     }
 
     return res;
+}
+
+int runCmdTerminal(QString cmd, bool escalate) noexcept {
+    QProcess proc;
+    cmd += "; read -p 'Press enter to exit'";
+    auto paramlist = QStringList();
+    if (escalate) {
+        paramlist << "-s"
+                  << "pkexec /usr/lib/cachyos-kernel-manager/rootshell.sh";
+    }
+    paramlist << cmd;
+
+    proc.start("/usr/lib/cachyos-kernel-manager/terminal-helper", paramlist);
+    proc.waitForFinished(-1);
+    return proc.exitCode();
 }
 
 }  // namespace utils

@@ -25,24 +25,6 @@
 #include <fmt/compile.h>
 #include <fmt/core.h>
 
-#if defined(__clang__)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wsign-conversion"
-#elif defined(__GNUC__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wuseless-cast"
-#pragma GCC diagnostic ignored "-Wsign-conversion"
-#pragma GCC diagnostic ignored "-Wsuggest-attribute=pure"
-#endif
-
-#include <QProcess>
-
-#if defined(__clang__)
-#pragma clang diagnostic pop
-#elif defined(__GNUC__)
-#pragma GCC diagnostic pop
-#endif
-
 namespace {
 
 #ifdef PKG_DUMMY_IMPL
@@ -252,32 +234,16 @@ std::vector<Kernel> Kernel::get_kernels(alpm_handle_t* handle) noexcept {
 
 #ifdef PKG_DUMMY_IMPL
 
-// Runs a command in a terminal, escalates using pkexec if escalate is true
-int runCmdTerminal(QString cmd, bool escalate) {
-    QProcess proc;
-    cmd += "; read -p 'Press enter to exit'";
-    auto paramlist = QStringList();
-    if (escalate) {
-        paramlist << "-s"
-                  << "pkexec /usr/lib/cachyos-kernel-manager/rootshell.sh";
-    }
-    paramlist << cmd;
-
-    proc.start("/usr/lib/cachyos-kernel-manager/terminal-helper", paramlist);
-    proc.waitForFinished(-1);
-    return proc.exitCode();
-}
-
 void Kernel::commit_transaction() noexcept {
     if (!g_kernel_install_list.empty()) {
         const auto& packages_install = utils::make_multiline(g_kernel_install_list, false, " ");
-        runCmdTerminal(fmt::format(FMT_COMPILE("pacman -S --needed {}"), packages_install).c_str(), true);
+        utils::runCmdTerminal(fmt::format(FMT_COMPILE("pacman -S --needed {}"), packages_install).c_str(), true);
         g_kernel_install_list.clear();
     }
 
     if (!g_kernel_removal_list.empty()) {
         const auto& packages_remove = utils::make_multiline(g_kernel_removal_list, false, " ");
-        runCmdTerminal(fmt::format(FMT_COMPILE("pacman -Rsn {}"), packages_remove).c_str(), true);
+        utils::runCmdTerminal(fmt::format(FMT_COMPILE("pacman -Rsn {}"), packages_remove).c_str(), true);
         g_kernel_removal_list.clear();
     }
 }

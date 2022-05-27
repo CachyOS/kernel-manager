@@ -31,6 +31,11 @@ pkg_check_modules(
   REQUIRED
   IMPORTED_TARGET
   libalpm>=13.0.0)
+pkg_check_modules(
+  LIBGLIBMM
+  REQUIRED
+  IMPORTED_TARGET
+  glibmm-2.4>=2.66.4)
 
 CPMAddPackage(
   NAME fmt
@@ -75,7 +80,8 @@ add_executable(${PROJECT_NAME}
     src/utils.hpp src/utils.cpp
     src/kernel.hpp src/kernel.cpp
     src/km-window.hpp src/km-window.cpp
-    src/km-window.ui
+    src/conf-window.hpp src/conf-window.cpp
+    src/km-window.ui src/conf-window.ui
     src/main.cpp
     )
 
@@ -91,7 +97,7 @@ enable_sanitizers(project_options)
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE project_warnings project_options Qt5::Widgets Threads::Threads fmt::fmt PkgConfig::LIBALPM)
+target_link_libraries(${PROJECT_NAME} PRIVATE project_warnings project_options Qt5::Widgets Threads::Threads fmt::fmt PkgConfig::LIBALPM PkgConfig::LIBGLIBMM)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
    target_link_libraries(${PROJECT_NAME} PRIVATE range-v3::range-v3)
