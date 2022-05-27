@@ -20,6 +20,8 @@
 #include "ini.hpp"
 #include "utils.hpp"
 
+#include <sys/utsname.h>
+
 #include <fmt/compile.h>
 #include <fmt/core.h>
 
@@ -101,6 +103,16 @@ void parse_repos(alpm_handle_t* handle) noexcept {
                 // add CacheDir
                 const auto& archs = utils::make_multiline(it_nested.second, false, " ");
                 for (const auto& arch : archs) {
+                    if (arch == "auto") {
+                        struct utsname un;
+                        uname(&un);
+                        char* tmp = un.machine;
+                        if (tmp != nullptr) {
+                            alpm_option_add_architecture(handle, tmp);
+                        }
+                        continue;
+                    }
+
                     alpm_option_add_architecture(handle, arch.c_str());
                 }
             }
