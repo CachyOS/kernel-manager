@@ -279,7 +279,11 @@ void ConfWindow::on_execute() noexcept {
     // Execute 'sed' with combobox values
     execute_sed("HZ_ticks", get_hz_tick(static_cast<size_t>(m_ui->hztickscomboBox->currentIndex())));
     execute_sed("tickrate", get_tickless_mode(static_cast<size_t>(m_ui->ticklesscomboBox->currentIndex())));
-    execute_sed("lto", get_lto_mode(static_cast<size_t>(m_ui->ltocomboBox->currentIndex())));
+
+    const std::string_view lto_mode = get_lto_mode(static_cast<size_t>(m_ui->ltocomboBox->currentIndex()));
+    if (lto_mode != "no") {
+        execute_sed("lto", lto_mode);
+    }
 
     // Run our build command!
     run_cmd_async("makepkg -sicf --cleanbuild", &m_running);
