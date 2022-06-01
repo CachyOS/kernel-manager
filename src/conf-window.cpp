@@ -131,6 +131,7 @@ void prepare_build_environment() noexcept {
 
     fs::current_path(app_path / "pkgbuilds");
     system("git checkout --force master");
+    system("git clean -fd");
     system("git pull");
 }
 
