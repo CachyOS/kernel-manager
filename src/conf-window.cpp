@@ -22,7 +22,22 @@
 #include <filesystem>
 #include <unordered_map>
 
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wold-style-cast"
+#elif defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wuseless-cast"
+#pragma GCC diagnostic ignored "-Wold-style-cast"
+#endif
+
 #include <glib.h>
+
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#elif defined(__GNUC__)
+#pragma GCC diagnostic pop
+#endif
 
 #include <fmt/core.h>
 #include <fmt/compile.h>
@@ -174,7 +189,7 @@ void run_cmd_async(std::string&& cmd, bool* data) {
         nullptr, &child_pid, nullptr, &child_stdout,
         &child_stderr, &error);
     if (error != nullptr) {
-        g_critical("Spawning child failed: %s", error->message);
+        fmt::print(stderr, "Spawning child failed: {}", error->message);
         return;
     }
     // Add a child watch function which will be called when the child process

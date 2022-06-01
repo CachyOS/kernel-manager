@@ -43,13 +43,14 @@ qt5_dep = dependency('qt5', modules: ['Widgets'])
 # Common dependencies
 fmt = dependency('fmt', version : ['>=8.0.0'], fallback : ['fmt', 'fmt_dep'])
 libalpm = dependency('libalpm', version : ['>=13.0.0'])
+glib = dependency('glib-2.0', version : ['>=2.72.1'])
 
 src_files = files(
     'src/ini.hpp',
     'src/utils.hpp', 'src/utils.cpp',
     'src/kernel.hpp', 'src/kernel.cpp',
     'src/km-window.hpp', 'src/km-window.cpp',
-    #src/km-window.ui
+    'src/conf-window.hpp', 'src/conf-window.cpp',
     'src/main.cpp',
 )
 
@@ -80,7 +81,7 @@ if cc.get_id() == 'gcc'
         '-Wduplicated-cond',
         '-Wduplicated-branches',
         '-Wlogical-op',
-        #'-Wuseless-cast',
+        '-Wuseless-cast',
 
         '-Wsuggest-attribute=cold',
         '-Wsuggest-attribute=format',
@@ -116,17 +117,17 @@ endif
 
 add_project_arguments(cc.get_supported_arguments(possible_cc_flags), language : 'cpp')
 
-deps = [qt5_dep, fmt, libalpm]
+deps = [qt5_dep, fmt, libalpm, glib]
 if cc.get_id() == 'clang'
   ranges = dependency('range-v3', version : ['>=0.11.0'])
   deps += [ranges]
 endif
 
 prep = qt5.preprocess(
-  moc_headers : ['src/km-window.hpp'] # These need to be fed through the moc tool before use.
+  moc_headers : ['src/km-window.hpp', 'src/conf-window.hpp'] # These need to be fed through the moc tool before use.
 )
 # XML files that need to be compiled with the uic tol.
-prep += qt5.compile_ui(sources : 'src/km-window.ui')
+prep += qt5.compile_ui(sources : ['src/km-window.ui', 'src/conf-window.ui'])
 
 src_files += [prep]
 executable(

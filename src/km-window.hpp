@@ -27,9 +27,11 @@
 #pragma clang diagnostic ignored "-Wdeprecated-enum-enum-conversion"
 #elif defined(__GNUC__)
 #pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wuseless-cast"
 #pragma GCC diagnostic ignored "-Wsign-conversion"
 #pragma GCC diagnostic ignored "-Wconversion"
 #pragma GCC diagnostic ignored "-Wdeprecated-enum-enum-conversion"
+#pragma GCC diagnostic ignored "-Wsuggest-attribute=pure"
 #endif
 
 #include <ui_km-window.h>
