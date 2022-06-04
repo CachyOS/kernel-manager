@@ -19,6 +19,9 @@
 #include "conf-window.hpp"
 #include "utils.hpp"
 
+#include <cstdio>
+#include <cstdlib>
+
 #include <filesystem>
 #include <unordered_map>
 
@@ -86,22 +89,22 @@ static const std::unordered_map<std::string_view, std::string_view> option_map =
     {"nf_cone", "_nf_cone"},
     {"lto", "_use_llvm_lto"}};
 
-constexpr const char* get_kernel_name(size_t index) noexcept {
+[[gnu::pure]] constexpr const char* get_kernel_name(size_t index) noexcept {
     constexpr std::array kernel_names = {"bmq", "bore", "cacule", "cfs", "pds", "rc", "tt"};
     return kernel_names[index];
 }
 
-constexpr const char* get_hz_tick(size_t index) noexcept {
+[[gnu::pure]] constexpr const char* get_hz_tick(size_t index) noexcept {
     constexpr std::array hz_ticks = {"1000", "750", "600", "500"};
     return hz_ticks[index];
 }
 
-constexpr const char* get_tickless_mode(size_t index) noexcept {
+[[gnu::pure]] constexpr const char* get_tickless_mode(size_t index) noexcept {
     constexpr std::array tickless_modes = {"full", "idle", "perodic"};
     return tickless_modes[index];
 }
 
-constexpr const char* get_lto_mode(size_t index) noexcept {
+[[gnu::pure]] constexpr const char* get_lto_mode(size_t index) noexcept {
     constexpr std::array lto_modes = {"no", "full", "thin"};
     return lto_modes[index];
 }
@@ -140,19 +143,25 @@ void prepare_build_environment() noexcept {
 
     fs::current_path(app_path);
 
+    std::int32_t cmd_status{};
     if (!fs::exists(pkgbuilds_path)) {
-        system("git clone https://github.com/cachyos/linux-cachyos.git pkgbuilds");
+        cmd_status = std::system("git clone https://github.com/cachyos/linux-cachyos.git pkgbuilds");
     }
 
     fs::current_path(app_path / "pkgbuilds");
-    system("git checkout --force master");
-    system("git clean -fd");
-    system("git pull");
+    cmd_status += std::system("git checkout --force master");
+    cmd_status += std::system("git clean -fd");
+    cmd_status += std::system("git pull");
+    if (cmd_status != 0) {
+        std::perror("prepare_build_environment");
+    }
 }
 
 void execute_sed(std::string_view option, std::string_view value) noexcept {
     const auto& sed_cmd = fmt::format(FMT_COMPILE("sed -i \"s/{}/{}={}/\" PKGBUILD"), default_option_map.at(option), option_map.at(option), value);
-    system(sed_cmd.c_str());
+    if (std::system(sed_cmd.c_str()) != 0) {
+        std::perror("execute_sed");
+    }
 }
 
 const char* convert_checkstate(QCheckBox* checkbox) noexcept {

@@ -28,8 +28,7 @@
        <item>
         <widget class="QLabel" name="label">
          <property name="text">
-          <string>NUMA is optimized for multi-socket motherboards.
-A single multi-core CPU actually runs slower with NUMA enabled.</string>
+          <string>Disable NUMA</string>
          </property>
         </widget>
        </item>
