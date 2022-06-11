@@ -50,8 +50,9 @@
 namespace fs = std::filesystem;
 
 static const std::unordered_map<std::string_view, std::string_view> default_option_map = {
+    {"nconfig", "_makenconfig="},
     {"numa", "_NUMAdisable=y"},
-    {"hardly", "_cc_harder=y"},
+    {"hardly", "_cc_harder="},
     {"per_gov", "_per_gov=y"},
     {"tcp_bbr2", "_tcp_bbr2=y"},
     {"HZ_ticks", "_HZ_ticks=750"},
@@ -59,7 +60,7 @@ static const std::unordered_map<std::string_view, std::string_view> default_opti
     {"mqdeadline", "_mq_deadline_disable=y"},
     {"kyber", "_kyber_disable=y"},
     {"lru", "_lru_enable=y"},
-    {"damon", "_damon=y"},
+    {"damon", "_damon="},
     {"spf", "_spf_enable=y"},
     {"lrng", "_lrng_enable=y"},
     {"cpu_opt", "_processor_opt="},
@@ -71,6 +72,7 @@ static const std::unordered_map<std::string_view, std::string_view> default_opti
     {"builtin_zfs", "_build_zfs="}};
 
 static const std::unordered_map<std::string_view, std::string_view> option_map = {
+    {"nconfig", "_makenconfig"},
     {"numa", "_NUMAdisable"},
     {"hardly", "_cc_harder"},
     {"per_gov", "_per_gov"},
@@ -237,7 +239,6 @@ ConfWindow::ConfWindow(QWidget* parent)
 
     // Setting default options
     m_ui->numacheck->setCheckState(Qt::Checked);
-    m_ui->hardlycheck->setCheckState(Qt::Checked);
     m_ui->perfgoverncheck->setCheckState(Qt::Checked);
     m_ui->tcpbbrcheck->setCheckState(Qt::Checked);
 
@@ -258,7 +259,6 @@ ConfWindow::ConfWindow(QWidget* parent)
     m_ui->mqdiocheck->setCheckState(Qt::Checked);
     m_ui->kybercheck->setCheckState(Qt::Checked);
     m_ui->lrucheck->setCheckState(Qt::Checked);
-    m_ui->damoncheck->setCheckState(Qt::Checked);
     m_ui->spfcheck->setCheckState(Qt::Checked);
     m_ui->lrngcheck->setCheckState(Qt::Checked);
 
@@ -307,20 +307,37 @@ void ConfWindow::on_execute() noexcept {
 
     // Execute 'sed' with checkboxes values
     execute_sed("numa", convert_checkstate(m_ui->numacheck));
-    execute_sed("hardly", convert_checkstate(m_ui->hardlycheck));
     execute_sed("per_gov", convert_checkstate(m_ui->perfgoverncheck));
     execute_sed("tcp_bbr2", convert_checkstate(m_ui->tcpbbrcheck));
     execute_sed("mqdeadline", convert_checkstate(m_ui->mqdiocheck));
     execute_sed("kyber", convert_checkstate(m_ui->kybercheck));
     execute_sed("lru", convert_checkstate(m_ui->lrucheck));
-    execute_sed("damon", convert_checkstate(m_ui->damoncheck));
     execute_sed("spf", convert_checkstate(m_ui->spfcheck));
     execute_sed("lrng", convert_checkstate(m_ui->lrngcheck));
     execute_sed("auto_optim", convert_checkstate(m_ui->autooptimcheck));
     execute_sed("debug", convert_checkstate(m_ui->debugcheck));
     execute_sed("zstd_comp", convert_checkstate(m_ui->zstcompcheck));
     execute_sed("nf_cone", convert_checkstate(m_ui->nfconecheck));
-    execute_sed("builtin_zfs", convert_checkstate(m_ui->builtin_zfscheck));
+
+    const auto& is_nconfig_enabled = (m_ui->nconfigcheck->checkState() == Qt::Checked);
+    const auto& is_hardly_enabled = (m_ui->hardlycheck->checkState() == Qt::Checked);
+    const auto& is_damon_enabled = (m_ui->damoncheck->checkState() == Qt::Checked);
+    const auto& is_builtin_zfs_enabled = (m_ui->builtin_zfscheck->checkState() == Qt::Checked);
+    if (is_nconfig_enabled) {
+        execute_sed("nconfig", "y");
+    }
+    if (is_builtin_zfs_enabled) {
+        execute_sed("builtin_zfs", "y");
+    }
+    if (is_hardly_enabled) {
+        execute_sed("hardly", "y");
+    }
+    if (is_damon_enabled) {
+        execute_sed("damon", "y");
+    }
+    if (is_builtin_zfs_enabled) {
+        execute_sed("builtin_zfs", "y");
+    }
 
     // Execute 'sed' with combobox values
     execute_sed("HZ_ticks", get_hz_tick(static_cast<size_t>(m_ui->hztickscomboBox->currentIndex())));
