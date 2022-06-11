@@ -405,7 +405,7 @@
        <item>
         <widget class="QLabel" name="label5">
          <property name="text">
-          <string>Apply Kernel automatic Optimization</string>
+          <string>Apply automatic CPU Optimization</string>
          </property>
         </widget>
        </item>

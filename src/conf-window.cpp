@@ -92,7 +92,7 @@ static const std::unordered_map<std::string_view, std::string_view> option_map =
     {"builtin_zfs", "_build_zfs"}};
 
 [[gnu::pure]] constexpr const char* get_kernel_name(size_t index) noexcept {
-    constexpr std::array kernel_names{"bmq", "bore", "cacule", "cfs", "pds", "rc", "tt"};
+    constexpr std::array kernel_names{"bmq", "bore", "cacule", "cfs", "hardened", "pds", "rc", "tt"};
     return kernel_names[index];
 }
 
@@ -125,6 +125,8 @@ constexpr std::string_view get_kernel_name_path(std::string_view kernel_name) no
         return "linux-cachyos-cacule";
     } else if (kernel_name == "cfs") {
         return "linux-cachyos-cfs";
+    } else if (kernel_name == "hardened") {
+        return "linux-cachyos-hardened";
     } else if (kernel_name == "pds") {
         return "linux-cachyos-pds";
     } else if (kernel_name == "rc") {
@@ -226,6 +228,7 @@ ConfWindow::ConfWindow(QWidget* parent)
                  << "Bore - Burst-Oriented Response Enhancer"
                  << "Cacule - CacULE scheduler"
                  << "CFS - Completely Fair Scheduler"
+                 << "Hardened - Hardened kernel with the BORE Scheduler"
                  << "PDS - Priority and Deadline based Skip list multiple queue CPU scheduler"
                  << "RC - Release Candidate"
                  << "TT - Task Type Scheduler";
@@ -260,7 +263,7 @@ ConfWindow::ConfWindow(QWidget* parent)
     m_ui->lrngcheck->setCheckState(Qt::Checked);
 
     QStringList cpu_optims;
-    cpu_optims << "Manual"
+    cpu_optims << "Disabled"
                << "Generic"
                << "Native AMD"
                << "Native Intel"
