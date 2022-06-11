@@ -62,12 +62,13 @@ static const std::unordered_map<std::string_view, std::string_view> default_opti
     {"damon", "_damon=y"},
     {"spf", "_spf_enable=y"},
     {"lrng", "_lrng_enable=y"},
-    {"auto_optim", "_use_auto_optimization="},
-    {"auto_select", "_use_optimization_select=y"},
+    {"cpu_opt", "_processor_opt="},
+    {"auto_optim", "_use_auto_optimization=y"},
     {"debug", "_disable_debug=y"},
     {"zstd_comp", "_zstd_compression=y"},
     {"nf_cone", "_nf_cone=y"},
-    {"lto", "_use_llvm_lto="}};
+    {"lto", "_use_llvm_lto="},
+    {"builtin_zfs", "_build_zfs="}};
 
 static const std::unordered_map<std::string_view, std::string_view> option_map = {
     {"numa", "_NUMAdisable"},
@@ -82,31 +83,37 @@ static const std::unordered_map<std::string_view, std::string_view> option_map =
     {"damon", "_damon"},
     {"spf", "_spf_enable"},
     {"lrng", "_lrng_enable"},
+    {"cpu_opt", "_processor_opt"},
     {"auto_optim", "_use_auto_optimization"},
-    {"auto_select", "_use_optimization_select"},
     {"debug", "_disable_debug"},
     {"zstd_comp", "_zstd_compression"},
     {"nf_cone", "_nf_cone"},
-    {"lto", "_use_llvm_lto"}};
+    {"lto", "_use_llvm_lto"},
+    {"builtin_zfs", "_build_zfs"}};
 
 [[gnu::pure]] constexpr const char* get_kernel_name(size_t index) noexcept {
-    constexpr std::array kernel_names = {"bmq", "bore", "cacule", "cfs", "pds", "rc", "tt"};
+    constexpr std::array kernel_names{"bmq", "bore", "cacule", "cfs", "pds", "rc", "tt"};
     return kernel_names[index];
 }
 
 [[gnu::pure]] constexpr const char* get_hz_tick(size_t index) noexcept {
-    constexpr std::array hz_ticks = {"1000", "750", "600", "500"};
+    constexpr std::array hz_ticks{"1000", "750", "600", "500"};
     return hz_ticks[index];
 }
 
 [[gnu::pure]] constexpr const char* get_tickless_mode(size_t index) noexcept {
-    constexpr std::array tickless_modes = {"full", "idle", "perodic"};
+    constexpr std::array tickless_modes{"full", "idle", "perodic"};
     return tickless_modes[index];
 }
 
 [[gnu::pure]] constexpr const char* get_lto_mode(size_t index) noexcept {
-    constexpr std::array lto_modes = {"no", "full", "thin"};
+    constexpr std::array lto_modes{"no", "full", "thin"};
     return lto_modes[index];
+}
+
+[[gnu::pure]] constexpr const char* get_cpu_opt_mode(size_t index) noexcept {
+    constexpr std::array cpu_opt_modes{"manual", "generic", "native_amd", "native_intel", "zen", "zen2", "zen3", "sandybridge", "ivybridge", "haswell", "icelake", "tigerlake", "alderlake"};
+    return cpu_opt_modes[index];
 }
 
 constexpr std::string_view get_kernel_name_path(std::string_view kernel_name) noexcept {
@@ -251,7 +258,18 @@ ConfWindow::ConfWindow(QWidget* parent)
     m_ui->damoncheck->setCheckState(Qt::Checked);
     m_ui->spfcheck->setCheckState(Qt::Checked);
     m_ui->lrngcheck->setCheckState(Qt::Checked);
-    m_ui->selectoptimcheck->setCheckState(Qt::Checked);
+
+    QStringList cpu_optims;
+    cpu_optims << "Manual"
+               << "Generic"
+               << "Native AMD"
+               << "Native Intel"
+               << "Zen" << "Zen2" << "Zen3"
+               << "Sandy Bridge" << "Ivy Bridge" << "Haswell"
+               << "Icelake" << "Tiger Lake" << "Alder Lake";
+    m_ui->processor_optcomboBox->addItems(cpu_optims);
+
+    m_ui->autooptimcheck->setCheckState(Qt::Checked);
     m_ui->debugcheck->setCheckState(Qt::Checked);
     m_ui->zstcompcheck->setCheckState(Qt::Checked);
     m_ui->nfconecheck->setCheckState(Qt::Checked);
@@ -296,10 +314,10 @@ void ConfWindow::on_execute() noexcept {
     execute_sed("spf", convert_checkstate(m_ui->spfcheck));
     execute_sed("lrng", convert_checkstate(m_ui->lrngcheck));
     execute_sed("auto_optim", convert_checkstate(m_ui->autooptimcheck));
-    execute_sed("auto_select", convert_checkstate(m_ui->selectoptimcheck));
     execute_sed("debug", convert_checkstate(m_ui->debugcheck));
     execute_sed("zstd_comp", convert_checkstate(m_ui->zstcompcheck));
     execute_sed("nf_cone", convert_checkstate(m_ui->nfconecheck));
+    execute_sed("builtin_zfs", convert_checkstate(m_ui->builtin_zfscheck));
 
     // Execute 'sed' with combobox values
     execute_sed("HZ_ticks", get_hz_tick(static_cast<size_t>(m_ui->hztickscomboBox->currentIndex())));
@@ -308,6 +326,11 @@ void ConfWindow::on_execute() noexcept {
     const std::string_view lto_mode = get_lto_mode(static_cast<size_t>(m_ui->ltocomboBox->currentIndex()));
     if (lto_mode != "no") {
         execute_sed("lto", lto_mode);
+    }
+
+    const std::string_view cpu_opt_mode = get_cpu_opt_mode(static_cast<size_t>(m_ui->processor_optcomboBox->currentIndex()));
+    if (cpu_opt_mode != "manual") {
+        execute_sed("cpu_opt", cpu_opt_mode);
     }
 
     // Run our build command!

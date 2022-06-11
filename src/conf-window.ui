@@ -371,6 +371,35 @@
      </widget>
     </item>
     <item>
+     <widget class="QWidget" name="processor_optwidget" native="true">
+      <layout class="QHBoxLayout" name="horizontalLayout19">
+       <item>
+        <widget class="QLabel" name="label18">
+         <property name="text">
+          <string>CPU compiler optimizations</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer19">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QComboBox" name="processor_optcomboBox"/>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
      <widget class="QWidget" name="autooptimwidget" native="true">
       <layout class="QHBoxLayout" name="horizontalLayout6">
        <item>
@@ -395,35 +424,6 @@
        </item>
        <item>
         <widget class="QCheckBox" name="autooptimcheck"/>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item>
-     <widget class="QWidget" name="selectoptimwidget" native="true">
-      <layout class="QHBoxLayout" name="horizontalLayout18">
-       <item>
-        <widget class="QLabel" name="label17">
-         <property name="text">
-          <string>Apply Kernel Optimization selecting</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer18">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="selectoptimcheck"/>
        </item>
       </layout>
      </widget>
@@ -540,6 +540,35 @@
        </item>
        <item>
         <widget class="QComboBox" name="ltocomboBox"/>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QWidget" name="builtin_zfswidget" native="true">
+      <layout class="QHBoxLayout" name="horizontalLayout18">
+       <item>
+        <widget class="QLabel" name="label17">
+         <property name="text">
+          <string>Build the ZFS module</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer18">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="builtin_zfscheck"/>
        </item>
       </layout>
      </widget>
