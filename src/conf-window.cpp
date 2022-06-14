@@ -354,5 +354,5 @@ void ConfWindow::on_execute() noexcept {
     }
 
     // Run our build command!
-    run_cmd_async("makepkg -sicf --cleanbuild", &m_running);
+    run_cmd_async("makepkg -sicf --cleanbuild --skipchecksums", &m_running);
 }
