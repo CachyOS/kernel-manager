@@ -38,6 +38,7 @@
 #include <memory>
 
 #include <QMainWindow>
+#include <QPointer>
 
 #if defined(__clang__)
 #pragma clang diagnostic pop
@@ -61,6 +62,7 @@ class ConfWindow final : public QMainWindow {
 
  private:
     bool m_running{};
+    QPointer<QWidget> m_parent;
     std::unique_ptr<Ui::ConfWindow> m_ui = std::make_unique<Ui::ConfWindow>();
 };
 

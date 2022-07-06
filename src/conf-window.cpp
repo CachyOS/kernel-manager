@@ -218,7 +218,9 @@ void run_cmd_async(std::string&& cmd, bool* data) {
 }
 
 ConfWindow::ConfWindow(QWidget* parent)
-  : QMainWindow(parent) {
+  : QMainWindow(parent),
+    m_parent{parent}
+{
     m_ui->setupUi(this);
 
     setAttribute(Qt::WA_NativeWindow);
@@ -234,33 +236,33 @@ ConfWindow::ConfWindow(QWidget* parent)
                  << "PDS - Priority and Deadline based Skip list multiple queue CPU scheduler"
                  << "RC - Release Candidate"
                  << "TT - Task Type Scheduler";
-    m_ui->comboBox->addItems(kernel_names);
-    m_ui->comboBox->setCurrentIndex(1);
+    m_ui->main_combo_box->addItems(kernel_names);
+    m_ui->main_combo_box->setCurrentIndex(1);
 
     // Setting default options
-    m_ui->numacheck->setCheckState(Qt::Checked);
-    m_ui->perfgoverncheck->setCheckState(Qt::Checked);
-    m_ui->tcpbbrcheck->setCheckState(Qt::Checked);
+    m_ui->numa_check->setCheckState(Qt::Checked);
+    m_ui->perfgovern_check->setCheckState(Qt::Checked);
+    m_ui->tcpbbr_check->setCheckState(Qt::Checked);
 
     QStringList hz_ticks;
     hz_ticks << "1000HZ"
              << "750Hz"
              << "600Hz"
              << "500Hz";
-    m_ui->hztickscomboBox->addItems(hz_ticks);
-    m_ui->hztickscomboBox->setCurrentIndex(1);
+    m_ui->hzticks_combo_box->addItems(hz_ticks);
+    m_ui->hzticks_combo_box->setCurrentIndex(1);
 
     QStringList tickless_modes;
     tickless_modes << "Full"
                    << "Idle"
                    << "Periodic";
-    m_ui->ticklesscomboBox->addItems(tickless_modes);
+    m_ui->tickless_combo_box->addItems(tickless_modes);
 
-    m_ui->mqdiocheck->setCheckState(Qt::Checked);
-    m_ui->kybercheck->setCheckState(Qt::Checked);
-    m_ui->lrucheck->setCheckState(Qt::Checked);
-    m_ui->spfcheck->setCheckState(Qt::Checked);
-    m_ui->lrngcheck->setCheckState(Qt::Checked);
+    m_ui->mqdio_check->setCheckState(Qt::Checked);
+    m_ui->kyber_check->setCheckState(Qt::Checked);
+    m_ui->lru_check->setCheckState(Qt::Checked);
+    m_ui->spf_check->setCheckState(Qt::Checked);
+    m_ui->lrng_check->setCheckState(Qt::Checked);
 
     QStringList cpu_optims;
     cpu_optims << "Disabled"
@@ -270,22 +272,22 @@ ConfWindow::ConfWindow(QWidget* parent)
                << "Zen" << "Zen2" << "Zen3"
                << "Sandy Bridge" << "Ivy Bridge" << "Haswell"
                << "Icelake" << "Tiger Lake" << "Alder Lake";
-    m_ui->processor_optcomboBox->addItems(cpu_optims);
+    m_ui->processor_opt_combo_box->addItems(cpu_optims);
 
-    m_ui->autooptimcheck->setCheckState(Qt::Checked);
-    m_ui->debugcheck->setCheckState(Qt::Checked);
-    m_ui->zstcompcheck->setCheckState(Qt::Checked);
-    m_ui->nfconecheck->setCheckState(Qt::Checked);
+    m_ui->autooptim_check->setCheckState(Qt::Checked);
+    m_ui->debug_check->setCheckState(Qt::Checked);
+    m_ui->zstcomp_check->setCheckState(Qt::Checked);
+    m_ui->nfcone_check->setCheckState(Qt::Checked);
 
     QStringList lto_modes;
     lto_modes << "No"
               << "Full"
               << "Thin";
-    m_ui->ltocomboBox->addItems(lto_modes);
+    m_ui->lto_combo_box->addItems(lto_modes);
 
     // Connect buttons signal
-    connect(m_ui->cancel, SIGNAL(clicked()), this, SLOT(on_cancel()));
-    connect(m_ui->ok, SIGNAL(clicked()), this, SLOT(on_execute()));
+    connect(m_ui->cancel_button, SIGNAL(clicked()), this, SLOT(on_cancel()));
+    connect(m_ui->ok_button, SIGNAL(clicked()), this, SLOT(on_execute()));
 }
 
 void ConfWindow::closeEvent(QCloseEvent* event) {
@@ -301,28 +303,28 @@ void ConfWindow::on_execute() noexcept {
     if (m_running) { return; }
     m_running = true;
 
-    const std::string_view cpusched_path = get_kernel_name_path(get_kernel_name(static_cast<size_t>(m_ui->comboBox->currentIndex())));
+    const std::string_view cpusched_path = get_kernel_name_path(get_kernel_name(static_cast<size_t>(m_ui->main_combo_box->currentIndex())));
     prepare_build_environment();
     fs::current_path(cpusched_path);
 
     // Execute 'sed' with checkboxes values
-    execute_sed("numa", convert_checkstate(m_ui->numacheck));
-    execute_sed("per_gov", convert_checkstate(m_ui->perfgoverncheck));
-    execute_sed("tcp_bbr2", convert_checkstate(m_ui->tcpbbrcheck));
-    execute_sed("mqdeadline", convert_checkstate(m_ui->mqdiocheck));
-    execute_sed("kyber", convert_checkstate(m_ui->kybercheck));
-    execute_sed("lru", convert_checkstate(m_ui->lrucheck));
-    execute_sed("spf", convert_checkstate(m_ui->spfcheck));
-    execute_sed("lrng", convert_checkstate(m_ui->lrngcheck));
-    execute_sed("auto_optim", convert_checkstate(m_ui->autooptimcheck));
-    execute_sed("debug", convert_checkstate(m_ui->debugcheck));
-    execute_sed("zstd_comp", convert_checkstate(m_ui->zstcompcheck));
-    execute_sed("nf_cone", convert_checkstate(m_ui->nfconecheck));
+    execute_sed("numa", convert_checkstate(m_ui->numa_check));
+    execute_sed("per_gov", convert_checkstate(m_ui->perfgovern_check));
+    execute_sed("tcp_bbr2", convert_checkstate(m_ui->tcpbbr_check));
+    execute_sed("mqdeadline", convert_checkstate(m_ui->mqdio_check));
+    execute_sed("kyber", convert_checkstate(m_ui->kyber_check));
+    execute_sed("lru", convert_checkstate(m_ui->lru_check));
+    execute_sed("spf", convert_checkstate(m_ui->spf_check));
+    execute_sed("lrng", convert_checkstate(m_ui->lrng_check));
+    execute_sed("auto_optim", convert_checkstate(m_ui->autooptim_check));
+    execute_sed("debug", convert_checkstate(m_ui->debug_check));
+    execute_sed("zstd_comp", convert_checkstate(m_ui->zstcomp_check));
+    execute_sed("nf_cone", convert_checkstate(m_ui->nfcone_check));
 
-    const auto& is_nconfig_enabled = (m_ui->nconfigcheck->checkState() == Qt::Checked);
-    const auto& is_hardly_enabled = (m_ui->hardlycheck->checkState() == Qt::Checked);
-    const auto& is_damon_enabled = (m_ui->damoncheck->checkState() == Qt::Checked);
-    const auto& is_builtin_zfs_enabled = (m_ui->builtin_zfscheck->checkState() == Qt::Checked);
+    const auto& is_nconfig_enabled = (m_ui->nconfig_check->checkState() == Qt::Checked);
+    const auto& is_hardly_enabled = (m_ui->hardly_check->checkState() == Qt::Checked);
+    const auto& is_damon_enabled = (m_ui->damon_check->checkState() == Qt::Checked);
+    const auto& is_builtin_zfs_enabled = (m_ui->builtin_zfs_check->checkState() == Qt::Checked);
     if (is_nconfig_enabled) {
         execute_sed("nconfig", "y");
     }
@@ -340,15 +342,15 @@ void ConfWindow::on_execute() noexcept {
     }
 
     // Execute 'sed' with combobox values
-    execute_sed("HZ_ticks", get_hz_tick(static_cast<size_t>(m_ui->hztickscomboBox->currentIndex())));
-    execute_sed("tickrate", get_tickless_mode(static_cast<size_t>(m_ui->ticklesscomboBox->currentIndex())));
+    execute_sed("HZ_ticks", get_hz_tick(static_cast<size_t>(m_ui->hzticks_combo_box->currentIndex())));
+    execute_sed("tickrate", get_tickless_mode(static_cast<size_t>(m_ui->tickless_combo_box->currentIndex())));
 
-    const std::string_view lto_mode = get_lto_mode(static_cast<size_t>(m_ui->ltocomboBox->currentIndex()));
+    const std::string_view lto_mode = get_lto_mode(static_cast<size_t>(m_ui->lto_combo_box->currentIndex()));
     if (lto_mode != "no") {
         execute_sed("lto", lto_mode);
     }
 
-    const std::string_view cpu_opt_mode = get_cpu_opt_mode(static_cast<size_t>(m_ui->processor_optcomboBox->currentIndex()));
+    const std::string_view cpu_opt_mode = get_cpu_opt_mode(static_cast<size_t>(m_ui->processor_opt_combo_box->currentIndex()));
     if (cpu_opt_mode != "manual") {
         execute_sed("cpu_opt", cpu_opt_mode);
     }
