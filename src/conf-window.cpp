@@ -218,9 +218,7 @@ void run_cmd_async(std::string&& cmd, bool* data) {
 }
 
 ConfWindow::ConfWindow(QWidget* parent)
-  : QMainWindow(parent),
-    m_parent{parent}
-{
+  : QMainWindow(parent) {
     m_ui->setupUi(this);
 
     setAttribute(Qt::WA_NativeWindow);
