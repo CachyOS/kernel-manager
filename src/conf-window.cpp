@@ -55,7 +55,7 @@ static const std::unordered_map<std::string_view, std::string_view> default_opti
     {"hardly", "_cc_harder="},
     {"per_gov", "_per_gov=y"},
     {"tcp_bbr2", "_tcp_bbr2=y"},
-    {"HZ_ticks", "_HZ_ticks=750"},
+    {"HZ_ticks", "_HZ_ticks=1000"},
     {"tickrate", "_tickrate=full"},
     {"mqdeadline", "_mq_deadline_disable=y"},
     {"kyber", "_kyber_disable=y"},
@@ -248,7 +248,6 @@ ConfWindow::ConfWindow(QWidget* parent)
              << "600Hz"
              << "500Hz";
     m_ui->hzticks_combo_box->addItems(hz_ticks);
-    m_ui->hzticks_combo_box->setCurrentIndex(1);
 
     QStringList tickless_modes;
     tickless_modes << "Full"
