@@ -40,14 +40,14 @@ pkg_check_modules(
 CPMAddPackage(
   NAME fmt
   GITHUB_REPOSITORY fmtlib/fmt
-  GIT_TAG c4ee726532178e556d923372f29163bd206d7732
+  GIT_TAG 9.1.0
   EXCLUDE_FROM_ALL YES
 )
 if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
    CPMAddPackage(
      NAME range-v3
      GITHUB_REPOSITORY ericniebler/range-v3
-     GIT_TAG 3d6e6f56e5e1a3ec4befcc7695504ea23e1d52ab
+     GIT_TAG 689b4f3da769fb21dd7acf62550a038242d832e5
      EXCLUDE_FROM_ALL YES
    )
 endif()
