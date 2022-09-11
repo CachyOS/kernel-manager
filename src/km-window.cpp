@@ -445,9 +445,13 @@ MainWindow::MainWindow(QWidget* parent)
 
     // Create worker thread
     m_worker = new Work([&]() {
-        while (m_thread_running) {
-            auto smth = fmt::format("...");
-            if (m_running) {
+        while (m_thread_running.load(std::memory_order_consume)) {
+            std::unique_lock<std::mutex> lock(m_mutex);
+            fmt::print(stderr, "Waiting... \n");
+
+            m_cv.wait(lock, [&] { return m_running.load(std::memory_order_consume); });
+
+            if (m_running.load(std::memory_order_consume) && m_thread_running.load(std::memory_order_consume)) {
                 m_ui->ok->setEnabled(false);
 
                 std::vector<std::string> change_list(size_t(m_change_list.size()));
@@ -464,7 +468,7 @@ MainWindow::MainWindow(QWidget* parent)
                 m_last_percent = 100;
                 m_last_text    = "Done";
 
-                m_running = false;
+                m_running.store(false, std::memory_order_relaxed);
                 m_ui->ok->setEnabled(true);
             }
         }
@@ -601,8 +605,9 @@ void MainWindow::buildChangeList(QTreeWidgetItem* item) noexcept {
 
 void MainWindow::closeEvent(QCloseEvent* event) {
     // Exit worker thread
-    m_running        = false;
-    m_thread_running = false;
+    m_running.store(true, std::memory_order_relaxed);
+    m_thread_running.store(false, std::memory_order_relaxed);
+    m_cv.notify_all();
 
     // Execute parent function
     QWidget::closeEvent(event);
@@ -628,8 +633,10 @@ void Work::doHeavyCaclulations() {
 }
 
 void MainWindow::on_execute() noexcept {
-    if (m_running)
+    if (m_running.load(std::memory_order_consume))
         return;
-    m_running = true;
+    m_running.store(true, std::memory_order_relaxed);
+    m_thread_running.store(true, std::memory_order_relaxed);
+    m_cv.notify_all();
     m_worker_th->start();
 }

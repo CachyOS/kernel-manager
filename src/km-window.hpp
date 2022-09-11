@@ -43,6 +43,7 @@
 #include <memory>
 #include <thread>
 #include <vector>
+#include <condition_variable>
 
 #include <alpm.h>
 
@@ -101,11 +102,12 @@ class MainWindow final : public QMainWindow {
     void closeEvent(QCloseEvent* event) override;
 
  private:
-    bool m_running{};
-    bool m_thread_running{true};
+    std::atomic_bool m_running{};
+    std::atomic_bool m_thread_running{true};
     int32_t m_last_percent{};
     QString m_last_text{};
     std::mutex m_mutex{};
+    std::condition_variable m_cv{};
 
     QStringList m_change_list{};
 
