@@ -83,7 +83,7 @@ void parse_repos(alpm_handle_t* handle) noexcept {
                     continue;
                 }
                 // add CacheDir
-                const auto& archs = utils::make_multiline(it_nested.second, false, " ");
+                const auto& archs = utils::make_multiline(it_nested.second, ' ');
                 for (const auto& arch : archs) {
                     if (arch == "auto") {
                         struct utsname un;
@@ -236,13 +236,13 @@ std::vector<Kernel> Kernel::get_kernels(alpm_handle_t* handle) noexcept {
 
 void Kernel::commit_transaction() noexcept {
     if (!g_kernel_install_list.empty()) {
-        const auto& packages_install = utils::make_multiline(g_kernel_install_list, false, " ");
+        const auto& packages_install = utils::join_vec(g_kernel_install_list, " ");
         utils::runCmdTerminal(fmt::format(FMT_COMPILE("pacman -S --needed {}"), packages_install).c_str(), true);
         g_kernel_install_list.clear();
     }
 
     if (!g_kernel_removal_list.empty()) {
-        const auto& packages_remove = utils::make_multiline(g_kernel_removal_list, false, " ");
+        const auto& packages_remove = utils::join_vec(g_kernel_removal_list, " ");
         utils::runCmdTerminal(fmt::format(FMT_COMPILE("pacman -Rsn {}"), packages_remove).c_str(), true);
         g_kernel_removal_list.clear();
     }

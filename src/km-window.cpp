@@ -559,9 +559,6 @@ MainWindow::~MainWindow() {
     if (m_worker_th != nullptr) {
         m_worker_th->exit();
     }
-
-    // Release libalpm handle
-    alpm_release(m_handle);
 }
 
 void MainWindow::checkUncheckItem() noexcept {
@@ -608,6 +605,9 @@ void MainWindow::closeEvent(QCloseEvent* event) {
     m_running.store(true, std::memory_order_relaxed);
     m_thread_running.store(false, std::memory_order_relaxed);
     m_cv.notify_all();
+
+    // Release libalpm handle
+    alpm_release(m_handle);
 
     // Execute parent function
     QWidget::closeEvent(event);

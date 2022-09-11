@@ -43,8 +43,8 @@
 namespace utils {
 
 [[nodiscard]] bool check_root() noexcept;
-[[nodiscard]] auto make_multiline(const std::string_view& str, bool reverse = false, const std::string_view&& delim = "\n") noexcept -> std::vector<std::string>;
-[[nodiscard]] auto make_multiline(const std::vector<std::string_view>& multiline, bool reverse = false, const std::string_view&& delim = "\n") noexcept -> std::string;
+[[nodiscard]] auto make_multiline(const std::string_view& str, char delim = '\n') noexcept -> std::vector<std::string>;
+[[nodiscard]] auto join_vec(const std::vector<std::string_view>& text, const std::string_view&& delim = "\n") noexcept -> std::string;
 
 // Runs a command in a terminal, escalates using pkexec if escalate is true
 int runCmdTerminal(QString cmd, bool escalate) noexcept;
