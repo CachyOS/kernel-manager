@@ -52,10 +52,10 @@ namespace fs = std::filesystem;
 static const std::unordered_map<std::string_view, std::string_view> default_option_map = {
     {"nconfig", "_makenconfig="},
     {"numa", "_NUMAdisable=y"},
-    {"hardly", "_cc_harder="},
+    {"hardly", "_cc_harder=y"},
     {"per_gov", "_per_gov=y"},
     {"tcp_bbr2", "_tcp_bbr2=y"},
-    {"HZ_ticks", "_HZ_ticks=1000"},
+    {"HZ_ticks", "_HZ_ticks=750"},
     {"tickrate", "_tickrate=full"},
     {"mqdeadline", "_mq_deadline_disable=y"},
     {"kyber", "_kyber_disable=y"},
@@ -239,6 +239,7 @@ ConfWindow::ConfWindow(QWidget* parent)
 
     // Setting default options
     m_ui->numa_check->setCheckState(Qt::Checked);
+    m_ui->hardly_check->setCheckState(Qt::Checked);
     m_ui->perfgovern_check->setCheckState(Qt::Checked);
     m_ui->tcpbbr_check->setCheckState(Qt::Checked);
 
@@ -248,6 +249,7 @@ ConfWindow::ConfWindow(QWidget* parent)
              << "600Hz"
              << "500Hz";
     m_ui->hzticks_combo_box->addItems(hz_ticks);
+    m_ui->hzticks_combo_box->setCurrentIndex(1);
 
     QStringList tickless_modes;
     tickless_modes << "Full"
@@ -306,6 +308,7 @@ void ConfWindow::on_execute() noexcept {
 
     // Execute 'sed' with checkboxes values
     execute_sed("numa", convert_checkstate(m_ui->numa_check));
+    execute_sed("hardly", convert_checkstate(m_ui->hardly_check));
     execute_sed("per_gov", convert_checkstate(m_ui->perfgovern_check));
     execute_sed("tcp_bbr2", convert_checkstate(m_ui->tcpbbr_check));
     execute_sed("mqdeadline", convert_checkstate(m_ui->mqdio_check));
@@ -319,7 +322,6 @@ void ConfWindow::on_execute() noexcept {
     execute_sed("nf_cone", convert_checkstate(m_ui->nfcone_check));
 
     const auto& is_nconfig_enabled = (m_ui->nconfig_check->checkState() == Qt::Checked);
-    const auto& is_hardly_enabled = (m_ui->hardly_check->checkState() == Qt::Checked);
     const auto& is_damon_enabled = (m_ui->damon_check->checkState() == Qt::Checked);
     const auto& is_builtin_zfs_enabled = (m_ui->builtin_zfs_check->checkState() == Qt::Checked);
     if (is_nconfig_enabled) {
@@ -327,9 +329,6 @@ void ConfWindow::on_execute() noexcept {
     }
     if (is_builtin_zfs_enabled) {
         execute_sed("builtin_zfs", "y");
-    }
-    if (is_hardly_enabled) {
-        execute_sed("hardly", "y");
     }
     if (is_damon_enabled) {
         execute_sed("damon", "y");
