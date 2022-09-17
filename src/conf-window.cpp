@@ -50,48 +50,62 @@
 namespace fs = std::filesystem;
 
 static const std::unordered_map<std::string_view, std::string_view> default_option_map = {
+    {"cachy_config", "_cachy_config='yes'"},
     {"nconfig", "_makenconfig="},
+    {"menuconfig", "_makemenuconfig="},
+    {"xconfig", "_makexconfig="},
+    {"gconfig", "_makegconfig="},
     {"numa", "_NUMAdisable=y"},
+    {"localmodcfg", "_localmodcfg="},
     {"hardly", "_cc_harder=y"},
     {"per_gov", "_per_gov=y"},
     {"tcp_bbr2", "_tcp_bbr2=y"},
     {"HZ_ticks", "_HZ_ticks=750"},
     {"tickrate", "_tickrate=full"},
+    {"preempt", "_preempt=full"},
     {"mqdeadline", "_mq_deadline_disable=y"},
     {"kyber", "_kyber_disable=y"},
-    {"lru", "_lru_enable=y"},
+    {"lru_config", "_lru_config='standard'"},
+    {"vma_config", "_vma_config='standard'"},
     {"damon", "_damon="},
-    {"spf", "_spf_enable=y"},
     {"lrng", "_lrng_enable=y"},
     {"cpu_opt", "_processor_opt="},
     {"auto_optim", "_use_auto_optimization=y"},
     {"debug", "_disable_debug=y"},
     {"zstd_comp", "_zstd_compression=y"},
-    {"nf_cone", "_nf_cone=y"},
+    {"zstd_level", "_zstd_level_value='normal'"},
     {"lto", "_use_llvm_lto="},
-    {"builtin_zfs", "_build_zfs="}};
+    {"builtin_zfs", "_build_zfs="},
+    {"builtin_bcachefs", "_bcachefs="}};
 
 static const std::unordered_map<std::string_view, std::string_view> option_map = {
+    {"cachy_config", "_cachy_config"},
     {"nconfig", "_makenconfig"},
+    {"menuconfig", "_makemenuconfig"},
+    {"xconfig", "_makexconfig"},
+    {"gconfig", "_makegconfig"},
     {"numa", "_NUMAdisable"},
+    {"localmodcfg", "_localmodcfg"},
     {"hardly", "_cc_harder"},
     {"per_gov", "_per_gov"},
     {"tcp_bbr2", "_tcp_bbr2"},
     {"HZ_ticks", "_HZ_ticks"},
     {"tickrate", "_tickrate"},
+    {"preempt", "_preempt"},
     {"mqdeadline", "_mq_deadline_disable"},
     {"kyber", "_kyber_disable"},
-    {"lru", "_lru_enable"},
+    {"lru_config", "_lru_config"},
+    {"vma_config", "_vma_config"},
     {"damon", "_damon"},
-    {"spf", "_spf_enable"},
     {"lrng", "_lrng_enable"},
     {"cpu_opt", "_processor_opt"},
     {"auto_optim", "_use_auto_optimization"},
     {"debug", "_disable_debug"},
     {"zstd_comp", "_zstd_compression"},
-    {"nf_cone", "_nf_cone"},
+    {"zstd_level", "_zstd_level_value"},
     {"lto", "_use_llvm_lto"},
-    {"builtin_zfs", "_build_zfs"}};
+    {"builtin_zfs", "_build_zfs"},
+    {"builtin_bcachefs", "_bcachefs"}};
 
 [[gnu::pure]] constexpr const char* get_kernel_name(size_t index) noexcept {
     constexpr std::array kernel_names{"bmq", "bore", "cacule", "cfs", "hardened", "pds", "rc", "tt"};
@@ -108,9 +122,24 @@ static const std::unordered_map<std::string_view, std::string_view> option_map =
     return tickless_modes[index];
 }
 
+[[gnu::pure]] constexpr const char* get_preempt_mode(size_t index) noexcept {
+    constexpr std::array preempt_modes{"full", "voluntary", "server"};
+    return preempt_modes[index];
+}
+
+[[gnu::pure]] constexpr const char* get_lru_config_mode(size_t index) noexcept {
+    constexpr std::array lru_config_modes{"standard", "stats", "none"};
+    return lru_config_modes[index];
+}
+
 [[gnu::pure]] constexpr const char* get_lto_mode(size_t index) noexcept {
     constexpr std::array lto_modes{"no", "full", "thin"};
     return lto_modes[index];
+}
+
+[[gnu::pure]] constexpr const char* get_zstd_comp_level(size_t index) noexcept {
+    constexpr std::array zstd_comp_levels{"ultra", "normal"};
+    return zstd_comp_levels[index];
 }
 
 [[gnu::pure]] constexpr const char* get_cpu_opt_mode(size_t index) noexcept {
@@ -238,6 +267,7 @@ ConfWindow::ConfWindow(QWidget* parent)
     m_ui->main_combo_box->setCurrentIndex(1);
 
     // Setting default options
+    m_ui->cachyconfig_check->setCheckState(Qt::Checked);
     m_ui->numa_check->setCheckState(Qt::Checked);
     m_ui->hardly_check->setCheckState(Qt::Checked);
     m_ui->perfgovern_check->setCheckState(Qt::Checked);
@@ -257,10 +287,27 @@ ConfWindow::ConfWindow(QWidget* parent)
                    << "Periodic";
     m_ui->tickless_combo_box->addItems(tickless_modes);
 
+    QStringList preempt_modes;
+    preempt_modes << "Full"
+                  << "Voluntary"
+                  << "Server";
+    m_ui->preempt_combo_box->addItems(preempt_modes);
+
     m_ui->mqdio_check->setCheckState(Qt::Checked);
     m_ui->kyber_check->setCheckState(Qt::Checked);
-    m_ui->lru_check->setCheckState(Qt::Checked);
-    m_ui->spf_check->setCheckState(Qt::Checked);
+
+    QStringList lru_config_modes;
+    lru_config_modes << "Standard"
+                     << "Stats"
+                     << "None";
+    m_ui->lru_config_combo_box->addItems(lru_config_modes);
+
+    QStringList vma_config_modes;
+    vma_config_modes << "Standard"
+                     << "Stats"
+                     << "None";
+    m_ui->vma_config_combo_box->addItems(vma_config_modes);
+
     m_ui->lrng_check->setCheckState(Qt::Checked);
 
     QStringList cpu_optims;
@@ -276,7 +323,12 @@ ConfWindow::ConfWindow(QWidget* parent)
     m_ui->autooptim_check->setCheckState(Qt::Checked);
     m_ui->debug_check->setCheckState(Qt::Checked);
     m_ui->zstcomp_check->setCheckState(Qt::Checked);
-    m_ui->nfcone_check->setCheckState(Qt::Checked);
+
+    QStringList zstd_comp_levels;
+    zstd_comp_levels << "Ultra"
+                     << "Normal";
+    m_ui->zstd_comp_levels_combo_box->addItems(zstd_comp_levels);
+    m_ui->zstd_comp_levels_combo_box->setCurrentIndex(1);
 
     QStringList lto_modes;
     lto_modes << "No"
@@ -313,22 +365,37 @@ void ConfWindow::on_execute() noexcept {
     execute_sed("tcp_bbr2", convert_checkstate(m_ui->tcpbbr_check));
     execute_sed("mqdeadline", convert_checkstate(m_ui->mqdio_check));
     execute_sed("kyber", convert_checkstate(m_ui->kyber_check));
-    execute_sed("lru", convert_checkstate(m_ui->lru_check));
-    execute_sed("spf", convert_checkstate(m_ui->spf_check));
     execute_sed("lrng", convert_checkstate(m_ui->lrng_check));
     execute_sed("auto_optim", convert_checkstate(m_ui->autooptim_check));
     execute_sed("debug", convert_checkstate(m_ui->debug_check));
     execute_sed("zstd_comp", convert_checkstate(m_ui->zstcomp_check));
-    execute_sed("nf_cone", convert_checkstate(m_ui->nfcone_check));
 
-    const auto& is_nconfig_enabled = (m_ui->nconfig_check->checkState() == Qt::Checked);
-    const auto& is_damon_enabled = (m_ui->damon_check->checkState() == Qt::Checked);
-    const auto& is_builtin_zfs_enabled = (m_ui->builtin_zfs_check->checkState() == Qt::Checked);
+    const auto& is_cachyconfig_enabled      = (m_ui->cachyconfig_check->checkState() == Qt::Checked);
+    const auto& is_nconfig_enabled          = (m_ui->nconfig_check->checkState() == Qt::Checked);
+    const auto& is_menuconfig_enabled       = (m_ui->menuconfig_check->checkState() == Qt::Checked);
+    const auto& is_xconfig_enabled          = (m_ui->xconfig_check->checkState() == Qt::Checked);
+    const auto& is_gconfig_enabled          = (m_ui->gconfig_check->checkState() == Qt::Checked);
+    const auto& is_localmodcfg_enabled      = (m_ui->localmodcfg_check->checkState() == Qt::Checked);
+    const auto& is_damon_enabled            = (m_ui->damon_check->checkState() == Qt::Checked);
+    const auto& is_builtin_zfs_enabled      = (m_ui->builtin_zfs_check->checkState() == Qt::Checked);
+    const auto& is_builtin_bcachefs_enabled = (m_ui->builtin_bcachefs_check->checkState() == Qt::Checked);
+    if (!is_cachyconfig_enabled) {
+        execute_sed("cachy_config", "'no'");
+    }
     if (is_nconfig_enabled) {
         execute_sed("nconfig", "y");
     }
-    if (is_builtin_zfs_enabled) {
-        execute_sed("builtin_zfs", "y");
+    if (is_menuconfig_enabled) {
+        execute_sed("menuconfig", "y");
+    }
+    if (is_xconfig_enabled) {
+        execute_sed("xconfig", "y");
+    }
+    if (is_gconfig_enabled) {
+        execute_sed("gconfig", "y");
+    }
+    if (is_localmodcfg_enabled) {
+        execute_sed("localmodcfg", "y");
     }
     if (is_damon_enabled) {
         execute_sed("damon", "y");
@@ -336,10 +403,17 @@ void ConfWindow::on_execute() noexcept {
     if (is_builtin_zfs_enabled) {
         execute_sed("builtin_zfs", "y");
     }
+    if (is_builtin_bcachefs_enabled) {
+        execute_sed("builtin_bcachefs", "y");
+    }
 
     // Execute 'sed' with combobox values
     execute_sed("HZ_ticks", get_hz_tick(static_cast<size_t>(m_ui->hzticks_combo_box->currentIndex())));
     execute_sed("tickrate", get_tickless_mode(static_cast<size_t>(m_ui->tickless_combo_box->currentIndex())));
+    execute_sed("preempt", get_preempt_mode(static_cast<size_t>(m_ui->preempt_combo_box->currentIndex())));
+    execute_sed("lru_config", get_lru_config_mode(static_cast<size_t>(m_ui->lru_config_combo_box->currentIndex())));
+    execute_sed("vma_config", get_lru_config_mode(static_cast<size_t>(m_ui->vma_config_combo_box->currentIndex())));
+    execute_sed("zstd_level", get_zstd_comp_level(static_cast<size_t>(m_ui->zstd_comp_levels_combo_box->currentIndex())));
 
     const std::string_view lto_mode = get_lto_mode(static_cast<size_t>(m_ui->lto_combo_box->currentIndex()));
     if (lto_mode != "no") {

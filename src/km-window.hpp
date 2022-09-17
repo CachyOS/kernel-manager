@@ -40,10 +40,10 @@
 #include "kernel.hpp"
 
 #include <array>
+#include <condition_variable>
 #include <memory>
 #include <thread>
 #include <vector>
-#include <condition_variable>
 
 #include <alpm.h>
 

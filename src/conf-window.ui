@@ -44,6 +44,35 @@
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
+         <widget class="QWidget" name="cachyconfig_widget" native="true">
+          <layout class="QHBoxLayout" name="cachyconfig_horizontal_layout">
+           <item>
+            <widget class="QLabel" name="cachyconfig_label">
+             <property name="text">
+              <string>Enable CachyOS config</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="cachyconfig_horizontal_spacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="cachyconfig_check"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
          <widget class="QWidget" name="nconfig_widget" native="true">
           <layout class="QHBoxLayout" name="nconfig_horizontal_layout">
            <item>
@@ -73,6 +102,93 @@
          </widget>
         </item>
         <item>
+         <widget class="QWidget" name="menuconfig_widget" native="true">
+          <layout class="QHBoxLayout" name="menuconfig_horizontal_layout">
+           <item>
+            <widget class="QLabel" name="menuconfig_label">
+             <property name="text">
+              <string>Tweak kernel options prior to a build via menuconfig</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="menuconfig_horizontal_spacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="menuconfig_check"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QWidget" name="xconfig_widget" native="true">
+          <layout class="QHBoxLayout" name="xconfig_horizontal_layout">
+           <item>
+            <widget class="QLabel" name="xconfig_label">
+             <property name="text">
+              <string>Tweak kernel options prior to a build via xconfig</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="xconfig_horizontal_spacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="xconfig_check"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QWidget" name="gconfig_widget" native="true">
+          <layout class="QHBoxLayout" name="gconfig_horizontal_layout">
+           <item>
+            <widget class="QLabel" name="gconfig_label">
+             <property name="text">
+              <string>Tweak kernel options prior to a build via gconfig</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="gconfig_horizontal_spacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="gconfig_check"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
          <widget class="QWidget" name="numa_widget" native="true">
           <layout class="QHBoxLayout" name="numa_horizontal_layout">
            <item>
@@ -97,6 +213,35 @@
            </item>
            <item>
             <widget class="QCheckBox" name="numa_check"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QWidget" name="localmodcfg_widget" native="true">
+          <layout class="QHBoxLayout" name="localmodcfg_horizontal_layout">
+           <item>
+            <widget class="QLabel" name="localmodcfg_label">
+             <property name="text">
+              <string>Use Modprobed-db</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="localmodcfg_horizontal_spacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="localmodcfg_check"/>
            </item>
           </layout>
          </widget>
@@ -247,6 +392,35 @@
          </widget>
         </item>
         <item>
+         <widget class="QWidget" name="preempt_widget" native="true">
+          <layout class="QHBoxLayout" name="preempt_horizontal_layout">
+           <item>
+            <widget class="QLabel" name="preempt_label">
+             <property name="text">
+              <string>Select preempt</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="preempt_horizontal_spacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QComboBox" name="preempt_combo_box"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
          <widget class="QWidget" name="mqdio_widget" native="true">
           <layout class="QHBoxLayout" name="mqdio_horizontal_layout">
            <item>
@@ -305,17 +479,17 @@
          </widget>
         </item>
         <item>
-         <widget class="QWidget" name="lru_widget" native="true">
-          <layout class="QHBoxLayout" name="lru_horizontal_layout">
+         <widget class="QWidget" name="lru_config_widget" native="true">
+          <layout class="QHBoxLayout" name="lru_config_horizontal_layout">
            <item>
-            <widget class="QLabel" name="lru_label">
+            <widget class="QLabel" name="lru_config_label">
              <property name="text">
               <string>Enable multigenerational LRU</string>
              </property>
             </widget>
            </item>
            <item>
-            <spacer name="lru_horizontal_spacer">
+            <spacer name="lru_config_horizontal_spacer">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
@@ -328,7 +502,36 @@
             </spacer>
            </item>
            <item>
-            <widget class="QCheckBox" name="lru_check"/>
+            <widget class="QComboBox" name="lru_config_combo_box"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QWidget" name="vma_config_widget" native="true">
+          <layout class="QHBoxLayout" name="vma_config_horizontal_layout">
+           <item>
+            <widget class="QLabel" name="vma_config_label">
+             <property name="text">
+              <string>Enable per-VMA locking</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="vma_config_horizontal_spacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QComboBox" name="vma_config_combo_box"/>
            </item>
           </layout>
          </widget>
@@ -358,35 +561,6 @@
            </item>
            <item>
             <widget class="QCheckBox" name="damon_check"/>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="QWidget" name="spf_widget" native="true">
-          <layout class="QHBoxLayout" name="spd_horizontal_layout">
-           <item>
-            <widget class="QLabel" name="spfl_label">
-             <property name="text">
-              <string>Enable SPECULATIVE_PAGE_FAULT</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="spf_horizontal_spacer">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="spf_check"/>
            </item>
           </layout>
          </widget>
@@ -537,17 +711,17 @@
          </widget>
         </item>
         <item>
-         <widget class="QWidget" name="nfcone_widget" native="true">
-          <layout class="QHBoxLayout" name="nfcone_horizontal_layout">
+         <widget class="QWidget" name="zstd_comp_levels_widget" native="true">
+          <layout class="QHBoxLayout" name="zstd_comp_levels_horizontal_layout">
            <item>
-            <widget class="QLabel" name="nfcone_label">
+            <widget class="QLabel" name="zstd_comp_levels_label">
              <property name="text">
-              <string>Enable nf cone</string>
+              <string>Selecting the ZSTD kernel and modules compression level</string>
              </property>
             </widget>
            </item>
            <item>
-            <spacer name="nfcone_horizontal_spacer">
+            <spacer name="zstd_comp_levels_horizontal_spacer">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
@@ -560,7 +734,7 @@
             </spacer>
            </item>
            <item>
-            <widget class="QCheckBox" name="nfcone_check"/>
+            <widget class="QComboBox" name="zstd_comp_levels_combo_box"/>
            </item>
           </layout>
          </widget>
@@ -619,6 +793,35 @@
            </item>
            <item>
             <widget class="QCheckBox" name="builtin_zfs_check"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QWidget" name="builtin_bcachefs_widget" native="true">
+          <layout class="QHBoxLayout" name="builtin_bcachefs_horizontal_layout">
+           <item>
+            <widget class="QLabel" name="builtin_bcachefs_label">
+             <property name="text">
+              <string>Build the BCACHEFS module</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="builtin_bcachefs_horizontal_spacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="builtin_bcachefs_check"/>
            </item>
           </layout>
          </widget>
