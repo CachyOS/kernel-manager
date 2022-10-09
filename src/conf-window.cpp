@@ -50,33 +50,33 @@
 namespace fs = std::filesystem;
 
 static const std::unordered_map<std::string_view, std::string_view> default_option_map = {
-    {"cachy_config", "_cachy_config='yes'"},
-    {"nconfig", "_makenconfig="},
-    {"menuconfig", "_makemenuconfig="},
-    {"xconfig", "_makexconfig="},
-    {"gconfig", "_makegconfig="},
-    {"numa", "_NUMAdisable=y"},
-    {"localmodcfg", "_localmodcfg="},
-    {"hardly", "_cc_harder=y"},
-    {"per_gov", "_per_gov=y"},
-    {"tcp_bbr2", "_tcp_bbr2=y"},
-    {"HZ_ticks", "_HZ_ticks=750"},
-    {"tickrate", "_tickrate=full"},
-    {"preempt", "_preempt=full"},
-    {"mqdeadline", "_mq_deadline_disable=y"},
-    {"kyber", "_kyber_disable=y"},
-    {"lru_config", "_lru_config='standard'"},
-    {"vma_config", "_vma_config='standard'"},
-    {"damon", "_damon="},
-    {"lrng", "_lrng_enable=y"},
-    {"cpu_opt", "_processor_opt="},
-    {"auto_optim", "_use_auto_optimization=y"},
-    {"debug", "_disable_debug=y"},
-    {"zstd_comp", "_zstd_compression=y"},
-    {"zstd_level", "_zstd_level_value='normal'"},
-    {"lto", "_use_llvm_lto="},
-    {"builtin_zfs", "_build_zfs="},
-    {"builtin_bcachefs", "_bcachefs="}};
+    {"cachy_config", "_cachy_config-'yes'"},
+    {"nconfig", "_makenconfig-"},
+    {"menuconfig", "_makemenuconfig-"},
+    {"xconfig", "_makexconfig-"},
+    {"gconfig", "_makegconfig-"},
+    {"numa", "_NUMAdisable-y"},
+    {"localmodcfg", "_localmodcfg-"},
+    {"hardly", "_cc_harder-y"},
+    {"per_gov", "_per_gov-y"},
+    {"tcp_bbr2", "_tcp_bbr2-y"},
+    {"HZ_ticks", "_HZ_ticks-750"},
+    {"tickrate", "_tickrate-full"},
+    {"preempt", "_preempt-full"},
+    {"mqdeadline", "_mq_deadline_disable-y"},
+    {"kyber", "_kyber_disable-y"},
+    {"lru_config", "_lru_config-'standard'"},
+    {"vma_config", "_vma_config-'standard'"},
+    {"damon", "_damon-"},
+    {"lrng", "_lrng_enable-y"},
+    {"cpu_opt", "_processor_opt-"},
+    {"auto_optim", "_use_auto_optimization-y"},
+    {"debug", "_disable_debug-y"},
+    {"zstd_comp", "_zstd_compression-y"},
+    {"zstd_level", "_zstd_level_value-'normal'"},
+    {"lto", "_use_llvm_lto-"},
+    {"builtin_zfs", "_build_zfs-"},
+    {"builtin_bcachefs", "_bcachefs-"}};
 
 static const std::unordered_map<std::string_view, std::string_view> option_map = {
     {"cachy_config", "_cachy_config"},
@@ -113,7 +113,7 @@ static const std::unordered_map<std::string_view, std::string_view> option_map =
 }
 
 [[gnu::pure]] constexpr const char* get_hz_tick(size_t index) noexcept {
-    constexpr std::array hz_ticks{"1000", "750", "600", "500"};
+    constexpr std::array hz_ticks{"1000", "750", "600", "500", "300", "250", "100"};
     return hz_ticks[index];
 }
 
@@ -198,7 +198,7 @@ void prepare_build_environment() noexcept {
 }
 
 void execute_sed(std::string_view option, std::string_view value) noexcept {
-    const auto& sed_cmd = fmt::format(FMT_COMPILE("sed -i \"s/{}/{}={}/\" PKGBUILD"), default_option_map.at(option), option_map.at(option), value);
+    const auto& sed_cmd = fmt::format(FMT_COMPILE("sed -i \"s/{}/{}-{}/\" PKGBUILD"), default_option_map.at(option), option_map.at(option), value);
     if (std::system(sed_cmd.c_str()) != 0) {
         std::perror("execute_sed");
     }
@@ -277,7 +277,10 @@ ConfWindow::ConfWindow(QWidget* parent)
     hz_ticks << "1000HZ"
              << "750Hz"
              << "600Hz"
-             << "500Hz";
+             << "500Hz"
+             << "300Hz"
+             << "250Hz"
+             << "100Hz";
     m_ui->hzticks_combo_box->addItems(hz_ticks);
     m_ui->hzticks_combo_box->setCurrentIndex(1);
 

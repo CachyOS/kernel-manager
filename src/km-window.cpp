@@ -22,6 +22,7 @@
 #include "utils.hpp"
 
 #include <future>
+#include <span>
 #include <thread>
 
 #include <fmt/core.h>
@@ -32,6 +33,7 @@
 #include <QTimer>
 #include <QTreeWidgetItem>
 
+#ifndef PKG_DUMMY_IMPL
 static int32_t* g_last_percent{};
 static QString* g_last_text{};
 
@@ -140,6 +142,10 @@ void cb_event(void* ctx, alpm_event_t* event) {
         opr             = "Hook is done.";
         *g_last_percent = 100;
         break;
+    case ALPM_EVENT_PKG_RETRIEVE_FAILED:
+        opr             = "Failed to retrieve package.";
+        *g_last_percent = 0;
+        break;
     // all the simple done events, with fallthrough for each
     case ALPM_EVENT_OPTDEP_REMOVAL:
     case ALPM_EVENT_DB_RETRIEVE_START:
@@ -147,7 +153,6 @@ void cb_event(void* ctx, alpm_event_t* event) {
     case ALPM_EVENT_PACSAVE_CREATED:
     case ALPM_EVENT_DB_RETRIEVE_DONE:
     case ALPM_EVENT_DB_RETRIEVE_FAILED:
-    case ALPM_EVENT_PKG_RETRIEVE_FAILED:
     case ALPM_EVENT_FILECONFLICTS_DONE:
     case ALPM_EVENT_CHECKDEPS_DONE:
     case ALPM_EVENT_RESOLVEDEPS_DONE:
@@ -166,39 +171,41 @@ void cb_event(void* ctx, alpm_event_t* event) {
 }
 
 void cb_progress(void* ctx, alpm_progress_t event, const char* pkgname, int percent, size_t howmany, size_t remain) {
+    using namespace std::literals::string_view_literals;
+
     (void)ctx;
-    std::string opr{"processing"};
+    std::string_view opr{"processing"};
     // set text of message to display
     switch (event) {
     case ALPM_PROGRESS_ADD_START:
-        opr = "installing";
+        opr = "installing"sv;
         break;
     case ALPM_PROGRESS_UPGRADE_START:
-        opr = "upgrading";
+        opr = "upgrading"sv;
         break;
     case ALPM_PROGRESS_DOWNGRADE_START:
-        opr = "downgrading";
+        opr = "downgrading"sv;
         break;
     case ALPM_PROGRESS_REINSTALL_START:
-        opr = "reinstalling";
+        opr = "reinstalling"sv;
         break;
     case ALPM_PROGRESS_REMOVE_START:
-        opr = "removing";
+        opr = "removing"sv;
         break;
     case ALPM_PROGRESS_CONFLICTS_START:
-        opr = "checking for file conflicts";
+        opr = "checking for file conflicts"sv;
         break;
     case ALPM_PROGRESS_DISKSPACE_START:
-        opr = "checking available disk space";
+        opr = "checking available disk space"sv;
         break;
     case ALPM_PROGRESS_INTEGRITY_START:
-        opr = "checking package integrity";
+        opr = "checking package integrity"sv;
         break;
     case ALPM_PROGRESS_KEYRING_START:
-        opr = "checking keys in keyring";
+        opr = "checking keys in keyring"sv;
         break;
     case ALPM_PROGRESS_LOAD_START:
-        opr = "loading package files";
+        opr = "loading package files"sv;
         break;
     default:
         return;
@@ -211,18 +218,21 @@ void cb_progress(void* ctx, alpm_progress_t event, const char* pkgname, int perc
     *g_last_text = QString(fmt::format("({}/{}) {}", remain, howmany, opr).c_str());
 }
 
-static char* clean_filename(const char* filename) {
-    size_t len = strlen(filename);
-    char* p;
-    char* fname = new char[len + 1];
-    memcpy(fname, filename, len + 1);
+static std::string clean_filename(const std::string_view& filename) {
+    using namespace std::literals::string_view_literals;
+
+    std::string_view fname = filename;
     // strip package or DB extension for cleaner look
-    if ((p = strstr(fname, ".pkg")) || (p = strstr(fname, ".db")) || (p = strstr(fname, ".files"))) {
-        len        = static_cast<size_t>(p - fname);
-        fname[len] = '\0';
+    static constexpr std::array strip_extensions{".pkg"sv, ".db"sv, ".files"sv};
+    for (auto extension : strip_extensions) {
+        auto trim_pos = fname.find(extension);
+        if (trim_pos != std::string_view::npos) {
+            fname.remove_suffix(fname.size() - trim_pos);
+            return std::string(fname.begin(), fname.end());
+        }
     }
 
-    return fname;
+    return std::string(fname.begin(), fname.end());
 }
 
 /* Handles download progress event */
@@ -235,16 +245,16 @@ static void dload_progress_event(const char* filename, alpm_download_event_progr
 
 /* download completed */
 static void dload_complete_event(const char* filename, alpm_download_event_completed_t* data) {
-    std::unique_ptr<char[]> cleaned_filename{clean_filename(filename)};
+    auto cleaned_filename = clean_filename(filename);
 
     if (data->result == 1) {
         // The line contains text from previous status. Erase these leftovers.
-        *g_last_text    = fmt::format("{} is up to date", cleaned_filename.get()).c_str();
+        *g_last_text    = fmt::format("{} is up to date", cleaned_filename).c_str();
         *g_last_percent = 0;
     } else if (data->result == 0) {
-        *g_last_text = fmt::format("{} download completed successfully", cleaned_filename.get()).c_str();
+        *g_last_text = fmt::format("{} download completed successfully", cleaned_filename).c_str();
     } else {
-        *g_last_text = fmt::format("{} failed to download", cleaned_filename.get()).c_str();
+        *g_last_text = fmt::format("{} failed to download", cleaned_filename).c_str();
     }
 }
 
@@ -258,9 +268,9 @@ void cb_download(void* ctx, const char* filename, alpm_download_event_type_t eve
     }
 
     if (event == ALPM_DOWNLOAD_INIT) {
-        std::unique_ptr<char[]> cleaned_filename{clean_filename(filename)};
-        *g_last_percent = 0;
-        *g_last_text    = fmt::format("{} downloading...", cleaned_filename.get()).c_str();
+        auto cleaned_filename = clean_filename(filename);
+        *g_last_percent       = 0;
+        *g_last_text          = fmt::format("{} downloading...", cleaned_filename).c_str();
     } else if (event == ALPM_DOWNLOAD_PROGRESS) {
         dload_progress_event(filename, reinterpret_cast<alpm_download_event_progress_t*>(data));
     } else if (event == ALPM_DOWNLOAD_RETRY) {
@@ -273,7 +283,7 @@ void cb_download(void* ctx, const char* filename, alpm_download_event_type_t eve
 
 void cb_log(void* ctx, alpm_loglevel_t level, const char* fmt, va_list args) {
     (void)ctx;
-    if (!fmt || strlen(fmt) == 0) {
+    if (!fmt || fmt[0] == '\0') {
         return;
     }
 
@@ -289,8 +299,9 @@ void cb_log(void* ctx, alpm_loglevel_t level, const char* fmt, va_list args) {
         std::vfprintf(stderr, fmt, args);
     }
 }
+#endif
 
-void install_packages(alpm_handle_t* handle, const std::vector<Kernel>& kernels, const std::vector<std::string>& selected_list) {
+bool install_packages(alpm_handle_t* handle, const std::span<Kernel>& kernels, const std::span<std::string>& selected_list) {
 #ifdef PKG_DUMMY_IMPL
     for (const auto& selected : selected_list) {
         const auto& kernel = ranges::find_if(kernels, [selected](auto&& el) { return el.get_raw() == selected; });
@@ -305,7 +316,7 @@ void install_packages(alpm_handle_t* handle, const std::vector<Kernel>& kernels,
     if (alpm_trans_init(handle, ALPM_TRANS_FLAG_ALLDEPS | ALPM_TRANS_FLAG_ALLEXPLICIT) != 0) {
         fmt::print(stderr, "failed to create a new transaction ({})\n", alpm_strerror(alpm_errno(handle)));
         alpm_trans_release(handle);
-        return;
+        return false;
     }
 
     /* Step 1: add targets to the created transaction */
@@ -334,7 +345,7 @@ void install_packages(alpm_handle_t* handle, const std::vector<Kernel>& kernels,
         }
         alpm_list_free(trans_data);
         alpm_trans_release(handle);
-        return;
+        return false;
     }
 
     /* Step 3: actually perform the installation */
@@ -342,23 +353,26 @@ void install_packages(alpm_handle_t* handle, const std::vector<Kernel>& kernels,
     if (inst_packages == nullptr) {
         alpm_list_free(trans_data);
         alpm_trans_release(handle);
-        return;
+        return false;
     }
 
     if (alpm_trans_commit(handle, &trans_data) != 0) {
-        fmt::print(stderr, "failed to commit transaction ({})\n", alpm_strerror(alpm_errno(handle)));
+        *g_last_text    = fmt::format("failed to commit transaction ({})", alpm_strerror(alpm_errno(handle))).c_str();
+        *g_last_percent = 0;
+        fmt::print(stderr, "{}\n", g_last_text->toStdString());
         alpm_list_free(trans_data);
         alpm_trans_release(handle);
-        return;
+        return false;
     }
 
     /* Step 4: release transaction resources */
     FREELIST(trans_data);
     alpm_trans_release(handle);
 #endif
+    return true;
 }
 
-void remove_packages(alpm_handle_t* handle, const std::vector<Kernel>& kernels, const std::vector<std::string>& selected_list) {
+bool remove_packages(alpm_handle_t* handle, const std::span<Kernel>& kernels, const std::span<std::string>& selected_list) {
 #ifdef PKG_DUMMY_IMPL
     for (const auto& selected : selected_list) {
         const auto& kernel = ranges::find_if(kernels, [selected](auto&& el) { return el.get_raw() == selected; });
@@ -374,7 +388,7 @@ void remove_packages(alpm_handle_t* handle, const std::vector<Kernel>& kernels, 
     if (alpm_trans_init(handle, ALPM_TRANS_FLAG_ALLDEPS) != 0) {
         fmt::print(stderr, "failed to create a new transaction ({})\n", alpm_strerror(alpm_errno(handle)));
         alpm_trans_release(handle);
-        return;
+        return false;
     }
 
     /* Step 1: add targets to the created transaction */
@@ -403,7 +417,7 @@ void remove_packages(alpm_handle_t* handle, const std::vector<Kernel>& kernels, 
         }
         alpm_list_free(trans_data);
         alpm_trans_release(handle);
-        return;
+        return false;
     }
 
     /* Step 3: actually perform the removal */
@@ -411,21 +425,42 @@ void remove_packages(alpm_handle_t* handle, const std::vector<Kernel>& kernels, 
     if (remove_packages == nullptr) {
         alpm_list_free(trans_data);
         alpm_trans_release(handle);
-        return;
+        return false;
     }
 
     if (alpm_trans_commit(handle, &trans_data) != 0) {
-        fmt::print(stderr, "failed to commit transaction ({})\n", alpm_strerror(alpm_errno(handle)));
+        *g_last_text    = fmt::format("failed to commit transaction ({})", alpm_strerror(alpm_errno(handle))).c_str();
+        *g_last_percent = 0;
+        fmt::print(stderr, "{}\n", g_last_text->toStdString());
         alpm_list_free(trans_data);
         alpm_trans_release(handle);
-        return;
+        return false;
     }
 
     /* Step 4: release transaction resources */
     FREELIST(trans_data);
     alpm_trans_release(handle);
 #endif
+    return true;
 }
+
+#ifndef PKG_DUMMY_IMPL
+void setup_handlers(alpm_handle_t* handle) noexcept {
+
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wsuggest-attribute=format"
+#endif
+    // Set libalpm callbacks
+    alpm_option_set_logcb(handle, cb_log, nullptr);
+    alpm_option_set_dlcb(handle, cb_download, nullptr);
+    alpm_option_set_progresscb(handle, cb_progress, nullptr);
+    alpm_option_set_eventcb(handle, cb_event, nullptr);
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC diagnostic pop
+#endif
+}
+#endif
 
 MainWindow::MainWindow(QWidget* parent)
   : QMainWindow(parent) {
@@ -435,12 +470,12 @@ MainWindow::MainWindow(QWidget* parent)
     setWindowFlags(Qt::Window);  // for the close, min and max buttons
 
     // Setup global values
-    g_last_text    = &m_last_text;
-    g_last_percent = &m_last_percent;
-
 #ifdef PKG_DUMMY_IMPL
     m_ui->progress_status->hide();
     m_ui->progressBar->hide();
+#else
+    g_last_text    = &m_last_text;
+    g_last_percent = &m_last_percent;
 #endif
 
     // Create worker thread
@@ -454,19 +489,40 @@ MainWindow::MainWindow(QWidget* parent)
             if (m_running.load(std::memory_order_consume) && m_thread_running.load(std::memory_order_consume)) {
                 m_ui->ok->setEnabled(false);
 
-                std::vector<std::string> change_list(size_t(m_change_list.size()));
-                for (size_t i = 0; i < change_list.size(); ++i) {
-                    change_list[i] = m_change_list[int(i)].toStdString();
+                std::vector<std::string> change_list(static_cast<std::size_t>(m_change_list.size()));
+                for (int i = 0; i < m_change_list.size(); ++i) {
+                    change_list[static_cast<std::size_t>(i)] = m_change_list[i].toStdString();
                 }
 
+#ifdef PKG_DUMMY_IMPL
                 install_packages(m_handle, m_kernels, change_list);
                 remove_packages(m_handle, m_kernels, change_list);
-
-#ifdef PKG_DUMMY_IMPL
                 Kernel::commit_transaction();
+#else
+                if (install_packages(m_handle, m_kernels, change_list)) {
+                    m_last_percent = 100;
+                    m_last_text    = "Done";
+
+                    utils::release_alpm(m_handle, &m_err);
+                    m_handle = utils::parse_alpm("/", "/var/lib/pacman/", &m_err);
+                    setup_handlers(m_handle);
+
+                    fmt::print(stderr, "the install has been performed!\n");
+                }
+                if (remove_packages(m_handle, m_kernels, change_list)) {
+                    m_last_percent = 100;
+                    m_last_text    = "Done";
+
+                    utils::release_alpm(m_handle, &m_err);
+                    m_handle = utils::parse_alpm("/", "/var/lib/pacman/", &m_err);
+                    setup_handlers(m_handle);
+
+                    fmt::print(stderr, "the removal has been performed!\n");
+                }
+
+                // TODO(vnepogodin): if our actual data has changed,
+                // then update UI tree. Update checkboxes state, etc.
 #endif
-                m_last_percent = 100;
-                m_last_text    = "Done";
 
                 m_running.store(false, std::memory_order_relaxed);
                 m_ui->ok->setEnabled(true);
@@ -485,40 +541,30 @@ MainWindow::MainWindow(QWidget* parent)
     auto* timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, QOverload<>::of(&MainWindow::paintLoop));
     timer->start(std::chrono::milliseconds(TIMEOUT_MS));
+
+    setup_handlers(m_handle);
 #endif
 
-#if defined(__GNUC__) && !defined(__clang__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wsuggest-attribute=format"
-#endif
-    // Set libalpm callbacks
-    alpm_option_set_logcb(m_handle, cb_log, NULL);
-    alpm_option_set_dlcb(m_handle, cb_download, NULL);
-    alpm_option_set_progresscb(m_handle, cb_progress, NULL);
-    alpm_option_set_eventcb(m_handle, cb_event, NULL);
-#if defined(__GNUC__) && !defined(__clang__)
-#pragma GCC diagnostic pop
-#endif
-
+    auto* tree_kernels = m_ui->treeKernels;
     QStringList column_names;
     column_names << "Choose"
                  << "PkgName"
                  << "Version"
                  << "Category";
-    m_ui->treeKernels->setHeaderLabels(column_names);
-    m_ui->treeKernels->hideColumn(TreeCol::Displayed);  // Displayed status true/false
-    m_ui->treeKernels->hideColumn(TreeCol::Immutable);  // Immutable status true/false
-    m_ui->treeKernels->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    tree_kernels->setHeaderLabels(column_names);
+    tree_kernels->hideColumn(TreeCol::Displayed);  // Displayed status true/false
+    tree_kernels->hideColumn(TreeCol::Immutable);  // Immutable status true/false
+    tree_kernels->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
-    m_ui->treeKernels->setContextMenuPolicy(Qt::CustomContextMenu);
+    tree_kernels->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    m_ui->treeKernels->blockSignals(true);
+    tree_kernels->blockSignals(true);
 
     // TODO(vnepogodin): parallelize it
     auto a2 = std::async(std::launch::deferred, [&] {
         std::lock_guard<std::mutex> guard(m_mutex);
         for (auto& kernel : m_kernels) {
-            auto widget_item = new QTreeWidgetItem(m_ui->treeKernels);
+            auto widget_item = new QTreeWidgetItem(tree_kernels);
             widget_item->setCheckState(TreeCol::Check, Qt::Unchecked);
             widget_item->setText(TreeCol::PkgName, kernel.get_raw());
             widget_item->setText(TreeCol::Version, kernel.version().c_str());
@@ -538,20 +584,20 @@ MainWindow::MainWindow(QWidget* parent)
 
     // Connect worker thread signals
     connect(m_worker_th, SIGNAL(finished()), m_worker, SLOT(deleteLater()));
-    connect(m_worker_th, SIGNAL(started()), m_worker, SLOT(doHeavyCaclulations()), Qt::QueuedConnection);
+    connect(m_worker_th, SIGNAL(started()), m_worker, SLOT(doHeavyCalculations()), Qt::QueuedConnection);
 
     // check/uncheck tree items space-bar press or double-click
     auto* shortcutToggle = new QShortcut(Qt::Key_Space, this);
     connect(shortcutToggle, &QShortcut::activated, this, &MainWindow::checkUncheckItem);
 
     // Connect tree widget
-    connect(m_ui->treeKernels, &QTreeWidget::itemChanged, this, &MainWindow::item_changed);
-    connect(m_ui->treeKernels, &QTreeWidget::itemDoubleClicked, [&](QTreeWidgetItem* item) { m_ui->treeKernels->setCurrentItem(item); });
-    connect(m_ui->treeKernels, &QTreeWidget::itemDoubleClicked, this, &MainWindow::checkUncheckItem);
+    connect(tree_kernels, &QTreeWidget::itemChanged, this, &MainWindow::item_changed);
+    connect(tree_kernels, &QTreeWidget::itemDoubleClicked, [&](QTreeWidgetItem* item) { m_ui->treeKernels->setCurrentItem(item); });
+    connect(tree_kernels, &QTreeWidget::itemDoubleClicked, this, &MainWindow::checkUncheckItem);
 
     // Wait for async function to finish
     a2.wait();
-    m_ui->treeKernels->blockSignals(false);
+    tree_kernels->blockSignals(false);
 }
 
 MainWindow::~MainWindow() {
@@ -563,11 +609,11 @@ MainWindow::~MainWindow() {
 
 void MainWindow::checkUncheckItem() noexcept {
     if (auto t_widget = qobject_cast<QTreeWidget*>(focusWidget())) {
-        if (t_widget->currentItem() == nullptr || t_widget->currentItem()->childCount() > 0)
+        if (t_widget->currentItem() == nullptr || t_widget->currentItem()->childCount() > 0) {
             return;
-        const int col  = static_cast<int>(TreeCol::Check);
-        auto new_state = (t_widget->currentItem()->checkState(col)) ? Qt::Unchecked : Qt::Checked;
-        t_widget->currentItem()->setCheckState(col, new_state);
+        }
+        auto new_state = (t_widget->currentItem()->checkState(TreeCol::Check) == Qt::Checked) ? Qt::Unchecked : Qt::Checked;
+        t_widget->currentItem()->setCheckState(TreeCol::Check, new_state);
     }
 }
 
@@ -628,7 +674,7 @@ void MainWindow::on_cancel() noexcept {
     close();
 }
 
-void Work::doHeavyCaclulations() {
+void Work::doHeavyCalculations() {
     m_func();
 }
 

@@ -17,10 +17,7 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "kernel.hpp"
-#include "ini.hpp"
 #include "utils.hpp"
-
-#include <sys/utsname.h>
 
 #include <fmt/compile.h>
 #include <fmt/core.h>
@@ -32,85 +29,6 @@ static std::vector<std::string_view> g_kernel_install_list{};
 static std::vector<std::string_view> g_kernel_removal_list{};
 #endif
 
-void parse_cachedirs(alpm_handle_t* handle) noexcept {
-    static constexpr auto cachedir = "/var/cache/pacman/pkg/";
-
-    alpm_list_t* cachedirs = nullptr;
-    cachedirs              = alpm_list_add(cachedirs, const_cast<void*>(reinterpret_cast<const void*>(cachedir)));
-    alpm_option_set_cachedirs(handle, cachedirs);
-}
-
-void parse_includes(alpm_handle_t* handle, alpm_db_t* db, const auto& section, const auto& file) noexcept {
-    const auto* archs = alpm_option_get_architectures(handle);
-    const auto* arch  = reinterpret_cast<const char*>(archs->data);
-
-    mINI::INIFile file_nested(file);
-    // next, create a structure that will hold data
-    mINI::INIStructure mirrorlist;
-
-    // now we can read the file
-    file_nested.read(mirrorlist);
-    for (const auto& mirror : mirrorlist) {
-        auto repo = mirror.second.begin()->second;
-        if (repo.starts_with("/")) {
-            continue;
-        }
-        utils::replace_all(repo, "$arch", arch);
-        utils::replace_all(repo, "$repo", section.c_str());
-        alpm_db_add_server(db, repo.c_str());
-    }
-}
-
-void parse_repos(alpm_handle_t* handle) noexcept {
-    static constexpr auto pacman_conf_path = "/etc/pacman.conf";
-    static constexpr auto ignored_repo     = "testing";
-
-    mINI::INIFile file(pacman_conf_path);
-    // next, create a structure that will hold data
-    mINI::INIStructure ini;
-
-    // now we can read the file
-    file.read(ini);
-    for (const auto& it : ini) {
-        const auto& section = it.first;
-        const auto& nested  = it.second;
-        if (section == ignored_repo) {
-            continue;
-        }
-        if (section == "options") {
-            for (const auto& it_nested : nested) {
-                if (it_nested.first != "architecture") {
-                    continue;
-                }
-                // add CacheDir
-                const auto& archs = utils::make_multiline(it_nested.second, ' ');
-                for (const auto& arch : archs) {
-                    if (arch == "auto") {
-                        struct utsname un;
-                        uname(&un);
-                        char* tmp = un.machine;
-                        if (tmp != nullptr) {
-                            alpm_option_add_architecture(handle, tmp);
-                        }
-                        continue;
-                    }
-
-                    alpm_option_add_architecture(handle, arch.c_str());
-                }
-            }
-            continue;
-        }
-        auto* db = alpm_register_syncdb(handle, section.c_str(), ALPM_SIG_USE_DEFAULT);
-
-        for (const auto& it_nested : nested) {
-            const auto& param = it_nested.first;
-            const auto& value = it_nested.second;
-            if (param == "include") {
-                parse_includes(handle, db, section, value);
-            }
-        }
-    }
-}
 }  // namespace
 
 std::string Kernel::version() noexcept {
@@ -138,7 +56,7 @@ bool Kernel::is_installed() const noexcept {
     auto* db  = alpm_get_localdb(m_handle);
     auto* pkg = alpm_db_get_pkg(db, m_name.c_str());
 
-    return pkg != NULL;
+    return pkg != nullptr;
 }
 
 bool Kernel::install() const noexcept {
@@ -148,9 +66,11 @@ bool Kernel::install() const noexcept {
     g_kernel_install_list.insert(g_kernel_install_list.end(), {pkg_name, pkg_headers});
     return true;
 #else
+    fmt::print(stderr, "installing ({})...\n", alpm_pkg_get_name(m_pkg));
     if (alpm_add_pkg(m_handle, m_pkg) != 0) {
         return false;
     }
+    fmt::print(stderr, "installing headers ({})...\n", alpm_pkg_get_name(m_headers));
     return alpm_add_pkg(m_handle, m_headers) == 0;
 #endif
 }
@@ -164,9 +84,11 @@ bool Kernel::remove() const noexcept {
     auto* db  = alpm_get_localdb(m_handle);
     auto* pkg = alpm_db_get_pkg(db, m_name.c_str());
 
+    fmt::print(stderr, "installing ({})...\n", alpm_pkg_get_name(m_pkg));
     if (alpm_remove_pkg(m_handle, pkg) != 0) {
         return false;
     }
+    fmt::print(stderr, "installing headers ({})...\n", alpm_pkg_get_name(m_headers));
     auto* headers = alpm_db_get_pkg(db, alpm_pkg_get_name(m_headers));
     return alpm_remove_pkg(m_handle, headers) == 0;
 #endif
@@ -190,9 +112,6 @@ std::vector<Kernel> Kernel::get_kernels(alpm_handle_t* handle) noexcept {
     static constexpr std::string_view ignored_pkg  = "linux-api-headers";
     static constexpr std::string_view replace_part = "-headers";
     std::vector<Kernel> kernels{};
-
-    parse_repos(handle);
-    parse_cachedirs(handle);
 
     auto* dbs = alpm_get_syncdbs(handle);
     for (alpm_list_t* i = dbs; i != nullptr; i = i->next) {

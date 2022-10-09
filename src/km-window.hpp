@@ -38,6 +38,7 @@
 #include <conf-window.hpp>
 
 #include "kernel.hpp"
+#include "utils.hpp"
 
 #include <array>
 #include <condition_variable>
@@ -67,7 +68,7 @@ class Work final : public QObject {
     virtual ~Work() = default;
 
  public slots:
-    void doHeavyCaclulations();
+    void doHeavyCalculations();
 
  private:
     function_t m_func;
@@ -104,8 +105,6 @@ class MainWindow final : public QMainWindow {
  private:
     std::atomic_bool m_running{};
     std::atomic_bool m_thread_running{true};
-    int32_t m_last_percent{};
-    QString m_last_text{};
     std::mutex m_mutex{};
     std::condition_variable m_cv{};
 
@@ -115,13 +114,15 @@ class MainWindow final : public QMainWindow {
     Work* m_worker{nullptr};
 
     alpm_errno_t m_err{};
-    alpm_handle_t* m_handle                  = alpm_initialize("/", "/var/lib/pacman/", &m_err);
+    alpm_handle_t* m_handle                  = utils::parse_alpm("/", "/var/lib/pacman/", &m_err);
     std::vector<Kernel> m_kernels            = Kernel::get_kernels(m_handle);
     std::unique_ptr<Ui::MainWindow> m_ui     = std::make_unique<Ui::MainWindow>();
     std::unique_ptr<ConfWindow> m_confwindow = std::make_unique<ConfWindow>();
 
     void buildChangeList(QTreeWidgetItem* item) noexcept;
 #ifndef PKG_DUMMY_IMPL
+    int32_t m_last_percent{};
+    QString m_last_text{};
     void paintLoop() noexcept;
 #endif
 };

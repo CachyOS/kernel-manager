@@ -26,16 +26,21 @@
 #if defined(__clang__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wold-style-cast"
+#elif defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wnull-dereference"
+#pragma GCC diagnostic ignored "-Wuseless-cast"
+#pragma GCC diagnostic ignored "-Wold-style-cast"
+#endif
 
 #include <range/v3/algorithm/copy.hpp>
 #include <range/v3/algorithm/find_if.hpp>
 #include <range/v3/algorithm/search.hpp>
 
+#if defined(__clang__)
 #pragma clang diagnostic pop
-#else
-#include <algorithm>
-#include <ranges>
-namespace ranges = std::ranges;
+#elif defined(__GNUC__)
+#pragma GCC diagnostic pop
 #endif
 
 #include <alpm.h>

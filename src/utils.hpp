@@ -22,6 +22,7 @@
 #include <string>       // for string
 #include <string_view>  // for string_view
 #include <vector>       // for vector
+#include <span>         // for span
 
 #if defined(__clang__)
 #pragma clang diagnostic push
@@ -40,11 +41,16 @@
 #pragma GCC diagnostic pop
 #endif
 
+#include <alpm.h>
+
 namespace utils {
 
 [[nodiscard]] bool check_root() noexcept;
 [[nodiscard]] auto make_multiline(const std::string_view& str, char delim = '\n') noexcept -> std::vector<std::string>;
-[[nodiscard]] auto join_vec(const std::vector<std::string_view>& text, const std::string_view&& delim = "\n") noexcept -> std::string;
+[[nodiscard]] auto join_vec(const std::span<std::string_view>& lines, const std::string_view&& delim) noexcept -> std::string;
+
+alpm_handle_t* parse_alpm(std::string_view root, std::string_view dbpath, alpm_errno_t* err) noexcept;
+void release_alpm(alpm_handle_t* handle, alpm_errno_t* err) noexcept;
 
 // Runs a command in a terminal, escalates using pkexec if escalate is true
 int runCmdTerminal(QString cmd, bool escalate) noexcept;

@@ -43,14 +43,12 @@ CPMAddPackage(
   GIT_TAG 9.1.0
   EXCLUDE_FROM_ALL YES
 )
-if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
-   CPMAddPackage(
-     NAME range-v3
-     GITHUB_REPOSITORY ericniebler/range-v3
-     GIT_TAG 689b4f3da769fb21dd7acf62550a038242d832e5
-     EXCLUDE_FROM_ALL YES
-   )
-endif()
+CPMAddPackage(
+  NAME range-v3
+  GITHUB_REPOSITORY ericniebler/range-v3
+  GIT_TAG 689b4f3da769fb21dd7acf62550a038242d832e5
+  EXCLUDE_FROM_ALL YES
+)
 
 find_package(PolkitQt5-1 REQUIRED)
 
@@ -97,11 +95,7 @@ enable_sanitizers(project_options)
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE project_warnings project_options Qt5::Widgets Threads::Threads fmt::fmt PkgConfig::LIBALPM PkgConfig::LIBGLIB)
-
-if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
-   target_link_libraries(${PROJECT_NAME} PRIVATE range-v3::range-v3)
-endif()
+target_link_libraries(${PROJECT_NAME} PRIVATE project_warnings project_options Qt5::Widgets Threads::Threads fmt::fmt range-v3::range-v3 PkgConfig::LIBALPM PkgConfig::LIBGLIB)
 
 option(ENABLE_UNITY "Enable Unity builds of projects" OFF)
 if(ENABLE_UNITY)
