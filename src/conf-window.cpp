@@ -17,13 +17,13 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "conf-window.hpp"
+#include "compile_options.hpp"
 #include "utils.hpp"
 
 #include <cstdio>
 #include <cstdlib>
 
 #include <filesystem>
-#include <unordered_map>
 
 #if defined(__clang__)
 #pragma clang diagnostic push
@@ -48,64 +48,6 @@
 #include <QStringList>
 
 namespace fs = std::filesystem;
-
-static const std::unordered_map<std::string_view, std::string_view> default_option_map = {
-    {"cachy_config", "_cachy_config-'yes'"},
-    {"nconfig", "_makenconfig-"},
-    {"menuconfig", "_makemenuconfig-"},
-    {"xconfig", "_makexconfig-"},
-    {"gconfig", "_makegconfig-"},
-    {"numa", "_NUMAdisable-y"},
-    {"localmodcfg", "_localmodcfg-"},
-    {"hardly", "_cc_harder-y"},
-    {"per_gov", "_per_gov-y"},
-    {"tcp_bbr2", "_tcp_bbr2-y"},
-    {"HZ_ticks", "_HZ_ticks-750"},
-    {"tickrate", "_tickrate-full"},
-    {"preempt", "_preempt-full"},
-    {"mqdeadline", "_mq_deadline_disable-y"},
-    {"kyber", "_kyber_disable-y"},
-    {"lru_config", "_lru_config-'standard'"},
-    {"vma_config", "_vma_config-'standard'"},
-    {"damon", "_damon-"},
-    {"lrng", "_lrng_enable-y"},
-    {"cpu_opt", "_processor_opt-"},
-    {"auto_optim", "_use_auto_optimization-y"},
-    {"debug", "_disable_debug-y"},
-    {"zstd_comp", "_zstd_compression-y"},
-    {"zstd_level", "_zstd_level_value-'normal'"},
-    {"lto", "_use_llvm_lto-"},
-    {"builtin_zfs", "_build_zfs-"},
-    {"builtin_bcachefs", "_bcachefs-"}};
-
-static const std::unordered_map<std::string_view, std::string_view> option_map = {
-    {"cachy_config", "_cachy_config"},
-    {"nconfig", "_makenconfig"},
-    {"menuconfig", "_makemenuconfig"},
-    {"xconfig", "_makexconfig"},
-    {"gconfig", "_makegconfig"},
-    {"numa", "_NUMAdisable"},
-    {"localmodcfg", "_localmodcfg"},
-    {"hardly", "_cc_harder"},
-    {"per_gov", "_per_gov"},
-    {"tcp_bbr2", "_tcp_bbr2"},
-    {"HZ_ticks", "_HZ_ticks"},
-    {"tickrate", "_tickrate"},
-    {"preempt", "_preempt"},
-    {"mqdeadline", "_mq_deadline_disable"},
-    {"kyber", "_kyber_disable"},
-    {"lru_config", "_lru_config"},
-    {"vma_config", "_vma_config"},
-    {"damon", "_damon"},
-    {"lrng", "_lrng_enable"},
-    {"cpu_opt", "_processor_opt"},
-    {"auto_optim", "_use_auto_optimization"},
-    {"debug", "_disable_debug"},
-    {"zstd_comp", "_zstd_compression"},
-    {"zstd_level", "_zstd_level_value"},
-    {"lto", "_use_llvm_lto"},
-    {"builtin_zfs", "_build_zfs"},
-    {"builtin_bcachefs", "_bcachefs"}};
 
 [[gnu::pure]] constexpr const char* get_kernel_name(size_t index) noexcept {
     constexpr std::array kernel_names{"bmq", "bore", "cacule", "cfs", "hardened", "pds", "rc", "tt"};
@@ -198,7 +140,7 @@ void prepare_build_environment() noexcept {
 }
 
 void execute_sed(std::string_view option, std::string_view value) noexcept {
-    const auto& sed_cmd = fmt::format(FMT_COMPILE("sed -i \"s/{}/{}-{}/\" PKGBUILD"), default_option_map.at(option), option_map.at(option), value);
+    const auto& sed_cmd = fmt::format(FMT_COMPILE("sed -i \"s/{}/{}-{}/\" PKGBUILD"), detail::default_option_map.at(option), detail::option_map.at(option), value);
     if (std::system(sed_cmd.c_str()) != 0) {
         std::perror("execute_sed");
     }

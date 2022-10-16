@@ -23,6 +23,7 @@ include(StaticAnalyzers)
 include(Sanitizers)
 include(CPM)
 
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
 find_package(Threads REQUIRED)
 find_package(PkgConfig REQUIRED)
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
@@ -41,6 +42,12 @@ CPMAddPackage(
   NAME fmt
   GITHUB_REPOSITORY fmtlib/fmt
   GIT_TAG 9.1.0
+  EXCLUDE_FROM_ALL YES
+)
+CPMAddPackage(
+  NAME frozen
+  GITHUB_REPOSITORY serge-sans-paille/frozen
+  GIT_TAG f75fffcc077e5cda0bf3c87121dca103855d2be5
   EXCLUDE_FROM_ALL YES
 )
 CPMAddPackage(
@@ -73,11 +80,18 @@ target_compile_features(project_options INTERFACE cxx_std_20)
 ##
 ## Target
 ##
+add_custom_command(
+    DEPENDS "${CMAKE_SOURCE_DIR}/src/mkoptions.py"
+    OUTPUT "${CMAKE_BINARY_DIR}/compile_options.hpp"
+    COMMAND ${Python3_EXECUTABLE} "${CMAKE_SOURCE_DIR}/src/mkoptions.py" "${CMAKE_CURRENT_BINARY_DIR}" "${CMAKE_SOURCE_DIR}"
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+)
 add_executable(${PROJECT_NAME}
     src/ini.hpp
     src/utils.hpp src/utils.cpp
     src/kernel.hpp src/kernel.cpp
     src/km-window.hpp src/km-window.cpp
+    "${CMAKE_BINARY_DIR}/compile_options.hpp"
     src/conf-window.hpp src/conf-window.cpp
     src/km-window.ui src/conf-window.ui
     src/main.cpp
@@ -93,9 +107,9 @@ configure_linker(project_options)
 # sanitizer options if supported by compiler
 enable_sanitizers(project_options)
 
-include_directories(${CMAKE_SOURCE_DIR}/src)
+include_directories(${CMAKE_SOURCE_DIR}/src ${CMAKE_BINARY_DIR})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE project_warnings project_options Qt5::Widgets Threads::Threads fmt::fmt range-v3::range-v3 PkgConfig::LIBALPM PkgConfig::LIBGLIB)
+target_link_libraries(${PROJECT_NAME} PRIVATE project_warnings project_options Qt5::Widgets Threads::Threads fmt::fmt range-v3::range-v3 frozen::frozen PkgConfig::LIBALPM PkgConfig::LIBGLIB)
 
 option(ENABLE_UNITY "Enable Unity builds of projects" OFF)
 if(ENABLE_UNITY)
