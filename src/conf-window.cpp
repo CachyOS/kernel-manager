@@ -266,7 +266,6 @@ ConfWindow::ConfWindow(QWidget* parent)
     m_ui->processor_opt_combo_box->addItems(cpu_optims);
 
     m_ui->autooptim_check->setCheckState(Qt::Checked);
-    m_ui->debug_check->setCheckState(Qt::Checked);
     m_ui->zstcomp_check->setCheckState(Qt::Checked);
 
     QStringList zstd_comp_levels;
