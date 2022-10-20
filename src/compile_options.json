@@ -21,7 +21,7 @@
         "lrng": "_lrng_enable-y",
         "cpu_opt": "_processor_opt-",
         "auto_optim": "_use_auto_optimization-y",
-        "debug": "_disable_debug-y",
+        "debug": "_disable_debug-",
         "zstd_comp": "_zstd_compression-y",
         "zstd_level": "_zstd_level_value-'normal'",
         "lto": "_use_llvm_lto-",
