@@ -571,6 +571,10 @@ MainWindow::MainWindow(QWidget* parent)
             widget_item->setText(TreeCol::Category, kernel.category().data());
             widget_item->setText(TreeCol::Displayed, QStringLiteral("true"));
             if (kernel.is_installed()) {
+                const std::string_view kernel_installed_db = kernel.get_installed_db();
+                if (!kernel_installed_db.empty() && kernel_installed_db != kernel.get_repo()) {
+                    continue;
+                }
                 widget_item->setText(TreeCol::Immutable, QStringLiteral("true"));
                 widget_item->setCheckState(TreeCol::Check, Qt::Checked);
             }

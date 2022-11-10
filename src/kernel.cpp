@@ -114,6 +114,7 @@ std::vector<Kernel> Kernel::get_kernels(alpm_handle_t* handle) noexcept {
     std::vector<Kernel> kernels{};
 
     auto* dbs = alpm_get_syncdbs(handle);
+    auto* local_db = alpm_get_localdb(handle);
     for (alpm_list_t* i = dbs; i != nullptr; i = i->next) {
         static constexpr auto needle = "linux[^ ]*-headers";
         alpm_list_t* needles         = nullptr;
@@ -141,7 +142,17 @@ std::vector<Kernel> Kernel::get_kernels(alpm_handle_t* handle) noexcept {
                 continue;
             }
 
-            kernels.emplace_back(Kernel{handle, pkg, headers, db_name, fmt::format(FMT_COMPILE("{}/{}"), db_name, pkg_name)});
+            auto kernel_obj = Kernel{handle, pkg, headers, db_name, fmt::format(FMT_COMPILE("{}/{}"), db_name, pkg_name)};
+
+            auto* local_pkg = alpm_db_get_pkg(local_db, pkg_name.c_str());
+            if (local_pkg) {
+                const char* pkg_installed_db = alpm_pkg_get_installed_db(local_pkg);
+                if (pkg_installed_db != nullptr) {
+                    kernel_obj.m_installed_db = pkg_installed_db;
+                }
+            }
+
+            kernels.emplace_back(std::move(kernel_obj));
         }
 
         alpm_list_free(needles);

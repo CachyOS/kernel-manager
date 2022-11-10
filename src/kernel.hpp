@@ -103,6 +103,12 @@ class Kernel {
 
     inline const char* get_raw() const noexcept
     { return m_raw.c_str(); }
+
+    inline std::string_view get_repo() const noexcept
+    { return m_repo.c_str(); }
+
+    inline std::string_view get_installed_db() const noexcept
+    { return m_installed_db.c_str(); }
     /* clang-format on */
 
 #ifdef PKG_DUMMY_IMPL
@@ -117,6 +123,7 @@ class Kernel {
     std::string m_name{};
     std::string m_repo{"local"};
     std::string m_raw{};
+    std::string m_installed_db{};
 
     alpm_pkg_t* m_pkg;
     alpm_pkg_t* m_headers;
