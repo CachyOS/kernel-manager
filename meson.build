@@ -38,6 +38,7 @@ if is_dummy_pkg_impl
 endif
 
 qt5 = import('qt5')
+prog_python = import('python').find_installation('python3')
 qt5_dep = dependency('qt5', modules: ['Widgets'])
 
 # Common dependencies
@@ -128,6 +129,17 @@ prep = qt5.preprocess(
 )
 # XML files that need to be compiled with the uic tol.
 prep += qt5.compile_ui(sources : ['src/km-window.ui', 'src/conf-window.ui'])
+
+compile_options_hpp = custom_target(
+    'compile_options.hpp',
+    output : 'compile_options.hpp',
+    input : meson.current_source_dir() + '/src/mkoptions.py',
+    command : [prog_python, '@INPUT@', meson.current_build_dir(), meson.current_source_dir()],
+)
+compile_options_dep = declare_dependency(
+    sources : [compile_options_hpp],
+)
+deps += [compile_options_dep]
 
 src_files += [prep]
 executable(
