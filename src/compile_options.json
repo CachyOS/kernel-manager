@@ -27,6 +27,7 @@
         "lto": "_use_llvm_lto-",
         "builtin_zfs": "_build_zfs-",
         "builtin_bcachefs": "_bcachefs-",
+        "rt_kernel": "_rtkernel-",
         "latency_nice": "_latency_nice-y"
     },
     "option_map": {
@@ -57,6 +58,7 @@
         "lto": "_use_llvm_lto",
         "builtin_zfs": "_build_zfs",
         "builtin_bcachefs": "_bcachefs",
+        "rt_kernel": "_rtkernel",
         "latency_nice": "_latency_nice"
     }
 }

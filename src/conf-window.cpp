@@ -287,10 +287,12 @@ ConfWindow::ConfWindow(QWidget* parent)
     connect(m_ui->main_combo_box, &QComboBox::currentIndexChanged, this, [this](std::int32_t index) {
         // If not BORE or CFS.
         if (index != 1 && index != 3) {
+            m_ui->RT_check->setEnabled(false);
             m_ui->latnice_check->setEnabled(false);
             m_ui->latnice_check->setCheckState(Qt::Unchecked);
             return;
         }
+        m_ui->RT_check->setEnabled(true);
         m_ui->latnice_check->setEnabled(true);
         m_ui->latnice_check->setCheckState(Qt::Checked);
     });
@@ -327,6 +329,7 @@ void ConfWindow::on_execute() noexcept {
     execute_sed("zstd_comp", convert_checkstate(m_ui->zstcomp_check));
 
     if (main_combo_index == 1 || main_combo_index == 3) {
+        execute_sed("rt_kernel", convert_checkstate(m_ui->RT_check));
         execute_sed("latency_nice", convert_checkstate(m_ui->latnice_check));
     }
 
