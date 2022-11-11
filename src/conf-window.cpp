@@ -267,6 +267,7 @@ ConfWindow::ConfWindow(QWidget* parent)
 
     m_ui->autooptim_check->setCheckState(Qt::Checked);
     m_ui->zstcomp_check->setCheckState(Qt::Checked);
+    m_ui->latnice_check->setCheckState(Qt::Checked);
 
     QStringList zstd_comp_levels;
     zstd_comp_levels << "Ultra"
@@ -283,6 +284,16 @@ ConfWindow::ConfWindow(QWidget* parent)
     // Connect buttons signal
     connect(m_ui->cancel_button, SIGNAL(clicked()), this, SLOT(on_cancel()));
     connect(m_ui->ok_button, SIGNAL(clicked()), this, SLOT(on_execute()));
+    connect(m_ui->main_combo_box, &QComboBox::currentIndexChanged, this, [=](std::int32_t index) {
+        // If not BORE or CFS.
+        if (index != 1 && index != 3) {
+            m_ui->latnice_check->setEnabled(false);
+            m_ui->latnice_check->setCheckState(Qt::Unchecked);
+            return;
+        }
+        m_ui->latnice_check->setEnabled(true);
+        m_ui->latnice_check->setCheckState(Qt::Checked);
+    });
 }
 
 void ConfWindow::closeEvent(QCloseEvent* event) {
@@ -298,7 +309,8 @@ void ConfWindow::on_execute() noexcept {
     if (m_running) { return; }
     m_running = true;
 
-    const std::string_view cpusched_path = get_kernel_name_path(get_kernel_name(static_cast<size_t>(m_ui->main_combo_box->currentIndex())));
+    const std::int32_t main_combo_index  = m_ui->main_combo_box->currentIndex();
+    const std::string_view cpusched_path = get_kernel_name_path(get_kernel_name(static_cast<size_t>(main_combo_index)));
     prepare_build_environment();
     fs::current_path(cpusched_path);
 
@@ -313,6 +325,10 @@ void ConfWindow::on_execute() noexcept {
     execute_sed("auto_optim", convert_checkstate(m_ui->autooptim_check));
     execute_sed("debug", convert_checkstate(m_ui->debug_check));
     execute_sed("zstd_comp", convert_checkstate(m_ui->zstcomp_check));
+
+    if (main_combo_index == 1 || main_combo_index == 3) {
+        execute_sed("latency_nice", convert_checkstate(m_ui->latnice_check));
+    }
 
     const auto& is_cachyconfig_enabled      = (m_ui->cachyconfig_check->checkState() == Qt::Checked);
     const auto& is_nconfig_enabled          = (m_ui->nconfig_check->checkState() == Qt::Checked);

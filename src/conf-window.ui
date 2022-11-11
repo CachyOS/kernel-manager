@@ -826,6 +826,35 @@
           </layout>
          </widget>
         </item>
+        <item>
+         <widget class="QWidget" name="latnice_widget" native="true">
+          <layout class="QHBoxLayout" name="latnice_horizontal_layout">
+           <item>
+            <widget class="QLabel" name="latnice_label">
+             <property name="text">
+              <string>Enable LATENCY NICE</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="latnice_horizontal_spacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="latnice_check"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
        </layout>
       </widget>
      </widget>
