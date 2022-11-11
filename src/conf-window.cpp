@@ -284,7 +284,7 @@ ConfWindow::ConfWindow(QWidget* parent)
     // Connect buttons signal
     connect(m_ui->cancel_button, SIGNAL(clicked()), this, SLOT(on_cancel()));
     connect(m_ui->ok_button, SIGNAL(clicked()), this, SLOT(on_execute()));
-    connect(m_ui->main_combo_box, &QComboBox::currentIndexChanged, this, [=](std::int32_t index) {
+    connect(m_ui->main_combo_box, &QComboBox::currentIndexChanged, this, [this](std::int32_t index) {
         // If not BORE or CFS.
         if (index != 1 && index != 3) {
             m_ui->latnice_check->setEnabled(false);
