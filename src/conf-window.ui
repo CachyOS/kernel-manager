@@ -508,35 +508,6 @@
          </widget>
         </item>
         <item>
-         <widget class="QWidget" name="vma_config_widget" native="true">
-          <layout class="QHBoxLayout" name="vma_config_horizontal_layout">
-           <item>
-            <widget class="QLabel" name="vma_config_label">
-             <property name="text">
-              <string>Enable per-VMA locking</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="vma_config_horizontal_spacer">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QComboBox" name="vma_config_combo_box"/>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
          <widget class="QWidget" name="damon_widget" native="true">
           <layout class="QHBoxLayout" name="damon_horizontal_layout">
            <item>

@@ -247,12 +247,6 @@ ConfWindow::ConfWindow(QWidget* parent)
                      << "None";
     m_ui->lru_config_combo_box->addItems(lru_config_modes);
 
-    QStringList vma_config_modes;
-    vma_config_modes << "Standard"
-                     << "Stats"
-                     << "None";
-    m_ui->vma_config_combo_box->addItems(vma_config_modes);
-
     m_ui->lrng_check->setCheckState(Qt::Checked);
 
     QStringList cpu_optims;
@@ -375,7 +369,6 @@ void ConfWindow::on_execute() noexcept {
     execute_sed("tickrate", get_tickless_mode(static_cast<size_t>(m_ui->tickless_combo_box->currentIndex())));
     execute_sed("preempt", get_preempt_mode(static_cast<size_t>(m_ui->preempt_combo_box->currentIndex())));
     execute_sed("lru_config", get_lru_config_mode(static_cast<size_t>(m_ui->lru_config_combo_box->currentIndex())));
-    execute_sed("vma_config", get_lru_config_mode(static_cast<size_t>(m_ui->vma_config_combo_box->currentIndex())));
     execute_sed("zstd_level", get_zstd_comp_level(static_cast<size_t>(m_ui->zstd_comp_levels_combo_box->currentIndex())));
 
     const std::string_view lto_mode = get_lto_mode(static_cast<size_t>(m_ui->lto_combo_box->currentIndex()));
