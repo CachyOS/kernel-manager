@@ -16,7 +16,7 @@ This is tested on Arch Linux, but *any* recent Arch Linux based system with late
 
 ```sh
 sudo pacman -Sy \
-    base-devel cmake pkg-config make qt6-base python
+    base-devel cmake pkg-config make qt5-base python
 ```
 
 ### Cloning the source code

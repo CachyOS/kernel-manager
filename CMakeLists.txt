@@ -26,7 +26,7 @@ include(CPM)
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
 find_package(Threads REQUIRED)
 find_package(PkgConfig REQUIRED)
-find_package(Qt6 COMPONENTS Widgets REQUIRED)
+find_package(Qt5 COMPONENTS Widgets REQUIRED)
 pkg_check_modules(
   LIBALPM
   REQUIRED
@@ -109,7 +109,7 @@ enable_sanitizers(project_options)
 
 include_directories(${CMAKE_SOURCE_DIR}/src ${CMAKE_BINARY_DIR})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE project_warnings project_options Qt6::Widgets Threads::Threads fmt::fmt range-v3::range-v3 frozen::frozen PkgConfig::LIBALPM PkgConfig::LIBGLIB)
+target_link_libraries(${PROJECT_NAME} PRIVATE project_warnings project_options Qt5::Widgets Threads::Threads fmt::fmt range-v3::range-v3 frozen::frozen PkgConfig::LIBALPM PkgConfig::LIBGLIB)
 
 option(ENABLE_UNITY "Enable Unity builds of projects" OFF)
 if(ENABLE_UNITY)

@@ -37,9 +37,9 @@ if is_dummy_pkg_impl
     add_global_arguments('-DPKG_DUMMY_IMPL', language : 'cpp')
 endif
 
-qt6 = import('qt6')
+qt5 = import('qt5')
 prog_python = import('python').find_installation('python3')
-qt6_dep = dependency('qt6', modules: ['Widgets'])
+qt5_dep = dependency('qt5', modules: ['Widgets'])
 
 # Common dependencies
 fmt = dependency('fmt', version : ['>=8.0.0'], fallback : ['fmt', 'fmt_dep'])
@@ -118,17 +118,17 @@ endif
 
 add_project_arguments(cc.get_supported_arguments(possible_cc_flags), language : 'cpp')
 
-deps = [qt6_dep, fmt, libalpm, glib]
+deps = [qt5_dep, fmt, libalpm, glib]
 if cc.get_id() == 'clang'
   ranges = dependency('range-v3', version : ['>=0.11.0'])
   deps += [ranges]
 endif
 
-prep = qt6.preprocess(
+prep = qt5.preprocess(
   moc_headers : ['src/km-window.hpp', 'src/conf-window.hpp'] # These need to be fed through the moc tool before use.
 )
 # XML files that need to be compiled with the uic tol.
-prep += qt6.compile_ui(sources : ['src/km-window.ui', 'src/conf-window.ui'])
+prep += qt5.compile_ui(sources : ['src/km-window.ui', 'src/conf-window.ui'])
 
 compile_options_hpp = custom_target(
     'compile_options.hpp',
