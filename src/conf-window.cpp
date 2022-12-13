@@ -125,12 +125,17 @@ void prepare_build_environment() noexcept {
 
     fs::current_path(app_path);
 
+    // Check if folder exits, but .git doesn't.
+    if (fs::exists(pkgbuilds_path) && !fs::exists(pkgbuilds_path / ".git")) {
+        fs::remove_all(pkgbuilds_path);
+    }
+
     std::int32_t cmd_status{};
     if (!fs::exists(pkgbuilds_path)) {
         cmd_status = std::system("git clone https://github.com/cachyos/linux-cachyos.git pkgbuilds");
     }
 
-    fs::current_path(app_path / "pkgbuilds");
+    fs::current_path(pkgbuilds_path);
     cmd_status += std::system("git checkout --force master");
     cmd_status += std::system("git clean -fd");
     cmd_status += std::system("git pull");
