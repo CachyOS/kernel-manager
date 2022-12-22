@@ -215,7 +215,6 @@ ConfWindow::ConfWindow(QWidget* parent)
 
     // Setting default options
     m_ui->cachyconfig_check->setCheckState(Qt::Checked);
-    m_ui->numa_check->setCheckState(Qt::Checked);
     m_ui->hardly_check->setCheckState(Qt::Checked);
     m_ui->perfgovern_check->setCheckState(Qt::Checked);
     m_ui->tcpbbr_check->setCheckState(Qt::Checked);
@@ -229,7 +228,7 @@ ConfWindow::ConfWindow(QWidget* parent)
              << "250Hz"
              << "100Hz";
     m_ui->hzticks_combo_box->addItems(hz_ticks);
-    m_ui->hzticks_combo_box->setCurrentIndex(1);
+    m_ui->hzticks_combo_box->setCurrentIndex(3);
 
     QStringList tickless_modes;
     tickless_modes << "Full"
@@ -251,8 +250,6 @@ ConfWindow::ConfWindow(QWidget* parent)
                      << "Stats"
                      << "None";
     m_ui->lru_config_combo_box->addItems(lru_config_modes);
-
-    m_ui->lrng_check->setCheckState(Qt::Checked);
 
     QStringList cpu_optims;
     cpu_optims << "Disabled"
@@ -284,6 +281,12 @@ ConfWindow::ConfWindow(QWidget* parent)
     connect(m_ui->cancel_button, SIGNAL(clicked()), this, SLOT(on_cancel()));
     connect(m_ui->ok_button, SIGNAL(clicked()), this, SLOT(on_execute()));
     connect(m_ui->main_combo_box, &QComboBox::currentIndexChanged, this, [this](std::int32_t index) {
+        // Set to 1000HZ, if BMQ, CACULE, PDS, TT
+        if (index == 0 || index == 2 || index == 5 || index == 7) {
+            m_ui->hzticks_combo_box->setCurrentIndex(0);
+        } else {
+            m_ui->hzticks_combo_box->setCurrentIndex(3);
+        }
         // If not BORE or CFS.
         if (index != 1 && index != 3) {
             m_ui->RT_check->setEnabled(false);
@@ -316,13 +319,11 @@ void ConfWindow::on_execute() noexcept {
     fs::current_path(cpusched_path);
 
     // Execute 'sed' with checkboxes values
-    execute_sed("numa", convert_checkstate(m_ui->numa_check));
     execute_sed("hardly", convert_checkstate(m_ui->hardly_check));
     execute_sed("per_gov", convert_checkstate(m_ui->perfgovern_check));
     execute_sed("tcp_bbr2", convert_checkstate(m_ui->tcpbbr_check));
     execute_sed("mqdeadline", convert_checkstate(m_ui->mqdio_check));
     execute_sed("kyber", convert_checkstate(m_ui->kyber_check));
-    execute_sed("lrng", convert_checkstate(m_ui->lrng_check));
     execute_sed("auto_optim", convert_checkstate(m_ui->autooptim_check));
     execute_sed("debug", convert_checkstate(m_ui->debug_check));
     execute_sed("zstd_comp", convert_checkstate(m_ui->zstcomp_check));
@@ -338,7 +339,9 @@ void ConfWindow::on_execute() noexcept {
     const auto& is_xconfig_enabled          = (m_ui->xconfig_check->checkState() == Qt::Checked);
     const auto& is_gconfig_enabled          = (m_ui->gconfig_check->checkState() == Qt::Checked);
     const auto& is_localmodcfg_enabled      = (m_ui->localmodcfg_check->checkState() == Qt::Checked);
+    const auto& is_numa_disabled            = (m_ui->numa_check->checkState() == Qt::Checked);
     const auto& is_damon_enabled            = (m_ui->damon_check->checkState() == Qt::Checked);
+    const auto& is_lrng_enabled             = (m_ui->lrng_check->checkState() == Qt::Checked);
     const auto& is_builtin_zfs_enabled      = (m_ui->builtin_zfs_check->checkState() == Qt::Checked);
     const auto& is_builtin_bcachefs_enabled = (m_ui->builtin_bcachefs_check->checkState() == Qt::Checked);
     if (!is_cachyconfig_enabled) {
@@ -359,8 +362,14 @@ void ConfWindow::on_execute() noexcept {
     if (is_localmodcfg_enabled) {
         execute_sed("localmodcfg", "y");
     }
+    if (is_numa_disabled) {
+        execute_sed("numa", "y");
+    }
     if (is_damon_enabled) {
         execute_sed("damon", "y");
+    }
+    if (is_lrng_enabled) {
+        execute_sed("lrng", "y");
     }
     if (is_builtin_zfs_enabled) {
         execute_sed("builtin_zfs", "y");
