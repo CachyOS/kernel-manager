@@ -156,8 +156,18 @@ void execute_sed(std::string_view option, std::string_view value) noexcept {
     }
 }
 
-const char* convert_checkstate(QCheckBox* checkbox) noexcept {
-    return (checkbox->checkState() == Qt::Checked) ? "y" : "n";
+inline constexpr void execute_sed_empty_wrapped(std::string_view option_name, bool option_enabled) noexcept {
+    if (option_enabled) {
+        execute_sed(option_name, "y");
+    }
+}
+
+inline bool checkstate_checked(QCheckBox* checkbox) noexcept {
+    return (checkbox->checkState() == Qt::Checked);
+}
+
+inline const char* convert_checkstate(QCheckBox* checkbox) noexcept {
+    return checkstate_checked(checkbox) ? "y" : "n";
 }
 
 void child_watch_cb(GPid pid, [[maybe_unused]] gint status, gpointer user_data) {
@@ -342,54 +352,24 @@ void ConfWindow::on_execute() noexcept {
         execute_sed("latency_nice", convert_checkstate(m_ui->latnice_check));
     }
 
-    const auto& is_cachyconfig_enabled      = (m_ui->cachyconfig_check->checkState() == Qt::Checked);
-    const auto& is_nconfig_enabled          = (m_ui->nconfig_check->checkState() == Qt::Checked);
-    const auto& is_menuconfig_enabled       = (m_ui->menuconfig_check->checkState() == Qt::Checked);
-    const auto& is_xconfig_enabled          = (m_ui->xconfig_check->checkState() == Qt::Checked);
-    const auto& is_gconfig_enabled          = (m_ui->gconfig_check->checkState() == Qt::Checked);
-    const auto& is_localmodcfg_enabled      = (m_ui->localmodcfg_check->checkState() == Qt::Checked);
-    const auto& is_numa_disabled            = (m_ui->numa_check->checkState() == Qt::Checked);
-    const auto& is_damon_enabled            = (m_ui->damon_check->checkState() == Qt::Checked);
-    const auto& is_lrng_enabled             = (m_ui->lrng_check->checkState() == Qt::Checked);
-    const auto& is_debug_disabled           = (m_ui->debug_check->checkState() == Qt::Checked);
-    const auto& is_builtin_zfs_enabled      = (m_ui->builtin_zfs_check->checkState() == Qt::Checked);
-    const auto& is_builtin_bcachefs_enabled = (m_ui->builtin_bcachefs_check->checkState() == Qt::Checked);
+    // Execute 'sed' with checkboxes values,
+    // which becomes enabled with any value passed,
+    // and if nothing passed means it's disabled.
+    const auto& is_cachyconfig_enabled = checkstate_checked(m_ui->cachyconfig_check);
     if (!is_cachyconfig_enabled) {
         execute_sed("cachy_config", "'no'");
     }
-    if (is_nconfig_enabled) {
-        execute_sed("nconfig", "y");
-    }
-    if (is_menuconfig_enabled) {
-        execute_sed("menuconfig", "y");
-    }
-    if (is_xconfig_enabled) {
-        execute_sed("xconfig", "y");
-    }
-    if (is_gconfig_enabled) {
-        execute_sed("gconfig", "y");
-    }
-    if (is_localmodcfg_enabled) {
-        execute_sed("localmodcfg", "y");
-    }
-    if (is_numa_disabled) {
-        execute_sed("numa", "y");
-    }
-    if (is_damon_enabled) {
-        execute_sed("damon", "y");
-    }
-    if (is_lrng_enabled) {
-        execute_sed("lrng", "y");
-    }
-    if (is_debug_disabled) {
-        execute_sed("debug", "y");
-    }
-    if (is_builtin_zfs_enabled) {
-        execute_sed("builtin_zfs", "y");
-    }
-    if (is_builtin_bcachefs_enabled) {
-        execute_sed("builtin_bcachefs", "y");
-    }
+    execute_sed_empty_wrapped("nconfig", checkstate_checked(m_ui->nconfig_check));
+    execute_sed_empty_wrapped("menuconfig", checkstate_checked(m_ui->menuconfig_check));
+    execute_sed_empty_wrapped("xconfig", checkstate_checked(m_ui->xconfig_check));
+    execute_sed_empty_wrapped("gconfig", checkstate_checked(m_ui->gconfig_check));
+    execute_sed_empty_wrapped("localmodcfg", checkstate_checked(m_ui->localmodcfg_check));
+    execute_sed_empty_wrapped("numa", checkstate_checked(m_ui->numa_check));
+    execute_sed_empty_wrapped("damon", checkstate_checked(m_ui->damon_check));
+    execute_sed_empty_wrapped("lrng", checkstate_checked(m_ui->lrng_check));
+    execute_sed_empty_wrapped("debug", checkstate_checked(m_ui->debug_check));
+    execute_sed_empty_wrapped("builtin_zfs", checkstate_checked(m_ui->builtin_zfs_check));
+    execute_sed_empty_wrapped("builtin_bcachefs", checkstate_checked(m_ui->builtin_bcachefs_check));
 
     // Execute 'sed' with combobox values
     execute_sed("HZ_ticks", get_hz_tick(static_cast<size_t>(m_ui->hzticks_combo_box->currentIndex())));
