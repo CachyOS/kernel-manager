@@ -79,6 +79,11 @@ namespace fs = std::filesystem;
     return lto_modes[index];
 }
 
+[[gnu::pure]] constexpr const char* get_hugepage_mode(size_t index) noexcept {
+    constexpr std::array zstd_comp_levels{"always", "madvise"};
+    return zstd_comp_levels[index];
+}
+
 [[gnu::pure]] constexpr const char* get_zstd_comp_level(size_t index) noexcept {
     constexpr std::array zstd_comp_levels{"ultra", "normal"};
     return zstd_comp_levels[index];
@@ -277,6 +282,11 @@ ConfWindow::ConfWindow(QWidget* parent)
               << "Thin";
     m_ui->lto_combo_box->addItems(lto_modes);
 
+    QStringList hugepage_modes;
+    hugepage_modes << "Always"
+                   << "Madivse";
+    m_ui->hugepage_combo_box->addItems(hugepage_modes);
+
     // Connect buttons signal
     connect(m_ui->cancel_button, SIGNAL(clicked()), this, SLOT(on_cancel()));
     connect(m_ui->ok_button, SIGNAL(clicked()), this, SLOT(on_execute()));
@@ -325,7 +335,6 @@ void ConfWindow::on_execute() noexcept {
     execute_sed("mqdeadline", convert_checkstate(m_ui->mqdio_check));
     execute_sed("kyber", convert_checkstate(m_ui->kyber_check));
     execute_sed("auto_optim", convert_checkstate(m_ui->autooptim_check));
-    execute_sed("debug", convert_checkstate(m_ui->debug_check));
     execute_sed("zstd_comp", convert_checkstate(m_ui->zstcomp_check));
 
     if (main_combo_index == 1 || main_combo_index == 3) {
@@ -342,6 +351,7 @@ void ConfWindow::on_execute() noexcept {
     const auto& is_numa_disabled            = (m_ui->numa_check->checkState() == Qt::Checked);
     const auto& is_damon_enabled            = (m_ui->damon_check->checkState() == Qt::Checked);
     const auto& is_lrng_enabled             = (m_ui->lrng_check->checkState() == Qt::Checked);
+    const auto& is_debug_disabled           = (m_ui->debug_check->checkState() == Qt::Checked);
     const auto& is_builtin_zfs_enabled      = (m_ui->builtin_zfs_check->checkState() == Qt::Checked);
     const auto& is_builtin_bcachefs_enabled = (m_ui->builtin_bcachefs_check->checkState() == Qt::Checked);
     if (!is_cachyconfig_enabled) {
@@ -371,6 +381,9 @@ void ConfWindow::on_execute() noexcept {
     if (is_lrng_enabled) {
         execute_sed("lrng", "y");
     }
+    if (is_debug_disabled) {
+        execute_sed("debug", "y");
+    }
     if (is_builtin_zfs_enabled) {
         execute_sed("builtin_zfs", "y");
     }
@@ -384,6 +397,7 @@ void ConfWindow::on_execute() noexcept {
     execute_sed("preempt", get_preempt_mode(static_cast<size_t>(m_ui->preempt_combo_box->currentIndex())));
     execute_sed("lru_config", get_lru_config_mode(static_cast<size_t>(m_ui->lru_config_combo_box->currentIndex())));
     execute_sed("zstd_level", get_zstd_comp_level(static_cast<size_t>(m_ui->zstd_comp_levels_combo_box->currentIndex())));
+    execute_sed("hugepage", get_hugepage_mode(static_cast<size_t>(m_ui->hugepage_combo_box->currentIndex())));
 
     const std::string_view lto_mode = get_lto_mode(static_cast<size_t>(m_ui->lto_combo_box->currentIndex()));
     if (lto_mode != "no") {

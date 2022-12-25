@@ -27,7 +27,8 @@
         "builtin_zfs": "_build_zfs-",
         "builtin_bcachefs": "_bcachefs-",
         "rt_kernel": "_rtkernel-",
-        "latency_nice": "_latency_nice-y"
+        "latency_nice": "_latency_nice-y",
+        "hugepage": "_hugepage-'full'"
     },
     "option_map": {
         "cachy_config": "_cachy_config",
@@ -57,6 +58,7 @@
         "builtin_zfs": "_build_zfs",
         "builtin_bcachefs": "_bcachefs",
         "rt_kernel": "_rtkernel",
-        "latency_nice": "_latency_nice"
+        "latency_nice": "_latency_nice",
+        "hugepage": "_hugepage"
     }
 }

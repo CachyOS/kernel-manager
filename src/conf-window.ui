@@ -855,6 +855,35 @@
           </layout>
          </widget>
         </item>
+        <item>
+         <widget class="QWidget" name="hugepage_widget" native="true">
+          <layout class="QHBoxLayout" name="hugepage_horizontal_layout">
+           <item>
+            <widget class="QLabel" name="hugepage_label">
+             <property name="text">
+              <string>Transparent Hugepages</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="hugepage_horizontal_spacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QComboBox" name="hugepage_combo_box"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
        </layout>
       </widget>
      </widget>
