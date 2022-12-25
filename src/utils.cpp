@@ -37,11 +37,11 @@
 
 #include <range/v3/algorithm/for_each.hpp>
 #include <range/v3/algorithm/reverse.hpp>
+#include <range/v3/range/conversion.hpp>
 #include <range/v3/view/filter.hpp>
+#include <range/v3/view/join.hpp>
 #include <range/v3/view/split.hpp>
 #include <range/v3/view/transform.hpp>
-#include <range/v3/range/conversion.hpp>
-#include <range/v3/view/join.hpp>
 
 #if defined(__clang__)
 #pragma clang diagnostic pop
