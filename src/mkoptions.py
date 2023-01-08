@@ -1,5 +1,5 @@
 #! /usr/bin/env python3
-"""// Copyright (C) 2022 Vladislav Nepogodin
+"""// Copyright (C) 2022-2023 Vladislav Nepogodin
 //
 // This file is part of CachyOS kernel manager.
 //
