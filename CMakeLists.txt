@@ -90,6 +90,7 @@ add_executable(${PROJECT_NAME}
     src/ini.hpp
     src/utils.hpp src/utils.cpp
     src/kernel.hpp src/kernel.cpp
+    src/aur_kernel.hpp src/aur_kernel.cpp
     src/km-window.hpp src/km-window.cpp
     "${CMAKE_BINARY_DIR}/compile_options.hpp"
     src/conf-window.hpp src/conf-window.cpp

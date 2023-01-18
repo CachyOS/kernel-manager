@@ -47,7 +47,7 @@
 
 class Kernel {
  public:
-    consteval Kernel() = default;
+    constexpr Kernel() = default;
     explicit Kernel(alpm_handle_t* handle, alpm_pkg_t* pkg, alpm_pkg_t* headers) : m_name(alpm_pkg_get_name(pkg)), m_pkg(pkg), m_headers(headers), m_handle(handle) { }
     explicit Kernel(alpm_handle_t* handle, alpm_pkg_t* pkg, alpm_pkg_t* headers, const std::string_view& repo) : m_name(alpm_pkg_get_name(pkg)), m_repo(repo), m_pkg(pkg), m_headers(headers), m_handle(handle) { }
     explicit Kernel(alpm_handle_t* handle, alpm_pkg_t* pkg, alpm_pkg_t* headers, const std::string_view& repo, const std::string_view& raw) : m_name(alpm_pkg_get_name(pkg)), m_repo(repo), m_raw(raw), m_pkg(pkg), m_headers(headers), m_handle(handle) { }
@@ -124,6 +124,10 @@ class Kernel {
     std::string m_repo{"local"};
     std::string m_raw{};
     std::string m_installed_db{};
+#ifdef ENABLE_AUR_KERNELS
+    std::string m_version{};
+    std::string m_name_headers{};
+#endif
 
     alpm_pkg_t* m_pkg;
     alpm_pkg_t* m_headers;

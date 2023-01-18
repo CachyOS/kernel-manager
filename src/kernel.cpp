@@ -17,7 +17,30 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 #include "kernel.hpp"
+#include "aur_kernel.hpp"
 #include "utils.hpp"
+
+#include <cstdio>
+#include <filesystem>
+#include <algorithm>
+#include <memory>
+
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wold-style-cast"
+#elif defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wuseless-cast"
+#pragma GCC diagnostic ignored "-Wold-style-cast"
+#endif
+
+#include <range/v3/algorithm/find_if.hpp>
+
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#elif defined(__GNUC__)
+#pragma GCC diagnostic pop
+#endif
 
 #include <fmt/compile.h>
 #include <fmt/core.h>
@@ -25,13 +48,51 @@
 namespace {
 
 #ifdef PKG_DUMMY_IMPL
+static std::vector<std::string_view> g_aur_kernel_install_list{};
 static std::vector<std::string_view> g_kernel_install_list{};
 static std::vector<std::string_view> g_kernel_removal_list{};
 #endif
 
 }  // namespace
 
+namespace utils {
+
+// https://github.com/sheredom/subprocess.h
+// https://gist.github.com/konstantint/d49ab683b978b3d74172
+// https://github.com/arun11299/cpp-subprocess/blob/master/subprocess.hpp#L1218
+// https://stackoverflow.com/questions/11342868/c-interface-for-interactive-bash
+// https://github.com/hniksic/rust-subprocess
+std::string exec(const std::string_view& command) noexcept {
+    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(command.data(), "r"), pclose);
+
+    if (!pipe) {
+        fmt::print(stderr, "popen failed! '{}'\n", command);
+        return "-1";
+    }
+
+    std::string result{};
+    std::array<char, 128> buffer{};
+    while (!feof(pipe.get())) {
+        if (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr) {
+            result += buffer.data();
+        }
+    }
+
+    if (result.ends_with('\n')) {
+        result.pop_back();
+    }
+
+    return result;
+}
+
+}
+
+namespace fs = std::filesystem;
+
 std::string Kernel::version() noexcept {
+#ifdef ENABLE_AUR_KERNELS
+    if (m_repo == "aur") { return m_version; }
+#endif
     const char* sync_pkg_ver = alpm_pkg_get_version(m_pkg);
     if (!is_installed()) {
         return sync_pkg_ver;
@@ -61,6 +122,12 @@ bool Kernel::is_installed() const noexcept {
 
 bool Kernel::install() const noexcept {
 #ifdef PKG_DUMMY_IMPL
+#ifdef ENABLE_AUR_KERNELS
+    if (m_repo == "aur") {
+        g_aur_kernel_install_list.insert(g_aur_kernel_install_list.end(), {m_name.c_str(), m_name_headers.c_str()});
+        return true;
+    }
+#endif
     const char* pkg_name    = alpm_pkg_get_name(m_pkg);
     const char* pkg_headers = alpm_pkg_get_name(m_headers);
     g_kernel_install_list.insert(g_kernel_install_list.end(), {pkg_name, pkg_headers});
@@ -159,12 +226,48 @@ std::vector<Kernel> Kernel::get_kernels(alpm_handle_t* handle) noexcept {
         alpm_list_free(ret_list);
     }
 
+#ifdef ENABLE_AUR_KERNELS
+    bool is_paru_installed{true};
+    if (!fs::exists("/sbin/paru") && !fs::exists("/sbin/awk")) {
+        fmt::print(stderr, "Paru & AWK are not installed! Disabling AUR kernels support\n");
+        is_paru_installed = false;
+    }
+
+    if (!kernels.empty() && is_paru_installed) {
+        auto&& aur_kernels_headers = utils::make_multiline(utils::exec("paru --aur -Sl | grep ' linux[^ ]*-headers' | awk '{print $2}'"));
+
+        for (auto&& aur_kernel_header : aur_kernels_headers) {
+            auto&& aur_kernel = std::string{aur_kernel_header};
+            utils::replace_all(aur_kernel, "-headers", "");
+            if (ranges::find_if(kernels, [&](auto& kernel){ return kernel.m_name == aur_kernel; }) != kernels.end()) {
+                continue;
+            }
+            Kernel kernel_obj{};
+
+            kernel_obj.m_handle = handle;
+            kernel_obj.m_repo = "aur";
+            kernel_obj.m_name = aur_kernel;
+            kernel_obj.m_name_headers = aur_kernel_header;
+            kernel_obj.m_version = "unknown-version";
+            kernel_obj.m_raw = fmt::format("aur/{}", aur_kernel);
+
+            kernels.emplace_back(std::move(kernel_obj));
+        }
+    }
+#endif
+
     return kernels;
 }
 
 #ifdef PKG_DUMMY_IMPL
 
 void Kernel::commit_transaction() noexcept {
+#ifdef ENABLE_AUR_KERNELS
+    if (!g_aur_kernel_install_list.empty()) {
+        detail::install_aur_kernels(g_aur_kernel_install_list);
+        g_aur_kernel_install_list.clear();
+    }
+#endif
     if (!g_kernel_install_list.empty()) {
         const auto& packages_install = utils::join_vec(g_kernel_install_list, " ");
         utils::runCmdTerminal(fmt::format(FMT_COMPILE("pacman -S --needed {}"), packages_install).c_str(), true);
