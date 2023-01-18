@@ -28,6 +28,7 @@
 #include <fmt/core.h>
 
 #include <QCoreApplication>
+#include <QMessageBox>
 #include <QScreen>
 #include <QShortcut>
 #include <QTimer>
@@ -580,6 +581,10 @@ MainWindow::MainWindow(QWidget* parent)
             }
         }
     });
+
+    if (m_kernels.empty()) {
+        QMessageBox::critical(this, "CachyOS Kernel Manager", "No kernels found!\nPlease run `pacman -Sy` to update DB!\nThis is needed for the app to work properly");
+    }
 
     // Connect buttons signal
     connect(m_ui->cancel, SIGNAL(clicked()), this, SLOT(on_cancel()));
