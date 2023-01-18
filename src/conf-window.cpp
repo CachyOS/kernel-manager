@@ -266,6 +266,13 @@ ConfWindow::ConfWindow(QWidget* parent)
                      << "None";
     m_ui->lru_config_combo_box->addItems(lru_config_modes);
 
+    QStringList vma_config_modes;
+    vma_config_modes << "Standard"
+                     << "Stats"
+                     << "None";
+    m_ui->vma_config_combo_box->addItems(vma_config_modes);
+    m_ui->vma_config_combo_box->setCurrentIndex(2);
+
     QStringList cpu_optims;
     cpu_optims << "Disabled"
                << "Generic"
@@ -345,7 +352,6 @@ void ConfWindow::on_execute() noexcept {
     execute_sed("mqdeadline", convert_checkstate(m_ui->mqdio_check));
     execute_sed("kyber", convert_checkstate(m_ui->kyber_check));
     execute_sed("auto_optim", convert_checkstate(m_ui->autooptim_check));
-    execute_sed("zstd_comp", convert_checkstate(m_ui->zstcomp_check));
 
     if (main_combo_index == 1 || main_combo_index == 3) {
         execute_sed("rt_kernel", convert_checkstate(m_ui->RT_check));
@@ -368,6 +374,7 @@ void ConfWindow::on_execute() noexcept {
     execute_sed_empty_wrapped("damon", checkstate_checked(m_ui->damon_check));
     execute_sed_empty_wrapped("lrng", checkstate_checked(m_ui->lrng_check));
     execute_sed_empty_wrapped("debug", checkstate_checked(m_ui->debug_check));
+    execute_sed_empty_wrapped("zstd_comp", convert_checkstate(m_ui->zstcomp_check));
     execute_sed_empty_wrapped("builtin_zfs", checkstate_checked(m_ui->builtin_zfs_check));
     execute_sed_empty_wrapped("builtin_bcachefs", checkstate_checked(m_ui->builtin_bcachefs_check));
 
@@ -376,6 +383,7 @@ void ConfWindow::on_execute() noexcept {
     execute_sed("tickrate", get_tickless_mode(static_cast<size_t>(m_ui->tickless_combo_box->currentIndex())));
     execute_sed("preempt", get_preempt_mode(static_cast<size_t>(m_ui->preempt_combo_box->currentIndex())));
     execute_sed("lru_config", get_lru_config_mode(static_cast<size_t>(m_ui->lru_config_combo_box->currentIndex())));
+    execute_sed("vma_config", get_lru_config_mode(static_cast<size_t>(m_ui->vma_config_combo_box->currentIndex())));
     execute_sed("zstd_level", get_zstd_comp_level(static_cast<size_t>(m_ui->zstd_comp_levels_combo_box->currentIndex())));
     execute_sed("hugepage", get_hugepage_mode(static_cast<size_t>(m_ui->hugepage_combo_box->currentIndex())));
 
