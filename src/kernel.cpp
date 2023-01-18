@@ -124,7 +124,7 @@ bool Kernel::install() const noexcept {
 #ifdef PKG_DUMMY_IMPL
 #ifdef ENABLE_AUR_KERNELS
     if (m_repo == "aur") {
-        g_aur_kernel_install_list.insert(g_aur_kernel_install_list.end(), {m_name.c_str(), m_name_headers.c_str()});
+        g_aur_kernel_install_list.insert(g_aur_kernel_install_list.end(), {m_name.c_str()});
         return true;
     }
 #endif
