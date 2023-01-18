@@ -2,7 +2,7 @@
 Simple kernel manager.
 
 That kernel manager is only supports kernels from any arch based repos.
-###### Note: does not support kernels in AUR.
+###### Note: does support kernels from AUR (requires paru & awk installed).
 
 Requirements
 ------------
