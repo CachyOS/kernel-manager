@@ -8,9 +8,11 @@ project('cachyos-kernel-manager', 'cpp',
                           'werror=true',
                           'b_ndebug=if-release'])
 
-is_debug_build     = get_option('buildtype').startswith('debug')
-is_dev_environment = get_option('devenv')
-is_dummy_pkg_impl  = get_option('pkg_dummy_impl')
+is_debug_build          = get_option('buildtype').startswith('debug')
+is_dev_environment      = get_option('devenv')
+is_dummy_pkg_impl       = get_option('pkg_dummy_impl')
+is_aur_kernels_enabled  = get_option('aur_kernels')
+
 cc = meson.get_compiler('cpp')
 if cc.get_id() == 'clang'
     specific_cc_flags = [
@@ -35,6 +37,11 @@ if not is_dev_environment
 endif
 if is_dummy_pkg_impl
     add_global_arguments('-DPKG_DUMMY_IMPL', language : 'cpp')
+endif
+if is_dummy_pkg_impl and is_aur_kernels_enabled
+    add_global_arguments('-DENABLE_AUR_KERNELS', language : 'cpp')
+elif is_aur_kernels_enabled
+    warning('Not supported when set to -Dpkg_dummy_impl=false! Disabling AUR kernels support..')
 endif
 
 qt5 = import('qt5')
