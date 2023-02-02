@@ -50,7 +50,7 @@
 namespace fs = std::filesystem;
 
 [[gnu::pure]] constexpr const char* get_kernel_name(size_t index) noexcept {
-    constexpr std::array kernel_names{"bmq", "bore", "cacule", "cfs", "hardened", "pds", "rc", "tt"};
+    constexpr std::array kernel_names{"bmq", "bore", "cfs", "hardened", "pds", "rc", "tt"};
     return kernel_names[index];
 }
 
@@ -99,8 +99,6 @@ constexpr std::string_view get_kernel_name_path(std::string_view kernel_name) no
         return "linux-cachyos-bmq";
     } else if (kernel_name == "bore") {
         return "linux-cachyos-bore";
-    } else if (kernel_name == "cacule") {
-        return "linux-cachyos-cacule";
     } else if (kernel_name == "cfs") {
         return "linux-cachyos-cfs";
     } else if (kernel_name == "hardened") {
@@ -219,7 +217,6 @@ ConfWindow::ConfWindow(QWidget* parent)
     QStringList kernel_names;
     kernel_names << "BMQ - BitMap Queue CPU scheduler"
                  << "Bore - Burst-Oriented Response Enhancer"
-                 << "Cacule - CacULE scheduler"
                  << "CFS - Completely Fair Scheduler"
                  << "Hardened - Hardened kernel with the BORE Scheduler"
                  << "PDS - Priority and Deadline based Skip list multiple queue CPU scheduler"
@@ -308,14 +305,14 @@ ConfWindow::ConfWindow(QWidget* parent)
     connect(m_ui->cancel_button, SIGNAL(clicked()), this, SLOT(on_cancel()));
     connect(m_ui->ok_button, SIGNAL(clicked()), this, SLOT(on_execute()));
     connect(m_ui->main_combo_box, &QComboBox::currentIndexChanged, this, [this](std::int32_t index) {
-        // Set to 1000HZ, if BMQ, CACULE, PDS, TT
-        if (index == 0 || index == 2 || index == 5 || index == 7) {
+        // Set to 1000HZ, if BMQ, PDS, TT
+        if (index == 0 || index == 4 || index == 6) {
             m_ui->hzticks_combo_box->setCurrentIndex(0);
         } else {
             m_ui->hzticks_combo_box->setCurrentIndex(3);
         }
         // If not BORE or CFS.
-        if (index != 1 && index != 3) {
+        if (index != 1 && index != 2) {
             m_ui->RT_check->setEnabled(false);
             m_ui->latnice_check->setEnabled(false);
             m_ui->latnice_check->setCheckState(Qt::Unchecked);
@@ -353,7 +350,7 @@ void ConfWindow::on_execute() noexcept {
     execute_sed("kyber", convert_checkstate(m_ui->kyber_check));
     execute_sed("auto_optim", convert_checkstate(m_ui->autooptim_check));
 
-    if (main_combo_index == 1 || main_combo_index == 3) {
+    if (main_combo_index == 1 || main_combo_index == 2) {
         execute_sed("rt_kernel", convert_checkstate(m_ui->RT_check));
         execute_sed("latency_nice", convert_checkstate(m_ui->latnice_check));
     }
