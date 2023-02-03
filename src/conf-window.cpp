@@ -75,7 +75,7 @@ namespace fs = std::filesystem;
 }
 
 [[gnu::pure]] constexpr const char* get_lto_mode(size_t index) noexcept {
-    constexpr std::array lto_modes{"no", "full", "thin"};
+    constexpr std::array lto_modes{"none", "full", "thin"};
     return lto_modes[index];
 }
 
@@ -281,7 +281,6 @@ ConfWindow::ConfWindow(QWidget* parent)
     m_ui->processor_opt_combo_box->addItems(cpu_optims);
 
     m_ui->autooptim_check->setCheckState(Qt::Checked);
-    m_ui->zstcomp_check->setCheckState(Qt::Checked);
     m_ui->latnice_check->setCheckState(Qt::Checked);
 
     QStringList zstd_comp_levels;
@@ -383,11 +382,7 @@ void ConfWindow::on_execute() noexcept {
     execute_sed("vma_config", get_lru_config_mode(static_cast<size_t>(m_ui->vma_config_combo_box->currentIndex())));
     execute_sed("zstd_level", get_zstd_comp_level(static_cast<size_t>(m_ui->zstd_comp_levels_combo_box->currentIndex())));
     execute_sed("hugepage", get_hugepage_mode(static_cast<size_t>(m_ui->hugepage_combo_box->currentIndex())));
-
-    const std::string_view lto_mode = get_lto_mode(static_cast<size_t>(m_ui->lto_combo_box->currentIndex()));
-    if (lto_mode != "no") {
-        execute_sed("lto", lto_mode);
-    }
+    execute_sed("lto", get_lto_mode(static_cast<size_t>(m_ui->lto_combo_box->currentIndex())));
 
     const std::string_view cpu_opt_mode = get_cpu_opt_mode(static_cast<size_t>(m_ui->processor_opt_combo_box->currentIndex()));
     if (cpu_opt_mode != "manual") {

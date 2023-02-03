@@ -1,6 +1,6 @@
 {
     "default_option_map": {
-        "cachy_config": "_cachy_config-'yes'",
+        "cachy_config": "_cachy_config-y",
         "nconfig": "_makenconfig-",
         "menuconfig": "_makemenuconfig-",
         "xconfig": "_makexconfig-",
@@ -15,21 +15,21 @@
         "preempt": "_preempt-full",
         "mqdeadline": "_mq_deadline_disable-y",
         "kyber": "_kyber_disable-y",
-        "lru_config": "_lru_config-'standard'",
-        "vma_config": "_vma_config-'none'",
+        "lru_config": "_lru_config-standard",
+        "vma_config": "_vma_config-none",
         "damon": "_damon-",
         "lrng": "_lrng_enable-",
         "cpu_opt": "_processor_opt-",
         "auto_optim": "_use_auto_optimization-y",
         "debug": "_disable_debug-",
         "zstd_comp": "_zstd_compression-",
-        "zstd_level": "_zstd_level_value-'normal'",
-        "lto": "_use_llvm_lto-",
+        "zstd_level": "_zstd_level_value-normal",
+        "lto": "_use_llvm_lto-none",
         "builtin_zfs": "_build_zfs-",
         "builtin_bcachefs": "_bcachefs-",
         "rt_kernel": "_rtkernel-",
         "latency_nice": "_latency_nice-y",
-        "hugepage": "_hugepage-'always'"
+        "hugepage": "_hugepage-always"
     },
     "option_map": {
         "cachy_config": "_cachy_config",
