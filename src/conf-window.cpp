@@ -24,17 +24,24 @@
 #include <cstdlib>
 
 #include <filesystem>
+#include <fstream>
 
 #if defined(__clang__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wold-style-cast"
 #elif defined(__GNUC__)
 #pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wnull-dereference"
 #pragma GCC diagnostic ignored "-Wuseless-cast"
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 #endif
 
 #include <glib.h>
+
+#include <range/v3/algorithm/for_each.hpp>
+#include <range/v3/view/filter.hpp>
+#include <range/v3/view/join.hpp>
+#include <range/v3/range/conversion.hpp>
 
 #if defined(__clang__)
 #pragma clang diagnostic pop
@@ -43,9 +50,14 @@
 #endif
 
 #include <fmt/core.h>
+#include <fmt/ranges.h>
 #include <fmt/compile.h>
 
+#include <QtDebug>
 #include <QStringList>
+#include <QInputDialog>
+#include <QFileDialog>
+#include <QLineEdit>
 
 namespace fs = std::filesystem;
 
@@ -168,6 +180,22 @@ inline const char* convert_checkstate(QCheckBox* checkbox) noexcept {
     return checkstate_checked(checkbox) ? "y" : "n";
 }
 
+inline constexpr auto convert_to_varname(std::string_view option) noexcept {
+    // force constexpr call with lambda
+    return [option]{ return detail::option_map.at(option); }();
+}
+
+inline auto convert_to_var_assign(std::string_view option, std::string_view value) noexcept {
+    return fmt::format(FMT_COMPILE("{}={}\n"), convert_to_varname(option), value);
+}
+
+inline constexpr auto convert_to_var_assign_empty_wrapped(std::string_view option_name, bool option_enabled) noexcept {
+    if (option_enabled) {
+        return convert_to_var_assign(option_name, "y");
+    }
+    return std::string{};
+}
+
 void child_watch_cb(GPid pid, [[maybe_unused]] gint status, gpointer user_data) {
 #if !defined(NDEBUG)
     g_message("Child %" G_PID_FORMAT " exited %s", pid,
@@ -206,12 +234,168 @@ void run_cmd_async(std::string&& cmd, bool* data) {
     g_child_watch_add(child_pid, child_watch_cb, data);
 }
 
+std::vector<std::string> get_source_array_from_pkgbuild(std::string_view kernel_name_path, std::string_view options_set) noexcept {
+    const auto& testscript_src = fmt::format(FMT_COMPILE("#!/usr/bin/bash\n{}\nsource $1\n{}"), options_set, "echo \"${source[@]}\"");
+    const auto& testscript_path = fmt::format(FMT_COMPILE("{}/.testscript"), kernel_name_path);
+
+    utils::write_to_file(testscript_path, testscript_src);
+    fs::permissions(testscript_path,
+        fs::perms::owner_exec | fs::perms::group_exec | fs::perms::others_exec,
+        fs::perm_options::add);
+
+    const auto& src_entries = utils::exec(fmt::format(FMT_COMPILE("{} {}/PKGBUILD"), testscript_path, kernel_name_path));
+    return utils::make_multiline(src_entries, ' ');
+}
+
+void insert_new_source_array_into_pkgbuild(std::string_view kernel_name_path, QListWidget* list_widget, const std::vector<std::string>& orig_source_array) noexcept {
+    static constexpr auto functor = [](auto&& rng) {
+        auto rng_str = std::string_view(&*rng.begin(), static_cast<size_t>(ranges::distance(rng)));
+        return !rng_str.ends_with(".patch");
+    };
+
+    std::vector<std::string> array_entries{};
+    ranges::for_each(orig_source_array | ranges::views::filter(functor), [&](auto&& rng) { array_entries.emplace_back(fmt::format(FMT_COMPILE("\"{}\""), rng)); });
+
+    // Apply flag to each item in list widget
+    for(int i = 0; i < list_widget->count(); ++i) {
+        auto* item = list_widget->item(i);
+        array_entries.emplace_back(fmt::format(FMT_COMPILE("\"{}\""), item->text().toStdString()));
+    }
+    const auto& pkgbuild_path = fmt::format(FMT_COMPILE("{}/PKGBUILD"), kernel_name_path);
+    auto pkgbuildsrc = utils::read_whole_file(pkgbuild_path);
+
+    const auto& new_source_array = fmt::format(FMT_COMPILE("source=(\n{})\n"), array_entries | ranges::views::join('\n') | ranges::to<std::string>());
+    if (auto foundpos = pkgbuildsrc.find("prepare()"); foundpos != std::string::npos) {
+        if (auto last_newline_before = pkgbuildsrc.find_last_of('\n', foundpos); last_newline_before != std::string::npos) {
+            pkgbuildsrc.insert(last_newline_before, new_source_array);
+        }
+    }
+    utils::write_to_file(pkgbuild_path, pkgbuildsrc);
+}
+
+QStringList convert_vector_of_strings_to_stringlist(const std::vector<std::string>& vec) noexcept {
+    QStringList result{};
+
+    for (auto&& element : vec) {
+        result << QString::fromStdString(element);
+    }
+    return result;
+}
+
+inline void list_widget_apply_edit_flag(QListWidget* list_widget) noexcept {
+    // Apply flag to each item in list widget
+    for(int i = 0; i < list_widget->count(); ++i) {
+        auto* item = list_widget->item(i);
+        item->setFlags(item->flags() | Qt::ItemIsEditable);
+    }
+}
+
+void ConfWindow::connect_all_checkboxes() noexcept {
+    auto options_page_ui_obj = m_ui->conf_options_page_widget->get_ui_obj();
+
+    std::array checkbox_list {
+        options_page_ui_obj->latnice_check,
+        options_page_ui_obj->lrng_check,
+        options_page_ui_obj->builtin_zfs_check,
+        options_page_ui_obj->builtin_bcachefs_check,
+    };
+
+    for (auto checkbox : checkbox_list) {
+        connect(checkbox, &QCheckBox::stateChanged, this, [this](std::int32_t) {
+            reset_patches_data_tab();
+        });
+    }
+}
+
+std::string ConfWindow::get_all_set_values() noexcept {
+    std::string result{};
+    auto options_page_ui_obj = m_ui->conf_options_page_widget->get_ui_obj();
+
+    const std::int32_t main_combo_index  = options_page_ui_obj->main_combo_box->currentIndex();
+
+    // checkboxes values
+    result += convert_to_var_assign("hardly", convert_checkstate(options_page_ui_obj->hardly_check));
+    result += convert_to_var_assign("per_gov", convert_checkstate(options_page_ui_obj->perfgovern_check));
+    result += convert_to_var_assign("tcp_bbr2", convert_checkstate(options_page_ui_obj->tcpbbr_check));
+    result += convert_to_var_assign("mqdeadline", convert_checkstate(options_page_ui_obj->mqdio_check));
+    result += convert_to_var_assign("kyber", convert_checkstate(options_page_ui_obj->kyber_check));
+    result += convert_to_var_assign("auto_optim", convert_checkstate(options_page_ui_obj->autooptim_check));
+
+    if (main_combo_index == 1 || main_combo_index == 2) {
+        result += convert_to_var_assign("rt_kernel", convert_checkstate(options_page_ui_obj->RT_check));
+        result += convert_to_var_assign("latency_nice", convert_checkstate(options_page_ui_obj->latnice_check));
+    }
+
+    // Execute 'sed' with checkboxes values,
+    // which becomes enabled with any value passed,
+    // and if nothing passed means it's disabled.
+    const auto& is_cachyconfig_enabled = checkstate_checked(options_page_ui_obj->cachyconfig_check);
+    if (!is_cachyconfig_enabled) {
+        result += convert_to_var_assign("cachy_config", "'no'");
+    }
+    result += convert_to_var_assign_empty_wrapped("nconfig", checkstate_checked(options_page_ui_obj->nconfig_check));
+    result += convert_to_var_assign_empty_wrapped("menuconfig", checkstate_checked(options_page_ui_obj->menuconfig_check));
+    result += convert_to_var_assign_empty_wrapped("xconfig", checkstate_checked(options_page_ui_obj->xconfig_check));
+    result += convert_to_var_assign_empty_wrapped("gconfig", checkstate_checked(options_page_ui_obj->gconfig_check));
+    result += convert_to_var_assign_empty_wrapped("localmodcfg", checkstate_checked(options_page_ui_obj->localmodcfg_check));
+    result += convert_to_var_assign_empty_wrapped("numa", checkstate_checked(options_page_ui_obj->numa_check));
+    result += convert_to_var_assign_empty_wrapped("damon", checkstate_checked(options_page_ui_obj->damon_check));
+    result += convert_to_var_assign_empty_wrapped("lrng", checkstate_checked(options_page_ui_obj->lrng_check));
+    result += convert_to_var_assign_empty_wrapped("debug", checkstate_checked(options_page_ui_obj->debug_check));
+    result += convert_to_var_assign_empty_wrapped("zstd_comp", convert_checkstate(options_page_ui_obj->zstcomp_check));
+    result += convert_to_var_assign_empty_wrapped("builtin_zfs", checkstate_checked(options_page_ui_obj->builtin_zfs_check));
+    result += convert_to_var_assign_empty_wrapped("builtin_bcachefs", checkstate_checked(options_page_ui_obj->builtin_bcachefs_check));
+
+    // Execute 'sed' with combobox values
+    result += convert_to_var_assign("HZ_ticks", get_hz_tick(static_cast<size_t>(options_page_ui_obj->hzticks_combo_box->currentIndex())));
+    result += convert_to_var_assign("tickrate", get_tickless_mode(static_cast<size_t>(options_page_ui_obj->tickless_combo_box->currentIndex())));
+    result += convert_to_var_assign("preempt", get_preempt_mode(static_cast<size_t>(options_page_ui_obj->preempt_combo_box->currentIndex())));
+    result += convert_to_var_assign("lru_config", get_lru_config_mode(static_cast<size_t>(options_page_ui_obj->lru_config_combo_box->currentIndex())));
+    result += convert_to_var_assign("vma_config", get_lru_config_mode(static_cast<size_t>(options_page_ui_obj->vma_config_combo_box->currentIndex())));
+    result += convert_to_var_assign("zstd_level", get_zstd_comp_level(static_cast<size_t>(options_page_ui_obj->zstd_comp_levels_combo_box->currentIndex())));
+    result += convert_to_var_assign("hugepage", get_hugepage_mode(static_cast<size_t>(options_page_ui_obj->hugepage_combo_box->currentIndex())));
+    result += convert_to_var_assign("lto", get_lto_mode(static_cast<size_t>(options_page_ui_obj->lto_combo_box->currentIndex())));
+
+    const std::string_view cpu_opt_mode = get_cpu_opt_mode(static_cast<size_t>(options_page_ui_obj->processor_opt_combo_box->currentIndex()));
+    if (cpu_opt_mode != "manual") {
+        result += convert_to_var_assign("cpu_opt", cpu_opt_mode);
+    }
+
+    return result;
+}
+
+void ConfWindow::clear_patches_data_tab() noexcept {
+    auto patches_page_ui_obj = m_ui->conf_patches_page_widget->get_ui_obj();
+    patches_page_ui_obj->list_widget->clear();
+}
+
+void ConfWindow::reset_patches_data_tab() noexcept {
+    auto options_page_ui_obj = m_ui->conf_options_page_widget->get_ui_obj();
+    auto patches_page_ui_obj = m_ui->conf_patches_page_widget->get_ui_obj();
+
+    const std::int32_t main_combo_index  = options_page_ui_obj->main_combo_box->currentIndex();
+    const std::string_view cpusched_path = get_kernel_name_path(get_kernel_name(static_cast<size_t>(main_combo_index)));
+
+    auto current_array_items = get_source_array_from_pkgbuild(cpusched_path, get_all_set_values());
+
+    current_array_items.erase(std::remove_if(current_array_items.begin(), current_array_items.end(),
+                          [](auto&& item_el){ return !item_el.ends_with(".patch"); }), current_array_items.end());
+    clear_patches_data_tab();
+    patches_page_ui_obj->list_widget->addItems(convert_vector_of_strings_to_stringlist(current_array_items));
+
+    // Apply flag to each item in list widget
+    list_widget_apply_edit_flag(patches_page_ui_obj->list_widget);
+}
+
 ConfWindow::ConfWindow(QWidget* parent)
   : QMainWindow(parent) {
     m_ui->setupUi(this);
 
     setAttribute(Qt::WA_NativeWindow);
     setWindowFlags(Qt::Window);  // for the close, min and max buttons
+
+    auto options_page_ui_obj = m_ui->conf_options_page_widget->get_ui_obj();
+    auto patches_page_ui_obj = m_ui->conf_patches_page_widget->get_ui_obj();
 
     // Selecting the CPU scheduler
     QStringList kernel_names;
@@ -222,14 +406,14 @@ ConfWindow::ConfWindow(QWidget* parent)
                  << "PDS - Priority and Deadline based Skip list multiple queue CPU scheduler"
                  << "RC - Release Candidate"
                  << "TT - Task Type Scheduler";
-    m_ui->main_combo_box->addItems(kernel_names);
-    m_ui->main_combo_box->setCurrentIndex(1);
+    options_page_ui_obj->main_combo_box->addItems(kernel_names);
+    options_page_ui_obj->main_combo_box->setCurrentIndex(1);
 
     // Setting default options
-    m_ui->cachyconfig_check->setCheckState(Qt::Checked);
-    m_ui->hardly_check->setCheckState(Qt::Checked);
-    m_ui->perfgovern_check->setCheckState(Qt::Checked);
-    m_ui->tcpbbr_check->setCheckState(Qt::Checked);
+    options_page_ui_obj->cachyconfig_check->setCheckState(Qt::Checked);
+    options_page_ui_obj->hardly_check->setCheckState(Qt::Checked);
+    options_page_ui_obj->perfgovern_check->setCheckState(Qt::Checked);
+    options_page_ui_obj->tcpbbr_check->setCheckState(Qt::Checked);
 
     QStringList hz_ticks;
     hz_ticks << "1000HZ"
@@ -239,36 +423,36 @@ ConfWindow::ConfWindow(QWidget* parent)
              << "300Hz"
              << "250Hz"
              << "100Hz";
-    m_ui->hzticks_combo_box->addItems(hz_ticks);
-    m_ui->hzticks_combo_box->setCurrentIndex(3);
+    options_page_ui_obj->hzticks_combo_box->addItems(hz_ticks);
+    options_page_ui_obj->hzticks_combo_box->setCurrentIndex(3);
 
     QStringList tickless_modes;
     tickless_modes << "Full"
                    << "Idle"
                    << "Periodic";
-    m_ui->tickless_combo_box->addItems(tickless_modes);
+    options_page_ui_obj->tickless_combo_box->addItems(tickless_modes);
 
     QStringList preempt_modes;
     preempt_modes << "Full"
                   << "Voluntary"
                   << "Server";
-    m_ui->preempt_combo_box->addItems(preempt_modes);
+    options_page_ui_obj->preempt_combo_box->addItems(preempt_modes);
 
-    m_ui->mqdio_check->setCheckState(Qt::Checked);
-    m_ui->kyber_check->setCheckState(Qt::Checked);
+    options_page_ui_obj->mqdio_check->setCheckState(Qt::Checked);
+    options_page_ui_obj->kyber_check->setCheckState(Qt::Checked);
 
     QStringList lru_config_modes;
     lru_config_modes << "Standard"
                      << "Stats"
                      << "None";
-    m_ui->lru_config_combo_box->addItems(lru_config_modes);
+    options_page_ui_obj->lru_config_combo_box->addItems(lru_config_modes);
 
     QStringList vma_config_modes;
     vma_config_modes << "Standard"
                      << "Stats"
                      << "None";
-    m_ui->vma_config_combo_box->addItems(vma_config_modes);
-    m_ui->vma_config_combo_box->setCurrentIndex(2);
+    options_page_ui_obj->vma_config_combo_box->addItems(vma_config_modes);
+    options_page_ui_obj->vma_config_combo_box->setCurrentIndex(2);
 
     QStringList cpu_optims;
     cpu_optims << "Disabled"
@@ -278,48 +462,116 @@ ConfWindow::ConfWindow(QWidget* parent)
                << "Zen" << "Zen2" << "Zen3"
                << "Sandy Bridge" << "Ivy Bridge" << "Haswell"
                << "Icelake" << "Tiger Lake" << "Alder Lake";
-    m_ui->processor_opt_combo_box->addItems(cpu_optims);
+    options_page_ui_obj->processor_opt_combo_box->addItems(cpu_optims);
 
-    m_ui->autooptim_check->setCheckState(Qt::Checked);
-    m_ui->latnice_check->setCheckState(Qt::Checked);
+    options_page_ui_obj->autooptim_check->setCheckState(Qt::Checked);
+    options_page_ui_obj->latnice_check->setCheckState(Qt::Checked);
 
     QStringList zstd_comp_levels;
     zstd_comp_levels << "Ultra"
                      << "Normal";
-    m_ui->zstd_comp_levels_combo_box->addItems(zstd_comp_levels);
-    m_ui->zstd_comp_levels_combo_box->setCurrentIndex(1);
+    options_page_ui_obj->zstd_comp_levels_combo_box->addItems(zstd_comp_levels);
+    options_page_ui_obj->zstd_comp_levels_combo_box->setCurrentIndex(1);
 
     QStringList lto_modes;
     lto_modes << "No"
               << "Full"
               << "Thin";
-    m_ui->lto_combo_box->addItems(lto_modes);
+    options_page_ui_obj->lto_combo_box->addItems(lto_modes);
 
     QStringList hugepage_modes;
     hugepage_modes << "Always"
                    << "Madivse";
-    m_ui->hugepage_combo_box->addItems(hugepage_modes);
+    options_page_ui_obj->hugepage_combo_box->addItems(hugepage_modes);
 
     // Connect buttons signal
-    connect(m_ui->cancel_button, SIGNAL(clicked()), this, SLOT(on_cancel()));
-    connect(m_ui->ok_button, SIGNAL(clicked()), this, SLOT(on_execute()));
-    connect(m_ui->main_combo_box, &QComboBox::currentIndexChanged, this, [this](std::int32_t index) {
+    connect(options_page_ui_obj->cancel_button, SIGNAL(clicked()), this, SLOT(on_cancel()));
+    connect(options_page_ui_obj->ok_button, SIGNAL(clicked()), this, SLOT(on_execute()));
+    connect(options_page_ui_obj->main_combo_box, &QComboBox::currentIndexChanged, this, [options_page_ui_obj, this](std::int32_t index) {
         // Set to 1000HZ, if BMQ, PDS, TT
         if (index == 0 || index == 4 || index == 6) {
-            m_ui->hzticks_combo_box->setCurrentIndex(0);
+            options_page_ui_obj->hzticks_combo_box->setCurrentIndex(0);
         } else {
-            m_ui->hzticks_combo_box->setCurrentIndex(3);
+            options_page_ui_obj->hzticks_combo_box->setCurrentIndex(3);
         }
         // If not BORE or CFS.
         if (index != 1 && index != 2) {
-            m_ui->RT_check->setEnabled(false);
-            m_ui->latnice_check->setEnabled(false);
-            m_ui->latnice_check->setCheckState(Qt::Unchecked);
+            options_page_ui_obj->RT_check->setEnabled(false);
+            options_page_ui_obj->latnice_check->setEnabled(false);
+            options_page_ui_obj->latnice_check->setCheckState(Qt::Unchecked);
+            reset_patches_data_tab();
             return;
         }
-        m_ui->RT_check->setEnabled(true);
-        m_ui->latnice_check->setEnabled(true);
-        m_ui->latnice_check->setCheckState(Qt::Checked);
+        options_page_ui_obj->RT_check->setEnabled(true);
+        options_page_ui_obj->latnice_check->setEnabled(true);
+        options_page_ui_obj->latnice_check->setCheckState(Qt::Checked);
+        reset_patches_data_tab();
+    });
+
+    // Setup patches page
+    prepare_build_environment();
+    reset_patches_data_tab();
+    connect_all_checkboxes();
+
+    connect(options_page_ui_obj->vma_config_combo_box, &QComboBox::currentIndexChanged, this, [this](std::int32_t) {
+        reset_patches_data_tab();
+    });
+
+    // local patches
+    connect(patches_page_ui_obj->local_patch_button, &QPushButton::clicked, this, [this, patches_page_ui_obj] {
+        const auto& files = QFileDialog::getOpenFileNames(
+                    this,
+                    "Select one or more patch files",
+                    QString::fromStdString(fix_path("~/")),
+                    "Patch file (*.patch)");
+        if (files.isEmpty()) { return; }
+
+        qDebug() << "Files: " << files << '\n';
+        patches_page_ui_obj->list_widget->addItems(files);
+
+        // Apply flag to each item in list widget
+        list_widget_apply_edit_flag(patches_page_ui_obj->list_widget);
+    });
+    // remote patches
+    connect(patches_page_ui_obj->remote_patch_button, &QPushButton::clicked, this, [this, patches_page_ui_obj] {
+        bool is_confirmed{};
+        const auto& patch_url_text = QInputDialog::getText(
+                    this,
+                    "Enter URL patch",
+                    "Patch URL:", QLineEdit::Normal,
+                    QString(), &is_confirmed);
+        if (!is_confirmed || patch_url_text.isEmpty()) { return; }
+
+        qDebug() << "Url: " << patch_url_text << '\n';
+        patches_page_ui_obj->list_widget->addItems(QStringList() << patch_url_text);
+
+        // Apply flag to each item in list widget
+        list_widget_apply_edit_flag(patches_page_ui_obj->list_widget);
+    });
+
+    patches_page_ui_obj->remove_entry_button->setIcon(QApplication::style()->standardIcon(QStyle::SP_TrashIcon));
+    patches_page_ui_obj->move_up_button->setIcon(QApplication::style()->standardIcon(QStyle::SP_ArrowUp));
+    patches_page_ui_obj->move_down_button->setIcon(QApplication::style()->standardIcon(QStyle::SP_ArrowDown));
+
+    // remove entry
+    connect(patches_page_ui_obj->remove_entry_button, &QPushButton::clicked, this, [patches_page_ui_obj]() {
+        const auto& current_index = patches_page_ui_obj->list_widget->currentRow();
+        delete patches_page_ui_obj->list_widget->takeItem(current_index);
+    });
+
+    // move up
+    connect(patches_page_ui_obj->move_up_button, &QPushButton::clicked, this, [patches_page_ui_obj]() {
+        const auto& current_index = patches_page_ui_obj->list_widget->currentRow();
+        auto current_item = patches_page_ui_obj->list_widget->takeItem(current_index);
+        patches_page_ui_obj->list_widget->insertItem(current_index - 1, current_item);
+        patches_page_ui_obj->list_widget->setCurrentRow(current_index - 1);
+    });
+    // move down
+    connect(patches_page_ui_obj->move_down_button, &QPushButton::clicked, this, [patches_page_ui_obj]() {
+        const auto& current_index = patches_page_ui_obj->list_widget->currentRow();
+        auto current_item = patches_page_ui_obj->list_widget->takeItem(current_index);
+        patches_page_ui_obj->list_widget->insertItem(current_index + 1, current_item);
+        patches_page_ui_obj->list_widget->setCurrentRow(current_index + 1);
     });
 }
 
@@ -336,55 +588,62 @@ void ConfWindow::on_execute() noexcept {
     if (m_running) { return; }
     m_running = true;
 
-    const std::int32_t main_combo_index  = m_ui->main_combo_box->currentIndex();
+    auto options_page_ui_obj = m_ui->conf_options_page_widget->get_ui_obj();
+    auto patches_page_ui_obj = m_ui->conf_patches_page_widget->get_ui_obj();
+
+    const std::int32_t main_combo_index  = options_page_ui_obj->main_combo_box->currentIndex();
     const std::string_view cpusched_path = get_kernel_name_path(get_kernel_name(static_cast<size_t>(main_combo_index)));
     prepare_build_environment();
+
+    // Only files which end with .patch,
+    // are considered as patches.
+    insert_new_source_array_into_pkgbuild(cpusched_path, patches_page_ui_obj->list_widget, get_source_array_from_pkgbuild(cpusched_path, get_all_set_values()));
     fs::current_path(cpusched_path);
 
     // Execute 'sed' with checkboxes values
-    execute_sed("hardly", convert_checkstate(m_ui->hardly_check));
-    execute_sed("per_gov", convert_checkstate(m_ui->perfgovern_check));
-    execute_sed("tcp_bbr2", convert_checkstate(m_ui->tcpbbr_check));
-    execute_sed("mqdeadline", convert_checkstate(m_ui->mqdio_check));
-    execute_sed("kyber", convert_checkstate(m_ui->kyber_check));
-    execute_sed("auto_optim", convert_checkstate(m_ui->autooptim_check));
+    execute_sed("hardly", convert_checkstate(options_page_ui_obj->hardly_check));
+    execute_sed("per_gov", convert_checkstate(options_page_ui_obj->perfgovern_check));
+    execute_sed("tcp_bbr2", convert_checkstate(options_page_ui_obj->tcpbbr_check));
+    execute_sed("mqdeadline", convert_checkstate(options_page_ui_obj->mqdio_check));
+    execute_sed("kyber", convert_checkstate(options_page_ui_obj->kyber_check));
+    execute_sed("auto_optim", convert_checkstate(options_page_ui_obj->autooptim_check));
 
     if (main_combo_index == 1 || main_combo_index == 2) {
-        execute_sed("rt_kernel", convert_checkstate(m_ui->RT_check));
-        execute_sed("latency_nice", convert_checkstate(m_ui->latnice_check));
+        execute_sed("rt_kernel", convert_checkstate(options_page_ui_obj->RT_check));
+        execute_sed("latency_nice", convert_checkstate(options_page_ui_obj->latnice_check));
     }
 
     // Execute 'sed' with checkboxes values,
     // which becomes enabled with any value passed,
     // and if nothing passed means it's disabled.
-    const auto& is_cachyconfig_enabled = checkstate_checked(m_ui->cachyconfig_check);
+    const auto& is_cachyconfig_enabled = checkstate_checked(options_page_ui_obj->cachyconfig_check);
     if (!is_cachyconfig_enabled) {
         execute_sed("cachy_config", "'no'");
     }
-    execute_sed_empty_wrapped("nconfig", checkstate_checked(m_ui->nconfig_check));
-    execute_sed_empty_wrapped("menuconfig", checkstate_checked(m_ui->menuconfig_check));
-    execute_sed_empty_wrapped("xconfig", checkstate_checked(m_ui->xconfig_check));
-    execute_sed_empty_wrapped("gconfig", checkstate_checked(m_ui->gconfig_check));
-    execute_sed_empty_wrapped("localmodcfg", checkstate_checked(m_ui->localmodcfg_check));
-    execute_sed_empty_wrapped("numa", checkstate_checked(m_ui->numa_check));
-    execute_sed_empty_wrapped("damon", checkstate_checked(m_ui->damon_check));
-    execute_sed_empty_wrapped("lrng", checkstate_checked(m_ui->lrng_check));
-    execute_sed_empty_wrapped("debug", checkstate_checked(m_ui->debug_check));
-    execute_sed_empty_wrapped("zstd_comp", convert_checkstate(m_ui->zstcomp_check));
-    execute_sed_empty_wrapped("builtin_zfs", checkstate_checked(m_ui->builtin_zfs_check));
-    execute_sed_empty_wrapped("builtin_bcachefs", checkstate_checked(m_ui->builtin_bcachefs_check));
+    execute_sed_empty_wrapped("nconfig", checkstate_checked(options_page_ui_obj->nconfig_check));
+    execute_sed_empty_wrapped("menuconfig", checkstate_checked(options_page_ui_obj->menuconfig_check));
+    execute_sed_empty_wrapped("xconfig", checkstate_checked(options_page_ui_obj->xconfig_check));
+    execute_sed_empty_wrapped("gconfig", checkstate_checked(options_page_ui_obj->gconfig_check));
+    execute_sed_empty_wrapped("localmodcfg", checkstate_checked(options_page_ui_obj->localmodcfg_check));
+    execute_sed_empty_wrapped("numa", checkstate_checked(options_page_ui_obj->numa_check));
+    execute_sed_empty_wrapped("damon", checkstate_checked(options_page_ui_obj->damon_check));
+    execute_sed_empty_wrapped("lrng", checkstate_checked(options_page_ui_obj->lrng_check));
+    execute_sed_empty_wrapped("debug", checkstate_checked(options_page_ui_obj->debug_check));
+    execute_sed_empty_wrapped("zstd_comp", convert_checkstate(options_page_ui_obj->zstcomp_check));
+    execute_sed_empty_wrapped("builtin_zfs", checkstate_checked(options_page_ui_obj->builtin_zfs_check));
+    execute_sed_empty_wrapped("builtin_bcachefs", checkstate_checked(options_page_ui_obj->builtin_bcachefs_check));
 
     // Execute 'sed' with combobox values
-    execute_sed("HZ_ticks", get_hz_tick(static_cast<size_t>(m_ui->hzticks_combo_box->currentIndex())));
-    execute_sed("tickrate", get_tickless_mode(static_cast<size_t>(m_ui->tickless_combo_box->currentIndex())));
-    execute_sed("preempt", get_preempt_mode(static_cast<size_t>(m_ui->preempt_combo_box->currentIndex())));
-    execute_sed("lru_config", get_lru_config_mode(static_cast<size_t>(m_ui->lru_config_combo_box->currentIndex())));
-    execute_sed("vma_config", get_lru_config_mode(static_cast<size_t>(m_ui->vma_config_combo_box->currentIndex())));
-    execute_sed("zstd_level", get_zstd_comp_level(static_cast<size_t>(m_ui->zstd_comp_levels_combo_box->currentIndex())));
-    execute_sed("hugepage", get_hugepage_mode(static_cast<size_t>(m_ui->hugepage_combo_box->currentIndex())));
-    execute_sed("lto", get_lto_mode(static_cast<size_t>(m_ui->lto_combo_box->currentIndex())));
+    execute_sed("HZ_ticks", get_hz_tick(static_cast<size_t>(options_page_ui_obj->hzticks_combo_box->currentIndex())));
+    execute_sed("tickrate", get_tickless_mode(static_cast<size_t>(options_page_ui_obj->tickless_combo_box->currentIndex())));
+    execute_sed("preempt", get_preempt_mode(static_cast<size_t>(options_page_ui_obj->preempt_combo_box->currentIndex())));
+    execute_sed("lru_config", get_lru_config_mode(static_cast<size_t>(options_page_ui_obj->lru_config_combo_box->currentIndex())));
+    execute_sed("vma_config", get_lru_config_mode(static_cast<size_t>(options_page_ui_obj->vma_config_combo_box->currentIndex())));
+    execute_sed("zstd_level", get_zstd_comp_level(static_cast<size_t>(options_page_ui_obj->zstd_comp_levels_combo_box->currentIndex())));
+    execute_sed("hugepage", get_hugepage_mode(static_cast<size_t>(options_page_ui_obj->hugepage_combo_box->currentIndex())));
+    execute_sed("lto", get_lto_mode(static_cast<size_t>(options_page_ui_obj->lto_combo_box->currentIndex())));
 
-    const std::string_view cpu_opt_mode = get_cpu_opt_mode(static_cast<size_t>(m_ui->processor_opt_combo_box->currentIndex()));
+    const std::string_view cpu_opt_mode = get_cpu_opt_mode(static_cast<size_t>(options_page_ui_obj->processor_opt_combo_box->currentIndex()));
     if (cpu_opt_mode != "manual") {
         execute_sed("cpu_opt", cpu_opt_mode);
     }

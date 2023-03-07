@@ -16,8 +16,8 @@
 // with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-#ifndef CONFWINDOW_HPP_
-#define CONFWINDOW_HPP_
+#ifndef CONFOPTIONSPAGE_HPP_
+#define CONFOPTIONSPAGE_HPP_
 
 #if defined(__clang__)
 #pragma clang diagnostic push
@@ -33,12 +33,11 @@
 #pragma GCC diagnostic ignored "-Wdeprecated-enum-enum-conversion"
 #endif
 
-#include <ui_conf-window.h>
+#include <ui_conf-options-page.h>
 
 #include <memory>
-#include <functional>
 
-#include <QMainWindow>
+#include <QObject>
 
 #if defined(__clang__)
 #pragma clang diagnostic pop
@@ -46,28 +45,18 @@
 #pragma GCC diagnostic pop
 #endif
 
-class ConfWindow final : public QMainWindow {
+class ConfOptionsPage final : public QWidget {
     Q_OBJECT
-    Q_DISABLE_COPY_MOVE(ConfWindow)
+    Q_DISABLE_COPY_MOVE(ConfOptionsPage)
  public:
-    explicit ConfWindow(QWidget* parent = nullptr);
-    virtual ~ConfWindow() = default;
+    explicit ConfOptionsPage(QWidget* parent = nullptr)
+        : QWidget(parent) { m_ui->setupUi(this); }
+    virtual ~ConfOptionsPage() = default;
 
- private slots:
-    void on_cancel() noexcept;
-    void on_execute() noexcept;
-
- protected:
-    void closeEvent(QCloseEvent* event) override;
+    Ui::ConfOptionsPage* get_ui_obj() noexcept { return m_ui.get(); }
 
  private:
-    bool m_running{};
-    std::unique_ptr<Ui::ConfWindow> m_ui = std::make_unique<Ui::ConfWindow>();
-
-    std::string get_all_set_values() noexcept;
-    void clear_patches_data_tab() noexcept;
-    void reset_patches_data_tab() noexcept;
-    void connect_all_checkboxes() noexcept;
+    std::unique_ptr<Ui::ConfOptionsPage> m_ui = std::make_unique<Ui::ConfOptionsPage>();
 };
 
-#endif  // CONFWINDOW_HPP_
+#endif  // CONFOPTIONSPAGE_HPP_

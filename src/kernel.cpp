@@ -55,38 +55,6 @@ static std::vector<std::string_view> g_kernel_removal_list{};
 
 }  // namespace
 
-namespace utils {
-
-// https://github.com/sheredom/subprocess.h
-// https://gist.github.com/konstantint/d49ab683b978b3d74172
-// https://github.com/arun11299/cpp-subprocess/blob/master/subprocess.hpp#L1218
-// https://stackoverflow.com/questions/11342868/c-interface-for-interactive-bash
-// https://github.com/hniksic/rust-subprocess
-std::string exec(const std::string_view& command) noexcept {
-    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(command.data(), "r"), pclose);
-
-    if (!pipe) {
-        fmt::print(stderr, "popen failed! '{}'\n", command);
-        return "-1";
-    }
-
-    std::string result{};
-    std::array<char, 128> buffer{};
-    while (!feof(pipe.get())) {
-        if (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr) {
-            result += buffer.data();
-        }
-    }
-
-    if (result.ends_with('\n')) {
-        result.pop_back();
-    }
-
-    return result;
-}
-
-}
-
 namespace fs = std::filesystem;
 
 std::string Kernel::version() noexcept {

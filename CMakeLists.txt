@@ -94,6 +94,8 @@ add_executable(${PROJECT_NAME}
     src/km-window.hpp src/km-window.cpp
     "${CMAKE_BINARY_DIR}/compile_options.hpp"
     src/conf-window.hpp src/conf-window.cpp
+    src/conf-patches-page.hpp src/conf-patches-page.ui
+    src/conf-options-page.hpp src/conf-options-page.ui
     src/km-window.ui src/conf-window.ui
     src/main.cpp
     )

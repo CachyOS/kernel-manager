@@ -22,8 +22,11 @@
 #include <algorithm>  // for transform
 #include <cstdint>    // for int32_t
 #include <unistd.h>   // for getuid
+#include <cerrno>     // for errno
 
 #include <sys/utsname.h>
+
+#include <fmt/core.h>
 
 #if defined(__clang__)
 #pragma clang diagnostic push
@@ -95,6 +98,70 @@ auto make_multiline(const std::string_view& str, char delim) noexcept -> std::ve
 auto join_vec(const std::span<std::string_view>& lines, const std::string_view&& delim) noexcept -> std::string {
     return lines | ranges::views::join(delim) | ranges::to<std::string>();
 }
+
+auto read_whole_file(const std::string_view& filepath) noexcept -> std::string {
+    // Use std::fopen because it's faster than std::ifstream
+    auto* file = std::fopen(filepath.data(), "rb");
+    if (file == nullptr) {
+        fmt::print(stderr, "[READWHOLEFILE] '{}' read failed: {}\n", filepath, std::strerror(errno));
+        return {};
+    }
+
+    std::fseek(file, 0u, SEEK_END);
+    const std::size_t size = static_cast<std::size_t>(std::ftell(file));
+    std::fseek(file, 0u, SEEK_SET);
+
+    std::string buf;
+    buf.resize(size);
+
+    const std::size_t read = std::fread(buf.data(), sizeof(char), size, file);
+    if (read != size) {
+        fmt::print(stderr, "[READWHOLEFILE] '{}' read failed: {}\n", filepath, std::strerror(errno));
+        return {};
+    }
+    std::fclose(file);
+
+    return buf;
+}
+
+bool write_to_file(const std::string_view& filepath, const std::string_view& data) noexcept {
+    std::ofstream file{filepath.data()};
+    if (!file.is_open()) {
+        fmt::print(stderr, "[WRITE_TO_FILE] '{}' open failed: {}\n", filepath, std::strerror(errno));
+        return false;
+    }
+    file << data;
+    return true;
+}
+
+// https://github.com/sheredom/subprocess.h
+// https://gist.github.com/konstantint/d49ab683b978b3d74172
+// https://github.com/arun11299/cpp-subprocess/blob/master/subprocess.hpp#L1218
+// https://stackoverflow.com/questions/11342868/c-interface-for-interactive-bash
+// https://github.com/hniksic/rust-subprocess
+std::string exec(const std::string_view& command) noexcept {
+    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(command.data(), "r"), pclose);
+
+    if (!pipe) {
+        fmt::print(stderr, "popen failed! '{}'\n", command);
+        return "-1";
+    }
+
+    std::string result{};
+    std::array<char, 128> buffer{};
+    while (!feof(pipe.get())) {
+        if (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr) {
+            result += buffer.data();
+        }
+    }
+
+    if (result.ends_with('\n')) {
+        result.pop_back();
+    }
+
+    return result;
+}
+
 
 int runCmdTerminal(QString cmd, bool escalate) noexcept {
     QProcess proc;
