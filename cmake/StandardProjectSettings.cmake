@@ -24,6 +24,11 @@ add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x050F00)
 # Generate compile_commands.json to make it easier to work with clang based tools
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
+  add_compile_options(-nostdlib++ -stdlib=libc++ -nodefaultlibs -fexperimental-library)
+  add_link_options(-stdlib=libc++)
+endif()
+
 option(ENABLE_IPO "Enable Interprocedural Optimization, aka Link Time Optimization (LTO)" OFF)
 
 if(ENABLE_IPO)
@@ -50,6 +55,8 @@ endif()
 # Enables STL container checker if not building a release.
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   add_definitions(-D_GLIBCXX_ASSERTIONS)
+  add_definitions(-D_LIBCPP_ENABLE_THREAD_SAFETY_ANNOTATIONS=1)
+  add_definitions(-D_LIBCPP_ENABLE_ASSERTIONS=1)
 endif()
 
 # Enables dev environment.
