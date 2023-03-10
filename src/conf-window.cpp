@@ -24,7 +24,6 @@
 #include <cstdlib>
 
 #include <filesystem>
-#include <fstream>
 
 #if defined(__clang__)
 #pragma clang diagnostic push
@@ -61,50 +60,26 @@
 
 namespace fs = std::filesystem;
 
-[[gnu::pure]] constexpr const char* get_kernel_name(size_t index) noexcept {
-    constexpr std::array kernel_names{"bmq", "bore", "cfs", "hardened", "pds", "rc", "tt"};
-    return kernel_names[index];
-}
+/**
+  * GENERATE_CONST_OPTION_VALUES(name, ...):
+  *
+  * Used to define constant values for options.
+  */
+ #define GENERATE_CONST_OPTION_VALUES(name, ...)                            \
+    [[gnu::pure]] constexpr const char* get_##name(size_t index) noexcept { \
+        constexpr std::array list_##name{__VA_ARGS__};                      \
+        return list_##name[index];                                          \
+    }
 
-[[gnu::pure]] constexpr const char* get_hz_tick(size_t index) noexcept {
-    constexpr std::array hz_ticks{"1000", "750", "600", "500", "300", "250", "100"};
-    return hz_ticks[index];
-}
-
-[[gnu::pure]] constexpr const char* get_tickless_mode(size_t index) noexcept {
-    constexpr std::array tickless_modes{"full", "idle", "perodic"};
-    return tickless_modes[index];
-}
-
-[[gnu::pure]] constexpr const char* get_preempt_mode(size_t index) noexcept {
-    constexpr std::array preempt_modes{"full", "voluntary", "server"};
-    return preempt_modes[index];
-}
-
-[[gnu::pure]] constexpr const char* get_lru_config_mode(size_t index) noexcept {
-    constexpr std::array lru_config_modes{"standard", "stats", "none"};
-    return lru_config_modes[index];
-}
-
-[[gnu::pure]] constexpr const char* get_lto_mode(size_t index) noexcept {
-    constexpr std::array lto_modes{"none", "full", "thin"};
-    return lto_modes[index];
-}
-
-[[gnu::pure]] constexpr const char* get_hugepage_mode(size_t index) noexcept {
-    constexpr std::array zstd_comp_levels{"always", "madvise"};
-    return zstd_comp_levels[index];
-}
-
-[[gnu::pure]] constexpr const char* get_zstd_comp_level(size_t index) noexcept {
-    constexpr std::array zstd_comp_levels{"ultra", "normal"};
-    return zstd_comp_levels[index];
-}
-
-[[gnu::pure]] constexpr const char* get_cpu_opt_mode(size_t index) noexcept {
-    constexpr std::array cpu_opt_modes{"manual", "generic", "native_amd", "native_intel", "zen", "zen2", "zen3", "sandybridge", "ivybridge", "haswell", "icelake", "tigerlake", "alderlake"};
-    return cpu_opt_modes[index];
-}
+GENERATE_CONST_OPTION_VALUES(kernel_name, "bmq", "bore", "cfs", "hardened", "pds", "rc", "tt")
+GENERATE_CONST_OPTION_VALUES(hz_tick, "1000", "750", "600", "500", "300", "250", "100")
+GENERATE_CONST_OPTION_VALUES(tickless_mode, "full", "idle", "perodic")
+GENERATE_CONST_OPTION_VALUES(preempt_mode, "full", "voluntary", "server")
+GENERATE_CONST_OPTION_VALUES(lru_config_mode, "standard", "stats", "none")
+GENERATE_CONST_OPTION_VALUES(lto_mode, "none", "full", "thin")
+GENERATE_CONST_OPTION_VALUES(hugepage_mode, "always", "madvise")
+GENERATE_CONST_OPTION_VALUES(zstd_comp_level, "ultra", "normal")
+GENERATE_CONST_OPTION_VALUES(cpu_opt_mode, "manual", "generic", "native_amd", "native_intel", "zen", "zen2", "zen3", "sandybridge", "ivybridge", "haswell", "icelake", "tigerlake", "alderlake")
 
 constexpr std::string_view get_kernel_name_path(std::string_view kernel_name) noexcept {
     if (kernel_name == "bmq") {

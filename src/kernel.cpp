@@ -237,13 +237,13 @@ void Kernel::commit_transaction() noexcept {
     }
 #endif
     if (!g_kernel_install_list.empty()) {
-        const auto& packages_install = utils::join_vec(g_kernel_install_list, " ");
+        const auto& packages_install = [&]{ return utils::join_vec(g_kernel_install_list, " "); }();
         utils::runCmdTerminal(fmt::format(FMT_COMPILE("pacman -S --needed {}"), packages_install).c_str(), true);
         g_kernel_install_list.clear();
     }
 
     if (!g_kernel_removal_list.empty()) {
-        const auto& packages_remove = utils::join_vec(g_kernel_removal_list, " ");
+        const auto& packages_remove = [&]{ return utils::join_vec(g_kernel_removal_list, " "); }();
         utils::runCmdTerminal(fmt::format(FMT_COMPILE("pacman -Rsn {}"), packages_remove).c_str(), true);
         g_kernel_removal_list.clear();
     }

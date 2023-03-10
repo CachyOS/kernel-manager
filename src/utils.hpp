@@ -27,11 +27,22 @@
 #if defined(__clang__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wsign-conversion"
+#pragma clang diagnostic ignored "-Wold-style-cast"
 #elif defined(__GNUC__)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wuseless-cast"
 #pragma GCC diagnostic ignored "-Wsign-conversion"
+#pragma GCC diagnostic ignored "-Wold-style-cast"
+#pragma GCC diagnostic ignored "-Wnull-dereference"
 #endif
+
+#include <range/v3/algorithm/for_each.hpp>
+#include <range/v3/algorithm/reverse.hpp>
+#include <range/v3/range/conversion.hpp>
+#include <range/v3/view/filter.hpp>
+#include <range/v3/view/join.hpp>
+#include <range/v3/view/split.hpp>
+#include <range/v3/view/transform.hpp>
 
 #include <QString>
 
@@ -46,8 +57,6 @@
 namespace utils {
 
 [[nodiscard]] bool check_root() noexcept;
-[[nodiscard]] auto make_multiline(const std::string_view& str, char delim = '\n') noexcept -> std::vector<std::string>;
-[[nodiscard]] auto join_vec(const std::span<std::string_view>& lines, const std::string_view&& delim) noexcept -> std::string;
 [[nodiscard]] auto read_whole_file(const std::string_view& filepath) noexcept -> std::string;
 bool write_to_file(const std::string_view& filepath, const std::string_view& data) noexcept;
 std::string exec(const std::string_view& command) noexcept;
@@ -58,7 +67,7 @@ void release_alpm(alpm_handle_t* handle, alpm_errno_t* err) noexcept;
 // Runs a command in a terminal, escalates using pkexec if escalate is true
 int runCmdTerminal(QString cmd, bool escalate) noexcept;
 
-inline std::size_t replace_all(std::string& inout, const std::string_view& what, const std::string_view& with) {
+inline constexpr std::size_t replace_all(std::string& inout, std::string_view what, std::string_view with) noexcept {
     std::size_t count{};
     std::size_t pos{};
     while (std::string::npos != (pos = inout.find(what.data(), pos, what.length()))) {
@@ -68,8 +77,29 @@ inline std::size_t replace_all(std::string& inout, const std::string_view& what,
     return count;
 }
 
-inline std::size_t remove_all(std::string& inout, const std::string_view& what) {
+inline constexpr std::size_t remove_all(std::string& inout, std::string_view what) noexcept {
     return replace_all(inout, what, "");
+}
+
+[[nodiscard]] inline constexpr auto make_multiline(std::string_view str, char delim = '\n') noexcept -> std::vector<std::string> {
+    return [&]{
+        constexpr auto functor = [](auto&& rng) {
+            return std::string_view(&*rng.begin(), static_cast<size_t>(ranges::distance(rng)));
+        };
+        constexpr auto second = [](auto&& rng) { return rng != ""; };
+
+        auto&& view_res = str
+            | ranges::views::split(delim)
+            | ranges::views::transform(functor);
+
+        std::vector<std::string> lines{};
+        ranges::for_each(view_res | ranges::views::filter(second), [&](auto&& rng) { lines.emplace_back(rng); });
+        return lines;
+    }();
+}
+
+[[nodiscard]] inline constexpr auto join_vec(std::span<std::string_view> lines, std::string_view delim) noexcept -> std::string {
+    return [&]{ return lines | ranges::views::join(delim) | ranges::to<std::string>(); }();
 }
 
 }  // namespace utils
