@@ -20,9 +20,9 @@
 #include "ini.hpp"
 
 #include <algorithm>  // for transform
+#include <cerrno>     // for errno
 #include <cstdint>    // for int32_t
 #include <unistd.h>   // for getuid
-#include <cerrno>     // for errno
 
 #include <sys/utsname.h>
 
@@ -118,7 +118,6 @@ std::string exec(const std::string_view& command) noexcept {
 
     return result;
 }
-
 
 int runCmdTerminal(QString cmd, bool escalate) noexcept {
     QProcess proc;

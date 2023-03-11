@@ -38,9 +38,9 @@
 #include <glib.h>
 
 #include <range/v3/algorithm/for_each.hpp>
+#include <range/v3/range/conversion.hpp>
 #include <range/v3/view/filter.hpp>
 #include <range/v3/view/join.hpp>
-#include <range/v3/range/conversion.hpp>
 
 #if defined(__clang__)
 #pragma clang diagnostic pop
@@ -48,24 +48,24 @@
 #pragma GCC diagnostic pop
 #endif
 
+#include <fmt/compile.h>
 #include <fmt/core.h>
 #include <fmt/ranges.h>
-#include <fmt/compile.h>
 
-#include <QtDebug>
-#include <QStringList>
-#include <QInputDialog>
 #include <QFileDialog>
+#include <QInputDialog>
 #include <QLineEdit>
+#include <QStringList>
+#include <QtDebug>
 
 namespace fs = std::filesystem;
 
 /**
-  * GENERATE_CONST_OPTION_VALUES(name, ...):
-  *
-  * Used to define constant values for options.
-  */
- #define GENERATE_CONST_OPTION_VALUES(name, ...)                            \
+ * GENERATE_CONST_OPTION_VALUES(name, ...):
+ *
+ * Used to define constant values for options.
+ */
+#define GENERATE_CONST_OPTION_VALUES(name, ...)                             \
     [[gnu::pure]] constexpr const char* get_##name(size_t index) noexcept { \
         constexpr std::array list_##name{__VA_ARGS__};                      \
         return list_##name[index];                                          \
@@ -157,7 +157,7 @@ inline const char* convert_checkstate(QCheckBox* checkbox) noexcept {
 
 inline constexpr auto convert_to_varname(std::string_view option) noexcept {
     // force constexpr call with lambda
-    return [option]{ return detail::option_map.at(option); }();
+    return [option] { return detail::option_map.at(option); }();
 }
 
 inline auto convert_to_var_assign(std::string_view option, std::string_view value) noexcept {
@@ -210,7 +210,7 @@ void run_cmd_async(std::string&& cmd, bool* data) {
 }
 
 std::vector<std::string> get_source_array_from_pkgbuild(std::string_view kernel_name_path, std::string_view options_set) noexcept {
-    const auto& testscript_src = fmt::format(FMT_COMPILE("#!/usr/bin/bash\n{}\nsource $1\n{}"), options_set, "echo \"${source[@]}\"");
+    const auto& testscript_src  = fmt::format(FMT_COMPILE("#!/usr/bin/bash\n{}\nsource $1\n{}"), options_set, "echo \"${source[@]}\"");
     const auto& testscript_path = fmt::format(FMT_COMPILE("{}/.testscript"), kernel_name_path);
 
     utils::write_to_file(testscript_path, testscript_src);
@@ -232,12 +232,12 @@ void insert_new_source_array_into_pkgbuild(std::string_view kernel_name_path, QL
     ranges::for_each(orig_source_array | ranges::views::filter(functor), [&](auto&& rng) { array_entries.emplace_back(fmt::format(FMT_COMPILE("\"{}\""), rng)); });
 
     // Apply flag to each item in list widget
-    for(int i = 0; i < list_widget->count(); ++i) {
+    for (int i = 0; i < list_widget->count(); ++i) {
         auto* item = list_widget->item(i);
         array_entries.emplace_back(fmt::format(FMT_COMPILE("\"{}\""), item->text().toStdString()));
     }
     const auto& pkgbuild_path = fmt::format(FMT_COMPILE("{}/PKGBUILD"), kernel_name_path);
-    auto pkgbuildsrc = utils::read_whole_file(pkgbuild_path);
+    auto pkgbuildsrc          = utils::read_whole_file(pkgbuild_path);
 
     const auto& new_source_array = fmt::format(FMT_COMPILE("source=(\n{})\n"), array_entries | ranges::views::join('\n') | ranges::to<std::string>());
     if (auto foundpos = pkgbuildsrc.find("prepare()"); foundpos != std::string::npos) {
@@ -259,7 +259,7 @@ QStringList convert_vector_of_strings_to_stringlist(const std::vector<std::strin
 
 inline void list_widget_apply_edit_flag(QListWidget* list_widget) noexcept {
     // Apply flag to each item in list widget
-    for(int i = 0; i < list_widget->count(); ++i) {
+    for (int i = 0; i < list_widget->count(); ++i) {
         auto* item = list_widget->item(i);
         item->setFlags(item->flags() | Qt::ItemIsEditable);
     }
@@ -268,7 +268,7 @@ inline void list_widget_apply_edit_flag(QListWidget* list_widget) noexcept {
 void ConfWindow::connect_all_checkboxes() noexcept {
     auto options_page_ui_obj = m_ui->conf_options_page_widget->get_ui_obj();
 
-    std::array checkbox_list {
+    std::array checkbox_list{
         options_page_ui_obj->latnice_check,
         options_page_ui_obj->lrng_check,
         options_page_ui_obj->builtin_zfs_check,
@@ -286,7 +286,7 @@ std::string ConfWindow::get_all_set_values() noexcept {
     std::string result{};
     auto options_page_ui_obj = m_ui->conf_options_page_widget->get_ui_obj();
 
-    const std::int32_t main_combo_index  = options_page_ui_obj->main_combo_box->currentIndex();
+    const std::int32_t main_combo_index = options_page_ui_obj->main_combo_box->currentIndex();
 
     // checkboxes values
     result += convert_to_var_assign("hardly", convert_checkstate(options_page_ui_obj->hardly_check));
@@ -354,7 +354,8 @@ void ConfWindow::reset_patches_data_tab() noexcept {
     auto current_array_items = get_source_array_from_pkgbuild(cpusched_path, get_all_set_values());
 
     current_array_items.erase(std::remove_if(current_array_items.begin(), current_array_items.end(),
-                          [](auto&& item_el){ return !item_el.ends_with(".patch"); }), current_array_items.end());
+                                  [](auto&& item_el) { return !item_el.ends_with(".patch"); }),
+        current_array_items.end());
     clear_patches_data_tab();
     patches_page_ui_obj->list_widget->addItems(convert_vector_of_strings_to_stringlist(current_array_items));
 
@@ -429,6 +430,7 @@ ConfWindow::ConfWindow(QWidget* parent)
     options_page_ui_obj->vma_config_combo_box->addItems(vma_config_modes);
     options_page_ui_obj->vma_config_combo_box->setCurrentIndex(2);
 
+    /* clang-format off */
     QStringList cpu_optims;
     cpu_optims << "Disabled"
                << "Generic"
@@ -438,6 +440,7 @@ ConfWindow::ConfWindow(QWidget* parent)
                << "Sandy Bridge" << "Ivy Bridge" << "Haswell"
                << "Icelake" << "Tiger Lake" << "Alder Lake";
     options_page_ui_obj->processor_opt_combo_box->addItems(cpu_optims);
+    /* clang-format on */
 
     options_page_ui_obj->autooptim_check->setCheckState(Qt::Checked);
     options_page_ui_obj->latnice_check->setCheckState(Qt::Checked);
@@ -495,11 +498,13 @@ ConfWindow::ConfWindow(QWidget* parent)
     // local patches
     connect(patches_page_ui_obj->local_patch_button, &QPushButton::clicked, this, [this, patches_page_ui_obj] {
         const auto& files = QFileDialog::getOpenFileNames(
-                    this,
-                    "Select one or more patch files",
-                    QString::fromStdString(fix_path("~/")),
-                    "Patch file (*.patch)");
+            this,
+            "Select one or more patch files",
+            QString::fromStdString(fix_path("~/")),
+            "Patch file (*.patch)");
+        /* clang-format off */
         if (files.isEmpty()) { return; }
+        /* clang-format on */
 
         qDebug() << "Files: " << files << '\n';
         patches_page_ui_obj->list_widget->addItems(files);
@@ -511,11 +516,13 @@ ConfWindow::ConfWindow(QWidget* parent)
     connect(patches_page_ui_obj->remote_patch_button, &QPushButton::clicked, this, [this, patches_page_ui_obj] {
         bool is_confirmed{};
         const auto& patch_url_text = QInputDialog::getText(
-                    this,
-                    "Enter URL patch",
-                    "Patch URL:", QLineEdit::Normal,
-                    QString(), &is_confirmed);
+            this,
+            "Enter URL patch",
+            "Patch URL:", QLineEdit::Normal,
+            QString(), &is_confirmed);
+        /* clang-format off */
         if (!is_confirmed || patch_url_text.isEmpty()) { return; }
+        /* clang-format on */
 
         qDebug() << "Url: " << patch_url_text << '\n';
         patches_page_ui_obj->list_widget->addItems(QStringList() << patch_url_text);
@@ -537,14 +544,14 @@ ConfWindow::ConfWindow(QWidget* parent)
     // move up
     connect(patches_page_ui_obj->move_up_button, &QPushButton::clicked, this, [patches_page_ui_obj]() {
         const auto& current_index = patches_page_ui_obj->list_widget->currentRow();
-        auto current_item = patches_page_ui_obj->list_widget->takeItem(current_index);
+        auto current_item         = patches_page_ui_obj->list_widget->takeItem(current_index);
         patches_page_ui_obj->list_widget->insertItem(current_index - 1, current_item);
         patches_page_ui_obj->list_widget->setCurrentRow(current_index - 1);
     });
     // move down
     connect(patches_page_ui_obj->move_down_button, &QPushButton::clicked, this, [patches_page_ui_obj]() {
         const auto& current_index = patches_page_ui_obj->list_widget->currentRow();
-        auto current_item = patches_page_ui_obj->list_widget->takeItem(current_index);
+        auto current_item         = patches_page_ui_obj->list_widget->takeItem(current_index);
         patches_page_ui_obj->list_widget->insertItem(current_index + 1, current_item);
         patches_page_ui_obj->list_widget->setCurrentRow(current_index + 1);
     });
@@ -560,7 +567,9 @@ void ConfWindow::on_cancel() noexcept {
 
 void ConfWindow::on_execute() noexcept {
     // Skip execution of the build, if already one is running
+    /* clang-format off */
     if (m_running) { return; }
+    /* clang-format on */
     m_running = true;
 
     auto options_page_ui_obj = m_ui->conf_options_page_widget->get_ui_obj();

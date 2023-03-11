@@ -19,9 +19,9 @@
 #include "aur_kernel.hpp"
 #include "utils.hpp"
 
+#include <algorithm>
 #include <cstdio>
 #include <cstdlib>
-#include <algorithm>
 #include <filesystem>
 
 #if defined(__clang__)

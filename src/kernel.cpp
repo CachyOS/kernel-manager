@@ -20,9 +20,9 @@
 #include "aur_kernel.hpp"
 #include "utils.hpp"
 
+#include <algorithm>
 #include <cstdio>
 #include <filesystem>
-#include <algorithm>
 #include <memory>
 
 #if defined(__clang__)
@@ -59,12 +59,14 @@ namespace fs = std::filesystem;
 
 std::string Kernel::version() noexcept {
 #ifdef ENABLE_AUR_KERNELS
+    /* clang-format off */
     if (m_repo == "aur") { return m_version; }
+    /* clang-format on */
 #endif
     const char* sync_pkg_ver = alpm_pkg_get_version(m_pkg);
-    if (!is_installed()) {
-        return sync_pkg_ver;
-    }
+    /* clang-format off */
+    if (!is_installed()) { return sync_pkg_ver; }
+    /* clang-format on */
 
     auto* db                  = alpm_get_localdb(m_handle);
     auto* local_pkg           = alpm_db_get_pkg(db, m_name.c_str());
@@ -207,17 +209,17 @@ std::vector<Kernel> Kernel::get_kernels(alpm_handle_t* handle) noexcept {
         for (auto&& aur_kernel_header : aur_kernels_headers) {
             auto&& aur_kernel = std::string{aur_kernel_header};
             utils::replace_all(aur_kernel, "-headers", "");
-            if (ranges::find_if(kernels, [&](auto& kernel){ return kernel.m_name == aur_kernel; }) != kernels.end()) {
+            if (ranges::find_if(kernels, [&](auto& kernel) { return kernel.m_name == aur_kernel; }) != kernels.end()) {
                 continue;
             }
             Kernel kernel_obj{};
 
-            kernel_obj.m_handle = handle;
-            kernel_obj.m_repo = "aur";
-            kernel_obj.m_name = aur_kernel;
+            kernel_obj.m_handle       = handle;
+            kernel_obj.m_repo         = "aur";
+            kernel_obj.m_name         = aur_kernel;
             kernel_obj.m_name_headers = aur_kernel_header;
-            kernel_obj.m_version = "unknown-version";
-            kernel_obj.m_raw = fmt::format("aur/{}", aur_kernel);
+            kernel_obj.m_version      = "unknown-version";
+            kernel_obj.m_raw          = fmt::format("aur/{}", aur_kernel);
 
             kernels.emplace_back(std::move(kernel_obj));
         }
@@ -237,13 +239,13 @@ void Kernel::commit_transaction() noexcept {
     }
 #endif
     if (!g_kernel_install_list.empty()) {
-        const auto& packages_install = [&]{ return utils::join_vec(g_kernel_install_list, " "); }();
+        const auto& packages_install = [&] { return utils::join_vec(g_kernel_install_list, " "); }();
         utils::runCmdTerminal(fmt::format(FMT_COMPILE("pacman -S --needed {}"), packages_install).c_str(), true);
         g_kernel_install_list.clear();
     }
 
     if (!g_kernel_removal_list.empty()) {
-        const auto& packages_remove = [&]{ return utils::join_vec(g_kernel_removal_list, " "); }();
+        const auto& packages_remove = [&] { return utils::join_vec(g_kernel_removal_list, " "); }();
         utils::runCmdTerminal(fmt::format(FMT_COMPILE("pacman -Rsn {}"), packages_remove).c_str(), true);
         g_kernel_removal_list.clear();
     }
