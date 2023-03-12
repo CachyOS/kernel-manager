@@ -1,0 +1,6 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="/translations">
+        <file alias="ru">lang/cachyos-kernel-manager_ru.qm</file>
+    </qresource>
+</RCC>

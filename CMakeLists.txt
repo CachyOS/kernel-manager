@@ -26,7 +26,7 @@ include(CPM)
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
 find_package(Threads REQUIRED)
 find_package(PkgConfig REQUIRED)
-find_package(Qt5 COMPONENTS Widgets REQUIRED)
+find_package(Qt5 COMPONENTS Widgets LinguistTools REQUIRED)
 pkg_check_modules(
   LIBALPM
   REQUIRED
@@ -78,6 +78,20 @@ endif()
 add_library(project_options INTERFACE)
 target_compile_features(project_options INTERFACE cxx_std_20)
 
+# Files with translation sources. You should run lupdate manually when needed to regenerate them
+file(GLOB TS_FILES "${PROJECT_SOURCE_DIR}/lang/*.ts")
+file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lang")
+
+set_source_files_properties(${TS_FILES} PROPERTIES OUTPUT_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/lang") # set qm files output directory
+qt5_add_translation(QM_FILES ${TS_FILES})   # generate qm files
+
+add_custom_command(
+    DEPENDS "${QM_FILES}"
+    OUTPUT "${CMAKE_BINARY_DIR}/cachyoskm_locale.qrc"
+    COMMAND cp "${CMAKE_SOURCE_DIR}/cachyoskm_locale.qrc" "${CMAKE_CURRENT_BINARY_DIR}"
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+)
+
 ##
 ## Target
 ##
@@ -98,7 +112,7 @@ add_executable(${PROJECT_NAME}
     src/conf-patches-page.hpp src/conf-patches-page.ui
     src/conf-options-page.hpp src/conf-options-page.ui
     src/km-window.ui src/conf-window.ui
-    src/main.cpp
+    src/main.cpp "${CMAKE_BINARY_DIR}/cachyoskm_locale.qrc"
     )
 
 # Link this 'library' to use the warnings specified in CompilerWarnings.cmake
