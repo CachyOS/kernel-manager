@@ -197,57 +197,57 @@
     <message>
         <location filename="../src/conf-window.cpp" line="380"/>
         <source>BMQ - BitMap Queue CPU scheduler</source>
-        <translation type="unfinished"></translation>
+        <translation>BMQ - планировщик CPU BitMap Queue</translation>
     </message>
     <message>
         <location filename="../src/conf-window.cpp" line="381"/>
         <source>Bore - Burst-Oriented Response Enhancer</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/conf-window.cpp" line="382"/>
         <source>CFS - Completely Fair Scheduler</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/conf-window.cpp" line="383"/>
         <source>Hardened - Hardened kernel with the BORE Scheduler</source>
-        <translation type="unfinished"></translation>
+        <translation>Hardened - ориентированное на безопасность с планировщиком BORE</translation>
     </message>
     <message>
         <location filename="../src/conf-window.cpp" line="384"/>
         <source>PDS - Priority and Deadline based Skip list multiple queue CPU scheduler</source>
-        <translation type="unfinished"></translation>
+        <translation>PDS - планировщик множественных очередей на основе приоритетов и дедлайнов Skiplist</translation>
     </message>
     <message>
         <location filename="../src/conf-window.cpp" line="385"/>
         <source>RC - Release Candidate</source>
-        <translation type="unfinished"></translation>
+        <translation>RC - Release Candidate (релиз-кандидат)</translation>
     </message>
     <message>
         <location filename="../src/conf-window.cpp" line="386"/>
         <source>TT - Task Type Scheduler</source>
-        <translation type="unfinished"></translation>
+        <translation>TT - Task Type планировщик</translation>
     </message>
     <message>
         <location filename="../src/conf-window.cpp" line="504"/>
         <source>Select one or more patch files</source>
-        <translation type="unfinished"></translation>
+        <translation>Выберите один или несколько файлов патчей</translation>
     </message>
     <message>
         <location filename="../src/conf-window.cpp" line="506"/>
         <source>Patch file (*.patch)</source>
-        <translation type="unfinished"></translation>
+        <translation>Файл патча (*.patch)</translation>
     </message>
     <message>
         <location filename="../src/conf-window.cpp" line="522"/>
         <source>Enter URL patch</source>
-        <translation type="unfinished"></translation>
+        <translation>Введите URL патча</translation>
     </message>
     <message>
         <location filename="../src/conf-window.cpp" line="523"/>
         <source>Patch URL:</source>
-        <translation type="unfinished"></translation>
+        <translation>URL патча:</translation>
     </message>
 </context>
 <context>
@@ -255,7 +255,7 @@
     <message>
         <location filename="../src/km-window.ui" line="17"/>
         <source>CachyOS Kernel Manager</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/km-window.ui" line="28"/>
@@ -266,7 +266,13 @@
 &lt;p&gt;This app won&apos;t work, if you are already running a pacman instance.&lt;/p&gt;
 &lt;/body&gt;
 &lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;
+&lt;body&gt;
+&lt;p&gt;Здесь вы увидите информацию о текущих установленных и доступных ядрах Linux.&lt;/p&gt;
+&lt;p&gt;Вы можете установить и/или удалить пакеты ядра, используя флажки в левой колонке.&lt;/p&gt;
+&lt;p&gt;Это приложение не будет работать, если у вас уже запущен pacman instance.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../src/km-window.ui" line="64"/>
@@ -313,7 +319,9 @@
         <source>No kernels found!
 Please run `pacman -Sy` to update DB!
 This is needed for the app to work properly</source>
-        <translation type="unfinished"></translation>
+        <translation>Ядра не найдены!
+Пожалуйста, запустите `pacman -Sy` для обновления БД!
+Это необходимо для правильной работы приложения</translation>
     </message>
 </context>
 </TS>
