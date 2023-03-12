@@ -81,23 +81,24 @@ GENERATE_CONST_OPTION_VALUES(hugepage_mode, "always", "madvise")
 GENERATE_CONST_OPTION_VALUES(zstd_comp_level, "ultra", "normal")
 GENERATE_CONST_OPTION_VALUES(cpu_opt_mode, "manual", "generic", "native_amd", "native_intel", "zen", "zen2", "zen3", "sandybridge", "ivybridge", "haswell", "icelake", "tigerlake", "alderlake")
 
-constexpr std::string_view get_kernel_name_path(std::string_view kernel_name) noexcept {
-    if (kernel_name == "bmq") {
-        return "linux-cachyos-bmq";
-    } else if (kernel_name == "bore") {
-        return "linux-cachyos-bore";
-    } else if (kernel_name == "cfs") {
-        return "linux-cachyos-cfs";
-    } else if (kernel_name == "hardened") {
-        return "linux-cachyos-hardened";
-    } else if (kernel_name == "pds") {
-        return "linux-cachyos-pds";
-    } else if (kernel_name == "rc") {
-        return "linux-cachyos-rc";
-    } else if (kernel_name == "tt") {
-        return "linux-cachyos-tt";
+constexpr auto get_kernel_name_path(std::string_view kernel_name) noexcept {
+    using namespace std::string_view_literals;
+    if (kernel_name == "bmq"sv) {
+        return "linux-cachyos-bmq"sv;
+    } else if (kernel_name == "bore"sv) {
+        return "linux-cachyos-bore"sv;
+    } else if (kernel_name == "cfs"sv) {
+        return "linux-cachyos-cfs"sv;
+    } else if (kernel_name == "hardened"sv) {
+        return "linux-cachyos-hardened"sv;
+    } else if (kernel_name == "pds"sv) {
+        return "linux-cachyos-pds"sv;
+    } else if (kernel_name == "rc"sv) {
+        return "linux-cachyos-rc"sv;
+    } else if (kernel_name == "tt"sv) {
+        return "linux-cachyos-tt"sv;
     }
-    return "linux-cachyos";
+    return "linux-cachyos"sv;
 }
 
 std::string fix_path(std::string&& path) noexcept {
@@ -210,7 +211,7 @@ void run_cmd_async(std::string&& cmd, bool* data) {
     g_child_watch_add(child_pid, child_watch_cb, data);
 }
 
-std::vector<std::string> get_source_array_from_pkgbuild(std::string_view kernel_name_path, std::string_view options_set) noexcept {
+auto get_source_array_from_pkgbuild(std::string_view kernel_name_path, std::string_view options_set) noexcept {
     const auto& testscript_src  = fmt::format(FMT_COMPILE("#!/usr/bin/bash\n{}\nsource $1\n{}"), options_set, "echo \"${source[@]}\"");
     const auto& testscript_path = fmt::format(FMT_COMPILE("{}/.testscript"), kernel_name_path);
 
@@ -249,7 +250,7 @@ void insert_new_source_array_into_pkgbuild(std::string_view kernel_name_path, QL
     utils::write_to_file(pkgbuild_path, pkgbuildsrc);
 }
 
-QStringList convert_vector_of_strings_to_stringlist(const std::vector<std::string>& vec) noexcept {
+auto convert_vector_of_strings_to_stringlist(const std::vector<std::string>& vec) noexcept {
     QStringList result{};
 
     for (auto&& element : vec) {
