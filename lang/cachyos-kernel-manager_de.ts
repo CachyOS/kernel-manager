@@ -5,35 +5,35 @@
     <name>ConfOptionsPage</name>
     <message>
         <source>Enable CachyOS config</source>
-        <translation type="unfinished"></translation>
+        <translation>CachyOS-Konfiguration einschalten</translation>
     </message>
     <message>
         <source>Tweak kernel options prior to a build via nconfig</source>
-        <translation type="unfinished"></translation>
+        <translation>Kernel-Optionen vor einem Build über nconfig anpassen</translation>
     </message>
     <message>
         <source>Tweak kernel options prior to a build via menuconfig</source>
-        <translation type="unfinished"></translation>
+        <translation>Kernel-Optionen vor einem Build über menuconfig anpassen</translation>
     </message>
     <message>
         <source>Tweak kernel options prior to a build via xconfig</source>
-        <translation type="unfinished"></translation>
+        <translation>Kernel-Optionen vor einem Build über xconfig anpassen</translation>
     </message>
     <message>
         <source>Tweak kernel options prior to a build via gconfig</source>
-        <translation type="unfinished"></translation>
+        <translation>Kernel-Optionen vor einem Build über gconfig anpassen</translation>
     </message>
     <message>
         <source>Disable NUMA</source>
-        <translation type="unfinished"></translation>
+        <translation>NUMA deaktivieren</translation>
     </message>
     <message>
         <source>Use Modprobed-db</source>
-        <translation type="unfinished"></translation>
+        <translation>Modprobed-db verwenden</translation>
     </message>
     <message>
         <source>Enable KBUILD_CFLAGS -O3</source>
-        <translation type="unfinished"></translation>
+        <translation>KBUILD_CFLAGS -O3 aktivieren</translation>
     </message>
     <message>
         <source>Set performance governor as default</source>
@@ -41,121 +41,122 @@
     </message>
     <message>
         <source>Enable TCP_CONG_BBR2</source>
-        <translation type="unfinished"></translation>
+        <translation>TCP_CONG_BBR2 aktivieren</translation>
     </message>
     <message>
         <source>Running tick rate</source>
-        <translation type="unfinished"></translation>
+        <translation>Laufende Tickrate</translation>
     </message>
     <message>
         <source>Select tickless</source>
-        <translation type="unfinished"></translation>
+        <translation>Wählen Sie tickless</translation>
     </message>
     <message>
         <source>Select preempt</source>
-        <translation type="unfinished"></translation>
+        <translation>Wählen Sie preempt</translation>
     </message>
     <message>
         <source>Disable MQ-Deadline I/O scheduler</source>
-        <translation type="unfinished"></translation>
+        <translation>MQ-Deadline I/O-Scheduler deaktivieren</translation>
     </message>
     <message>
         <source>Disable Kyber I/O scheduler</source>
-        <translation type="unfinished"></translation>
+        <translation>Kyber I/O scheduler deaktivieren</translation>
     </message>
     <message>
         <source>Enable multigenerational LRU</source>
-        <translation type="unfinished"></translation>
+        <translation>multigenerational LRUaktivieren</translation>
     </message>
     <message>
         <source>Enable per-VMA locking</source>
-        <translation type="unfinished"></translation>
+        <translation>per-VMA locking aktivieren</translation>
     </message>
     <message>
         <source>Enable DAMON</source>
-        <translation type="unfinished"></translation>
+        <translation>DAMON aktivieren</translation>
     </message>
     <message>
         <source>Enable Linux Random Number Generator</source>
-        <translation type="unfinished"></translation>
+        <translation>Linux-Zufallszahlengenerator aktivieren</translation>
     </message>
     <message>
         <source>CPU compiler optimizations</source>
-        <translation type="unfinished"></translation>
+        <translation>CPU Compiler Optimierungen</translation>
     </message>
     <message>
         <source>Apply automatic CPU Optimization</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatische CPU Optimierung anwenden</translation>
     </message>
     <message>
         <source>Disable debug to lower the size of the kernel</source>
-        <translation type="unfinished"></translation>
+        <translation>Debugging deaktivieren, um die Größe des Kernels zu verringern</translation>
     </message>
     <message>
         <source>Enable zram/zswap ZSTD compression</source>
-        <translation type="unfinished"></translation>
+        <translation>Zram/zswap ZSTD komprimierung einschalten</translation>
     </message>
     <message>
         <source>Selecting the ZSTD kernel and modules compression level</source>
-        <translation type="unfinished"></translation>
+        <translation>Auswahl der Komprimierungsstufe für den ZSTD kernel und die Module</translation>
     </message>
     <message>
         <source>Enable LTO</source>
-        <translation type="unfinished"></translation>
+        <translation>LTO aktivieren</translation>
     </message>
     <message>
         <source>Build the ZFS module</source>
-        <translation type="unfinished"></translation>
+        <translation>Erstellen Sie das ZFS modul</translation>
     </message>
     <message>
         <source>Build the BCACHEFS module</source>
-        <translation type="unfinished"></translation>
+        <translation>Erstellen Sie das BCACHEFS modul</translation>
     </message>
     <message>
         <source>Enable RT kernel</source>
-        <translation type="unfinished"></translation>
+        <translatorcomment>RT kernel aktivieren</translatorcomment>
+        <translation>Enable RT kernel</translation>
     </message>
     <message>
         <source>Enable LATENCY NICE</source>
-        <translation type="unfinished"></translation>
+        <translation>LATENCY NICE aktivieren</translation>
     </message>
     <message>
         <source>Transparent Hugepages</source>
-        <translation type="unfinished"></translation>
+        <translation>Transparente Hugepages</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Abbrechen</translation>
     </message>
     <message>
         <source>Execute</source>
-        <translation type="unfinished"></translation>
+        <translation>Ausführen</translation>
     </message>
 </context>
 <context>
     <name>ConfPatchesPage</name>
     <message>
         <source>Add remote patch</source>
-        <translation type="unfinished"></translation>
+        <translation>Remote-Patch hinzufügen</translation>
     </message>
     <message>
         <source>Add local patch</source>
-        <translation type="unfinished"></translation>
+        <translation>Lokalen Patch hinzufügen</translation>
     </message>
 </context>
 <context>
     <name>ConfWindow</name>
     <message>
         <source>CachyOS Kernel Manager Configure</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Options</source>
-        <translation type="unfinished"></translation>
+        <translation>Optionen</translation>
     </message>
     <message>
         <source>Patches</source>
-        <translation type="unfinished"></translation>
+        <translation>Patches</translation>
     </message>
     <message>
         <source>BMQ - BitMap Queue CPU scheduler</source>
@@ -187,26 +188,26 @@
     </message>
     <message>
         <source>Select one or more patch files</source>
-        <translation type="unfinished"></translation>
+        <translation>Wählen Sie eine oder mehrere Patch-Dateien</translation>
     </message>
     <message>
         <source>Patch file (*.patch)</source>
-        <translation type="unfinished"></translation>
+        <translation>Patch-Datei (*.patch)</translation>
     </message>
     <message>
         <source>Enter URL patch</source>
-        <translation type="unfinished"></translation>
+        <translation>URL-Patch eingeben</translation>
     </message>
     <message>
         <source>Patch URL:</source>
-        <translation type="unfinished"></translation>
+        <translation>Patch URL:</translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
         <source>CachyOS Kernel Manager</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>&lt;html&gt;
@@ -216,45 +217,53 @@
 &lt;p&gt;This app won&apos;t work, if you are already running a pacman instance.&lt;/p&gt;
 &lt;/body&gt;
 &lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;
+&lt;body&gt;
+&lt;p&gt;Hier finden Sie Informationen über die derzeit installierten und verfügbaren Linux-Kernel.&lt;/p&gt;
+&lt;p&gt;Sie können Kernel-Pakete installieren und/oder deinstallieren, indem Sie die Kontrollkästchen in der Spalte ganz links aktivieren.&lt;/p&gt;
+&lt;p&gt;Diese Anwendung wird nicht funktionieren, wenn Sie bereits eine pacman-Instanz verwenden.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</translation>
     </message>
     <message>
         <source>Choose</source>
-        <translation type="unfinished"></translation>
+        <translation>Wählen Sie</translation>
     </message>
     <message>
         <source>PkgName</source>
-        <translation type="unfinished"></translation>
+        <translation>Paketname</translation>
     </message>
     <message>
         <source>Version</source>
-        <translation type="unfinished"></translation>
+        <translation>Version</translation>
     </message>
     <message>
         <source>Category</source>
-        <translation type="unfinished"></translation>
+        <translation>Kategorie</translation>
     </message>
     <message>
         <source>nothing here..                                                                                      </source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Configure</source>
-        <translation type="unfinished"></translation>
+        <translation>Konfigurieren Sie</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Abbrechen</translation>
     </message>
     <message>
         <source>Execute</source>
-        <translation type="unfinished"></translation>
+        <translation>Ausführen</translation>
     </message>
     <message>
         <source>No kernels found!
 Please run `pacman -Sy` to update DB!
 This is needed for the app to work properly</source>
-        <translation type="unfinished"></translation>
+        <translation>Keine Kernel gefunden!
+Bitte führen Sie `pacman -Sy` aus, um die DB zu aktualisieren!
+Dies ist notwendig, damit die Anwendung richtig funktioniert</translation>
     </message>
 </context>
 </TS>
