@@ -20,8 +20,10 @@
 
 #include <QApplication>
 #include <QSharedMemory>
+#include <QTranslator>
+#include <QLibraryInfo>
 
-bool IsInstanceAlreadyRunning(QSharedMemory& memoryLock) {
+static bool IsInstanceAlreadyRunning(QSharedMemory& memoryLock) {
     if (!memoryLock.create(1)) {
         memoryLock.attach();
         memoryLock.detach();
@@ -34,18 +36,80 @@ bool IsInstanceAlreadyRunning(QSharedMemory& memoryLock) {
     return false;
 }
 
+/* Adopted from bitcoin-qt source code.
+ * Licensed under MIT
+ */
+/** Set up translations */
+static void initTranslations(QTranslator &qtTranslatorBase, QTranslator &qtTranslator, QTranslator &translatorBase, QTranslator &translator) {
+    // Remove old translators
+    QApplication::removeTranslator(&qtTranslatorBase);
+    QApplication::removeTranslator(&qtTranslator);
+    QApplication::removeTranslator(&translatorBase);
+    QApplication::removeTranslator(&translator);
+
+    // Get desired locale (e.g. "de_DE")
+    // 1) System default language
+    QString lang_territory = QLocale::system().name();
+
+    // Convert to "de" only by truncating "_DE"
+    QString lang = lang_territory;
+    lang.truncate(lang_territory.lastIndexOf('_'));
+
+    // Load language files for configured locale:
+    // - First load the translator for the base language, without territory
+    // - Then load the more specific locale translator
+
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+    const QString translation_path{QLibraryInfo::location(QLibraryInfo::TranslationsPath)};
+#else
+    const QString translation_path{QLibraryInfo::path(QLibraryInfo::TranslationsPath)};
+#endif
+
+    // Load e.g. qt_de.qm
+    if (qtTranslatorBase.load("qt_" + lang, translation_path)) {
+        QApplication::installTranslator(&qtTranslatorBase);
+    }
+
+    // Load e.g. qt_de_DE.qm
+    if (qtTranslator.load("qt_" + lang_territory, translation_path)) {
+        QApplication::installTranslator(&qtTranslator);
+    }
+
+    // Load e.g. cachyos-kernel-manager_de.qm (shortcut "de" needs to be defined in bitcoin.qrc)
+    if (translatorBase.load(lang, ":/translations/")) {
+        QApplication::installTranslator(&translatorBase);
+    }
+
+    // Load e.g. cachyos-kernel-manager_de_DE.qm (shortcut "de_DE" needs to be defined in bitcoin.qrc)
+    if (translator.load(lang_territory, ":/translations/")) {
+        QApplication::installTranslator(&translator);
+    }
+}
+
 auto main(int argc, char** argv) -> std::int32_t {
     QSharedMemory sharedMemoryLock("CachyOS-KM-lock");
     if (IsInstanceAlreadyRunning(sharedMemoryLock)) {
         return -1;
     }
 
-    // Set application info
-    QCoreApplication::setOrganizationName("CachyOS");
-    QCoreApplication::setApplicationName("CachyOS-KM");
+    /// 1. Basic Qt initialization (not dependent on parameters or configuration)
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+    // Generate high-dpi pixmaps
+    QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+#endif
+
+    /// 2. Application identification
+    QApplication::setOrganizationName("CachyOS");
+    QApplication::setOrganizationDomain("cachyos.org");
+    QApplication::setApplicationName("CachyOS-KM");
 
     // Set application attributes
     QApplication app(argc, argv);
+
+    /// 3. Initialization of translations
+    QTranslator qtTranslatorBase, qtTranslator, translatorBase, translator;
+    initTranslations(qtTranslatorBase, qtTranslator, translatorBase, translator);
 
     MainWindow w;
     w.show();
