@@ -44,6 +44,7 @@
 #include <condition_variable>
 #include <memory>
 #include <thread>
+#include <utility>
 #include <vector>
 
 #include <alpm.h>
@@ -64,8 +65,8 @@ class Work final : public QObject {
  public:
     using function_t = std::function<void()>;
     explicit Work(function_t func)
-      : m_func(func) { }
-    virtual ~Work() = default;
+      : m_func(std::move(func)) { }
+    ~Work() = default;
 
  public slots:
     void doHeavyCalculations();
@@ -88,7 +89,7 @@ class MainWindow final : public QMainWindow {
     Q_DISABLE_COPY_MOVE(MainWindow)
  public:
     explicit MainWindow(QWidget* parent = nullptr);
-    virtual ~MainWindow();
+    ~MainWindow();
 
  private slots:
     void on_cancel() noexcept;

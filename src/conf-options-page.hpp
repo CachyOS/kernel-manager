@@ -51,7 +51,7 @@ class ConfOptionsPage final : public QWidget {
  public:
     explicit ConfOptionsPage(QWidget* parent = nullptr)
         : QWidget(parent) { m_ui->setupUi(this); }
-    virtual ~ConfOptionsPage() = default;
+    ~ConfOptionsPage() = default;
 
     Ui::ConfOptionsPage* get_ui_obj() noexcept { return m_ui.get(); }
 

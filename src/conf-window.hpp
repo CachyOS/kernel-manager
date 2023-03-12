@@ -51,7 +51,7 @@ class ConfWindow final : public QMainWindow {
     Q_DISABLE_COPY_MOVE(ConfWindow)
  public:
     explicit ConfWindow(QWidget* parent = nullptr);
-    virtual ~ConfWindow() = default;
+    ~ConfWindow() = default;
 
  private slots:
     void on_cancel() noexcept;

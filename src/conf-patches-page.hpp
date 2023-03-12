@@ -51,7 +51,7 @@ class ConfPatchesPage final : public QWidget {
  public:
     explicit ConfPatchesPage(QWidget* parent = nullptr)
         : QWidget(parent) { m_ui->setupUi(this); }
-    virtual ~ConfPatchesPage() = default;
+    ~ConfPatchesPage() = default;
 
     Ui::ConfPatchesPage* get_ui_obj() noexcept { return m_ui.get(); }
 
