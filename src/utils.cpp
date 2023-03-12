@@ -190,7 +190,7 @@ void parse_repos(alpm_handle_t* handle) noexcept {
                 const auto& archs = utils::make_multiline(it_nested.second, ' ');
                 for (const auto& arch : archs) {
                     if (arch == "auto") {
-                        struct utsname un;
+                        struct utsname un{};
                         uname(&un);
                         char* tmp = un.machine;
                         if (tmp != nullptr) {

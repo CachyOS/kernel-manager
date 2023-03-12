@@ -192,8 +192,9 @@ void child_watch_cb(GPid pid, [[maybe_unused]] gint status, gpointer user_data) 
 void run_cmd_async(std::string&& cmd, bool* data) {
     cmd += "; read -p 'Press enter to exit'";
     const gchar* const argv[] = {"/usr/lib/cachyos-kernel-manager/terminal-helper", cmd.c_str(), nullptr};
-    gint child_stdout, child_stderr;
-    GPid child_pid;
+    gint child_stdout{};
+    gint child_stderr{};
+    GPid child_pid{};
     g_autoptr(GError) error = nullptr;
 
     // Spawn child process.

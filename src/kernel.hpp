@@ -129,9 +129,9 @@ class Kernel {
     std::string m_name_headers{};
 #endif
 
-    alpm_pkg_t* m_pkg;
-    alpm_pkg_t* m_headers;
-    alpm_handle_t* m_handle;
+    alpm_pkg_t* m_pkg{nullptr};
+    alpm_pkg_t* m_headers{nullptr};
+    alpm_handle_t* m_handle{nullptr};
 };
 
 #endif  // KERNEL_HPP
