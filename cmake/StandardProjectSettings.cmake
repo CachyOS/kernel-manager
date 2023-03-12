@@ -27,6 +27,14 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
   add_compile_options(-nostdlib++ -stdlib=libc++ -nodefaultlibs -fexperimental-library)
   add_link_options(-stdlib=libc++)
+
+  add_compile_options(-fstrict-vtable-pointers)
+
+  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 16)
+    # Set new experimental pass manager, it's a performance, build time and binary size win.
+    # Can be removed after https://reviews.llvm.org/D66490 merged and released to at least two versions of clang.
+    add_compile_options(-fexperimental-new-pass-manager)
+  endif()
 endif()
 
 option(ENABLE_IPO "Enable Interprocedural Optimization, aka Link Time Optimization (LTO)" OFF)
