@@ -563,7 +563,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     // TODO(vnepogodin): parallelize it
     auto a2 = std::async(std::launch::deferred, [&] {
-        std::lock_guard<std::mutex> guard(m_mutex);
+        const std::lock_guard<std::mutex> guard(m_mutex);
         for (auto& kernel : m_kernels) {
             auto widget_item = new QTreeWidgetItem(tree_kernels);
             widget_item->setCheckState(TreeCol::Check, Qt::Unchecked);

@@ -376,13 +376,13 @@ ConfWindow::ConfWindow(QWidget* parent)
 
     // Selecting the CPU scheduler
     QStringList kernel_names;
-    kernel_names << "BMQ - BitMap Queue CPU scheduler"
-                 << "Bore - Burst-Oriented Response Enhancer"
-                 << "CFS - Completely Fair Scheduler"
-                 << "Hardened - Hardened kernel with the BORE Scheduler"
-                 << "PDS - Priority and Deadline based Skip list multiple queue CPU scheduler"
-                 << "RC - Release Candidate"
-                 << "TT - Task Type Scheduler";
+    kernel_names << tr("BMQ - BitMap Queue CPU scheduler")
+                 << tr("Bore - Burst-Oriented Response Enhancer")
+                 << tr("CFS - Completely Fair Scheduler")
+                 << tr("Hardened - Hardened kernel with the BORE Scheduler")
+                 << tr("PDS - Priority and Deadline based Skip list multiple queue CPU scheduler")
+                 << tr("RC - Release Candidate")
+                 << tr("TT - Task Type Scheduler");
     options_page_ui_obj->main_combo_box->addItems(kernel_names);
     options_page_ui_obj->main_combo_box->setCurrentIndex(1);
 
@@ -500,9 +500,9 @@ ConfWindow::ConfWindow(QWidget* parent)
     connect(patches_page_ui_obj->local_patch_button, &QPushButton::clicked, this, [this, patches_page_ui_obj] {
         const auto& files = QFileDialog::getOpenFileNames(
             this,
-            "Select one or more patch files",
+            tr("Select one or more patch files"),
             QString::fromStdString(fix_path("~/")),
-            "Patch file (*.patch)");
+            tr("Patch file (*.patch)"));
         /* clang-format off */
         if (files.isEmpty()) { return; }
         /* clang-format on */
@@ -518,8 +518,8 @@ ConfWindow::ConfWindow(QWidget* parent)
         bool is_confirmed{};
         const auto& patch_url_text = QInputDialog::getText(
             this,
-            "Enter URL patch",
-            "Patch URL:", QLineEdit::Normal,
+            tr("Enter URL patch"),
+            tr("Patch URL:"), QLineEdit::Normal,
             QString(), &is_confirmed);
         /* clang-format off */
         if (!is_confirmed || patch_url_text.isEmpty()) { return; }
