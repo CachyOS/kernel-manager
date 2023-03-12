@@ -547,12 +547,6 @@ MainWindow::MainWindow(QWidget* parent)
 #endif
 
     auto* tree_kernels = m_ui->treeKernels;
-    QStringList column_names;
-    column_names << "Choose"
-                 << "PkgName"
-                 << "Version"
-                 << "Category";
-    tree_kernels->setHeaderLabels(column_names);
     tree_kernels->hideColumn(TreeCol::Displayed);  // Displayed status true/false
     tree_kernels->hideColumn(TreeCol::Immutable);  // Immutable status true/false
     tree_kernels->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
@@ -583,7 +577,7 @@ MainWindow::MainWindow(QWidget* parent)
     });
 
     if (m_kernels.empty()) {
-        QMessageBox::critical(this, "CachyOS Kernel Manager", "No kernels found!\nPlease run `pacman -Sy` to update DB!\nThis is needed for the app to work properly");
+        QMessageBox::critical(this, "CachyOS Kernel Manager", tr("No kernels found!\nPlease run `pacman -Sy` to update DB!\nThis is needed for the app to work properly"));
     }
 
     // Connect buttons signal
