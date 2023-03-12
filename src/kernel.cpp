@@ -48,7 +48,11 @@
 namespace {
 
 #ifdef PKG_DUMMY_IMPL
+
+#ifdef ENABLE_AUR_KERNELS
 static std::vector<std::string_view> g_aur_kernel_install_list{};
+#endif
+
 static std::vector<std::string_view> g_kernel_install_list{};
 static std::vector<std::string_view> g_kernel_removal_list{};
 #endif

@@ -81,7 +81,7 @@ if(PKG_DUMMY_IMPL)
 endif()
 
 # Choose pkg operation implementation.
-option(ENABLE_AUR_KERNELS "Enable AUR kernels support" ON)
+option(ENABLE_AUR_KERNELS "Enable AUR kernels support" OFF)
 if(PKG_DUMMY_IMPL AND ENABLE_AUR_KERNELS)
   add_definitions(-DENABLE_AUR_KERNELS)
 elseif(NOT PKG_DUMMY_IMPL)
