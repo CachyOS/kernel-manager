@@ -195,57 +195,57 @@
         <translation>Патчи</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="380"/>
+        <location filename="../src/conf-window.cpp" line="373"/>
         <source>BMQ - BitMap Queue CPU scheduler</source>
-        <translation>BMQ - планировщик CPU BitMap Queue</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="381"/>
+        <location filename="../src/conf-window.cpp" line="374"/>
         <source>Bore - Burst-Oriented Response Enhancer</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="382"/>
+        <location filename="../src/conf-window.cpp" line="375"/>
         <source>CFS - Completely Fair Scheduler</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="383"/>
+        <location filename="../src/conf-window.cpp" line="376"/>
         <source>Hardened - Hardened kernel with the BORE Scheduler</source>
-        <translation>Hardened - ориентированное на безопасность с планировщиком BORE</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="384"/>
+        <location filename="../src/conf-window.cpp" line="377"/>
         <source>PDS - Priority and Deadline based Skip list multiple queue CPU scheduler</source>
-        <translation>PDS - планировщик множественных очередей на основе приоритетов и дедлайнов Skiplist</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="385"/>
+        <location filename="../src/conf-window.cpp" line="378"/>
         <source>RC - Release Candidate</source>
-        <translation>RC - Release Candidate (релиз-кандидат)</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="386"/>
+        <location filename="../src/conf-window.cpp" line="379"/>
         <source>TT - Task Type Scheduler</source>
-        <translation>TT - Task Type планировщик</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="504"/>
+        <location filename="../src/conf-window.cpp" line="497"/>
         <source>Select one or more patch files</source>
         <translation>Выберите один или несколько файлов патчей</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="506"/>
+        <location filename="../src/conf-window.cpp" line="499"/>
         <source>Patch file (*.patch)</source>
         <translation>Файл патча (*.patch)</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="522"/>
+        <location filename="../src/conf-window.cpp" line="519"/>
         <source>Enter URL patch</source>
         <translation>Введите URL патча</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="523"/>
+        <location filename="../src/conf-window.cpp" line="520"/>
         <source>Patch URL:</source>
         <translation>URL патча:</translation>
     </message>
