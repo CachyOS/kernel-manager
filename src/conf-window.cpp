@@ -493,7 +493,7 @@ ConfWindow::ConfWindow(QWidget* parent)
 
     // local patches
     connect(patches_page_ui_obj->local_patch_button, &QPushButton::clicked, this, [this, patches_page_ui_obj] {
-        const auto& files = QFileDialog::getOpenFileNames(
+        auto files = QFileDialog::getOpenFileNames(
             this,
             tr("Select one or more patch files"),
             QString::fromStdString(utils::fix_path("~/")),
@@ -501,6 +501,11 @@ ConfWindow::ConfWindow(QWidget* parent)
         /* clang-format off */
         if (files.isEmpty()) { return; }
         /* clang-format on */
+
+        // Prepend 'file://' to each selected patch file.
+        std::transform(files.cbegin(), files.cend(),
+            files.begin(),  // write to the same location
+            [](auto&& file_path) { return QString("file://") + std::move(file_path); });
 
         qDebug() << "Files: " << files << '\n';
         patches_page_ui_obj->list_widget->addItems(files);
