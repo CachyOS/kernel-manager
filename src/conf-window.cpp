@@ -56,7 +56,6 @@
 #include <QInputDialog>
 #include <QLineEdit>
 #include <QStringList>
-#include <QtDebug>
 
 namespace fs = std::filesystem;
 
@@ -507,7 +506,6 @@ ConfWindow::ConfWindow(QWidget* parent)
             files.begin(),  // write to the same location
             [](auto&& file_path) { return QString("file://") + std::move(file_path); });
 
-        qDebug() << "Files: " << files << '\n';
         patches_page_ui_obj->list_widget->addItems(files);
 
         // Apply flag to each item in list widget
@@ -525,7 +523,6 @@ ConfWindow::ConfWindow(QWidget* parent)
         if (!is_confirmed || patch_url_text.isEmpty()) { return; }
         /* clang-format on */
 
-        qDebug() << "Url: " << patch_url_text << '\n';
         patches_page_ui_obj->list_widget->addItems(QStringList() << patch_url_text);
 
         // Apply flag to each item in list widget
