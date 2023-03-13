@@ -138,7 +138,7 @@ prep = qt5.preprocess(
   moc_headers : ['src/km-window.hpp', 'src/conf-window.hpp'] # These need to be fed through the moc tool before use.
 )
 # XML files that need to be compiled with the uic tol.
-prep += qt5.compile_ui(sources : ['src/km-window.ui', 'src/conf-window.ui'])
+prep += qt5.compile_ui(sources : ['src/km-window.ui', 'src/conf-window.ui', 'src/conf-options-page.ui', 'src/conf-patches-page.ui'])
 
 compile_options_hpp = custom_target(
     'compile_options.hpp',
