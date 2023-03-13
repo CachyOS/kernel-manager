@@ -24,24 +24,7 @@
 #include <cstdlib>
 #include <filesystem>
 
-#if defined(__clang__)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wold-style-cast"
-#elif defined(__GNUC__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wuseless-cast"
-#pragma GCC diagnostic ignored "-Wold-style-cast"
-#endif
-
-#include <glib.h>
-
 #include <range/v3/algorithm/search.hpp>
-
-#if defined(__clang__)
-#pragma clang diagnostic pop
-#elif defined(__GNUC__)
-#pragma GCC diagnostic pop
-#endif
 
 #include <fmt/core.h>
 
@@ -49,16 +32,10 @@ namespace fs = std::filesystem;
 
 namespace {
 
-std::string fix_path(std::string&& path) noexcept {
-    if (path[0] != '~') { return path; }
-    utils::replace_all(path, "~", g_get_home_dir());
-    return path;
-}
-
 void prepare_build_environment(const std::string_view& package_name) noexcept {
-    static const fs::path app_path       = fix_path("~/.cache/cachyos-km");
-    static const fs::path pkgbuilds_path = fix_path("~/.cache/cachyos-km/aur_pkgbuilds");
-    static const fs::path package_path   = fix_path(fmt::format("~/.cache/cachyos-km/aur_pkgbuilds/{}", package_name));
+    static const fs::path app_path       = utils::fix_path("~/.cache/cachyos-km");
+    static const fs::path pkgbuilds_path = utils::fix_path("~/.cache/cachyos-km/aur_pkgbuilds");
+    static const fs::path package_path   = utils::fix_path(fmt::format("~/.cache/cachyos-km/aur_pkgbuilds/{}", package_name));
     if (!fs::exists(app_path)) {
         fs::create_directories(app_path);
     }

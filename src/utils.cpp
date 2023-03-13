@@ -31,12 +31,17 @@
 #if defined(__clang__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wsign-conversion"
+#pragma clang diagnostic ignored "-Wold-style-cast"
 #elif defined(__GNUC__)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wuseless-cast"
 #pragma GCC diagnostic ignored "-Wsign-conversion"
+#pragma GCC diagnostic ignored "-Wnull-dereference"
+#pragma GCC diagnostic ignored "-Wold-style-cast"
 #pragma GCC diagnostic ignored "-Wsuggest-attribute=pure"
 #endif
+
+#include <glib.h>
 
 #include <QProcess>
 
@@ -132,6 +137,12 @@ int runCmdTerminal(QString cmd, bool escalate) noexcept {
     proc.start("/usr/lib/cachyos-kernel-manager/terminal-helper", paramlist);
     proc.waitForFinished(-1);
     return proc.exitCode();
+}
+
+std::string fix_path(std::string&& path) noexcept {
+    if (path[0] != '~') { return path; }
+    utils::replace_all(path, "~", g_get_home_dir());
+    return path;
 }
 
 namespace {

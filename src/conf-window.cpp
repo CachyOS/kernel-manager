@@ -101,15 +101,9 @@ constexpr auto get_kernel_name_path(std::string_view kernel_name) noexcept {
     return "linux-cachyos"sv;
 }
 
-std::string fix_path(std::string&& path) noexcept {
-    if (path[0] != '~') { return path; }
-    utils::replace_all(path, "~", g_get_home_dir());
-    return path;
-}
-
 void prepare_build_environment() noexcept {
-    static const fs::path app_path       = fix_path("~/.cache/cachyos-km");
-    static const fs::path pkgbuilds_path = fix_path("~/.cache/cachyos-km/pkgbuilds");
+    static const fs::path app_path       = utils::fix_path("~/.cache/cachyos-km");
+    static const fs::path pkgbuilds_path = utils::fix_path("~/.cache/cachyos-km/pkgbuilds");
     if (!fs::exists(app_path)) {
         fs::create_directories(app_path);
     }
@@ -502,7 +496,7 @@ ConfWindow::ConfWindow(QWidget* parent)
         const auto& files = QFileDialog::getOpenFileNames(
             this,
             tr("Select one or more patch files"),
-            QString::fromStdString(fix_path("~/")),
+            QString::fromStdString(utils::fix_path("~/")),
             tr("Patch file (*.patch)"));
         /* clang-format off */
         if (files.isEmpty()) { return; }
