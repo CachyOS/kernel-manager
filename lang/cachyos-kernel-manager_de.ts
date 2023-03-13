@@ -37,7 +37,7 @@
     </message>
     <message>
         <source>Set performance governor as default</source>
-        <translation type="unfinished"></translation>
+        <translation>Performance Governor aktivieren als Standard</translation>
     </message>
     <message>
         <source>Enable TCP_CONG_BBR2</source>
@@ -65,7 +65,7 @@
     </message>
     <message>
         <source>Enable multigenerational LRU</source>
-        <translation>multigenerational LRUaktivieren</translation>
+        <translation>Multigenerational LRU aktivieren</translation>
     </message>
     <message>
         <source>Enable per-VMA locking</source>
@@ -77,7 +77,7 @@
     </message>
     <message>
         <source>Enable Linux Random Number Generator</source>
-        <translation>Linux-Zufallszahlengenerator aktivieren</translation>
+        <translation>LRNG aktivieren</translation>
     </message>
     <message>
         <source>CPU compiler optimizations</source>
@@ -93,11 +93,11 @@
     </message>
     <message>
         <source>Enable zram/zswap ZSTD compression</source>
-        <translation>Zram/zswap ZSTD komprimierung einschalten</translation>
+        <translation>zram/zswap ZSTD komprimierung einschalten</translation>
     </message>
     <message>
         <source>Selecting the ZSTD kernel and modules compression level</source>
-        <translation>Auswahl der Komprimierungsstufe für den ZSTD kernel und die Module</translation>
+        <translation>Auswahl der Komprimierungsstufe für den ZSTD kernel und das Module</translation>
     </message>
     <message>
         <source>Enable LTO</source>
@@ -105,11 +105,11 @@
     </message>
     <message>
         <source>Build the ZFS module</source>
-        <translation>Erstellen Sie das ZFS modul</translation>
+        <translation>ZFS Module kompilieren</translation>
     </message>
     <message>
         <source>Build the BCACHEFS module</source>
-        <translation>Erstellen Sie das BCACHEFS modul</translation>
+        <translation>BCACHEFS Module kompilieren</translation>
     </message>
     <message>
         <source>Enable RT kernel</source>
