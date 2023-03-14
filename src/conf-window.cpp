@@ -294,7 +294,6 @@ std::string ConfWindow::get_all_set_values() noexcept {
     result += convert_to_var_assign("auto_optim", convert_checkstate(options_page_ui_obj->autooptim_check));
 
     if (main_combo_index == 1 || main_combo_index == 2) {
-        result += convert_to_var_assign("rt_kernel", convert_checkstate(options_page_ui_obj->RT_check));
         result += convert_to_var_assign("latency_nice", convert_checkstate(options_page_ui_obj->latnice_check));
     }
 
@@ -471,13 +470,11 @@ ConfWindow::ConfWindow(QWidget* parent)
         }
         // If not BORE or CFS.
         if (index != 1 && index != 2) {
-            options_page_ui_obj->RT_check->setEnabled(false);
             options_page_ui_obj->latnice_check->setEnabled(false);
             options_page_ui_obj->latnice_check->setCheckState(Qt::Unchecked);
             reset_patches_data_tab();
             return;
         }
-        options_page_ui_obj->RT_check->setEnabled(true);
         options_page_ui_obj->latnice_check->setEnabled(true);
         options_page_ui_obj->latnice_check->setCheckState(Qt::Checked);
         reset_patches_data_tab();
@@ -593,7 +590,6 @@ void ConfWindow::on_execute() noexcept {
     execute_sed("auto_optim", convert_checkstate(options_page_ui_obj->autooptim_check));
 
     if (main_combo_index == 1 || main_combo_index == 2) {
-        execute_sed("rt_kernel", convert_checkstate(options_page_ui_obj->RT_check));
         execute_sed("latency_nice", convert_checkstate(options_page_ui_obj->latnice_check));
     }
 
