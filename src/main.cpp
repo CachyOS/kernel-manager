@@ -57,7 +57,7 @@ static bool IsInstanceAlreadyRunning(QSharedMemory& memoryLock) {
  * Licensed under MIT
  */
 /** Set up translations */
-static void initTranslations(QTranslator &qtTranslatorBase, QTranslator &qtTranslator, QTranslator &translatorBase, QTranslator &translator) {
+static void initTranslations(QTranslator& qtTranslatorBase, QTranslator& qtTranslator, QTranslator& translatorBase, QTranslator& translator) {
     // Remove old translators
     QApplication::removeTranslator(&qtTranslatorBase);
     QApplication::removeTranslator(&qtTranslator);

@@ -140,7 +140,9 @@ int runCmdTerminal(QString cmd, bool escalate) noexcept {
 }
 
 std::string fix_path(std::string&& path) noexcept {
+    /* clang-format off */
     if (path[0] != '~') { return path; }
+    /* clang-format on */
     utils::replace_all(path, "~", g_get_home_dir());
     return path;
 }
@@ -201,7 +203,7 @@ void parse_repos(alpm_handle_t* handle) noexcept {
                 const auto& archs = utils::make_multiline(it_nested.second, ' ');
                 for (const auto& arch : archs) {
                     if (arch == "auto") {
-                        struct utsname un{};
+                        struct utsname un { };
                         uname(&un);
                         char* tmp = un.machine;
                         if (tmp != nullptr) {
