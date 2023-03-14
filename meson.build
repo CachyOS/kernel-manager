@@ -20,6 +20,8 @@ if cc.get_id() == 'clang'
         '-stdlib=libc++',
         '-nodefaultlibs',
         '-fexperimental-library',
+        '-fstrict-vtable-pointers',
+        '-fexperimental-new-pass-manager',
     ]
     specific_link_flags = [
         '-stdlib=libc++',
@@ -60,8 +62,11 @@ src_files = files(
     'src/ini.hpp',
     'src/utils.hpp', 'src/utils.cpp',
     'src/kernel.hpp', 'src/kernel.cpp',
-    'src/km-window.hpp', 'src/km-window.cpp',
+    'src/aur_kernel.hpp', 'src/aur_kernel.cpp',
+    'src/conf-patches-page.hpp',
+    'src/conf-options-page.hpp',
     'src/conf-window.hpp', 'src/conf-window.cpp',
+    'src/km-window.hpp', 'src/km-window.cpp',
     'src/main.cpp',
 )
 
@@ -92,7 +97,7 @@ if cc.get_id() == 'gcc'
         '-Wduplicated-cond',
         '-Wduplicated-branches',
         '-Wlogical-op',
-        '-Wuseless-cast',
+        #'-Wuseless-cast',
 
         '-Wsuggest-attribute=cold',
         '-Wsuggest-attribute=format',
@@ -114,10 +119,12 @@ if not is_debug_build
       possible_cc_flags += [
          '-flto',
          '-fwhole-program',
+         '-fuse-linker-plugin',
       ]
    else
       possible_cc_flags += [
          '-flto=thin',
+         '-fwhole-program-vtables',
       ]
    endif
 
@@ -134,11 +141,13 @@ if cc.get_id() == 'clang'
   deps += [ranges]
 endif
 
-prep = qt5.preprocess(
-  moc_headers : ['src/km-window.hpp', 'src/conf-window.hpp'] # These need to be fed through the moc tool before use.
+prep = qt5.compile_moc(
+  headers : ['src/km-window.hpp', 'src/conf-window.hpp', 'src/conf-options-page.hpp', 'src/conf-patches-page.hpp'] # These need to be fed through the moc tool before use.
 )
 # XML files that need to be compiled with the uic tol.
 prep += qt5.compile_ui(sources : ['src/km-window.ui', 'src/conf-window.ui', 'src/conf-options-page.ui', 'src/conf-patches-page.ui'])
+
+prep += qt5.compile_translations(qresource: 'cachyoskm_locale.qrc')
 
 compile_options_hpp = custom_target(
     'compile_options.hpp',
