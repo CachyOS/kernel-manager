@@ -33,6 +33,9 @@
 #pragma GCC diagnostic ignored "-Wnull-dereference"
 #pragma GCC diagnostic ignored "-Wuseless-cast"
 #pragma GCC diagnostic ignored "-Wold-style-cast"
+#pragma GCC diagnostic ignored "-Wsuggest-final-types"
+#pragma GCC diagnostic ignored "-Wsuggest-attribute=pure"
+#pragma GCC diagnostic ignored "-Wconversion"
 #endif
 
 #include <glib.h>
@@ -42,6 +45,11 @@
 #include <range/v3/view/filter.hpp>
 #include <range/v3/view/join.hpp>
 
+#include <QFileDialog>
+#include <QInputDialog>
+#include <QLineEdit>
+#include <QStringList>
+
 #if defined(__clang__)
 #pragma clang diagnostic pop
 #elif defined(__GNUC__)
@@ -50,12 +58,6 @@
 
 #include <fmt/compile.h>
 #include <fmt/core.h>
-#include <fmt/ranges.h>
-
-#include <QFileDialog>
-#include <QInputDialog>
-#include <QLineEdit>
-#include <QStringList>
 
 namespace fs = std::filesystem;
 
@@ -167,7 +169,7 @@ inline constexpr auto convert_to_var_assign_empty_wrapped(std::string_view optio
 
 void child_watch_cb(GPid pid, [[maybe_unused]] gint status, gpointer user_data) {
 #if !defined(NDEBUG)
-    g_message("Child %" G_PID_FORMAT " exited %s", pid,
+    fmt::print(stderr, "Child {} exited {}\n", pid,
         g_spawn_check_wait_status(status, nullptr) ? "normally" : "abnormally");
 #endif
 
