@@ -46,7 +46,7 @@
     <message>
         <location filename="../src/conf-options-page.ui" line="265"/>
         <source>Set performance governor as default</source>
-        <translation>Установить политику частот на "performance" по умолчанию</translation>
+        <translation>Установить политику частот на &quot;performance&quot; по умолчанию</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="294"/>
@@ -140,26 +140,21 @@
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="816"/>
-        <source>Enable RT kernel</source>
-        <translation>Включить ядро RT</translation>
-    </message>
-    <message>
-        <location filename="../src/conf-options-page.ui" line="845"/>
         <source>Enable LATENCY NICE</source>
         <translation>Включить LATENCY NICE</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="874"/>
+        <location filename="../src/conf-options-page.ui" line="845"/>
         <source>Transparent Hugepages</source>
         <translation>Установить режим работы для THP (Transparent Hugepages)</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="933"/>
+        <location filename="../src/conf-options-page.ui" line="904"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="940"/>
+        <location filename="../src/conf-options-page.ui" line="911"/>
         <source>Execute</source>
         <translation>Выполнить</translation>
     </message>
@@ -195,57 +190,62 @@
         <translation>Патчи</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="373"/>
+        <location filename="../src/conf-window.cpp" line="364"/>
+        <source>CachyOS - Bore + EEVDF + LATENCY NICE</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/conf-window.cpp" line="365"/>
         <source>BMQ - BitMap Queue CPU scheduler</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="374"/>
+        <location filename="../src/conf-window.cpp" line="366"/>
         <source>Bore - Burst-Oriented Response Enhancer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="375"/>
+        <location filename="../src/conf-window.cpp" line="367"/>
         <source>CFS - Completely Fair Scheduler</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="376"/>
+        <location filename="../src/conf-window.cpp" line="368"/>
         <source>Hardened - Hardened kernel with the BORE Scheduler</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="377"/>
+        <location filename="../src/conf-window.cpp" line="369"/>
         <source>PDS - Priority and Deadline based Skip list multiple queue CPU scheduler</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="378"/>
+        <location filename="../src/conf-window.cpp" line="370"/>
         <source>RC - Release Candidate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="379"/>
+        <location filename="../src/conf-window.cpp" line="371"/>
         <source>TT - Task Type Scheduler</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="497"/>
+        <location filename="../src/conf-window.cpp" line="487"/>
         <source>Select one or more patch files</source>
         <translation>Выберите один или несколько файлов патчей</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="499"/>
+        <location filename="../src/conf-window.cpp" line="489"/>
         <source>Patch file (*.patch)</source>
         <translation>Файл патча (*.patch)</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="519"/>
+        <location filename="../src/conf-window.cpp" line="509"/>
         <source>Enter URL patch</source>
         <translation>Введите URL патча</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="520"/>
+        <location filename="../src/conf-window.cpp" line="510"/>
         <source>Patch URL:</source>
         <translation>URL патча:</translation>
     </message>

@@ -112,11 +112,6 @@
         <translation>BCACHEFS Module kompilieren</translation>
     </message>
     <message>
-        <source>Enable RT kernel</source>
-        <translatorcomment>RT kernel aktivieren</translatorcomment>
-        <translation>Enable RT kernel</translation>
-    </message>
-    <message>
         <source>Enable LATENCY NICE</source>
         <translation>LATENCY NICE aktivieren</translation>
     </message>
@@ -201,6 +196,10 @@
     <message>
         <source>Patch URL:</source>
         <translation>Patch URL:</translation>
+    </message>
+    <message>
+        <source>CachyOS - Bore + EEVDF + LATENCY NICE</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
