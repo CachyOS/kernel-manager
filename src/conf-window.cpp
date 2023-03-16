@@ -430,7 +430,8 @@ ConfWindow::ConfWindow(QWidget* parent)
     /* clang-format on */
 
     options_page_ui_obj->autooptim_check->setCheckState(Qt::Checked);
-    options_page_ui_obj->latnice_check->setCheckState(Qt::Checked);
+    options_page_ui_obj->latnice_check->setCheckState(Qt::Unchecked);
+    options_page_ui_obj->latnice_check->setEnabled(false);
 
     QStringList zstd_comp_levels;
     zstd_comp_levels << "Ultra"
