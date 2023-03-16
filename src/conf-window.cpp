@@ -199,16 +199,17 @@ auto get_source_array_from_pkgbuild(std::string_view kernel_name_path, std::stri
     const auto& testscript_src  = fmt::format(FMT_COMPILE("#!/usr/bin/bash\n{}\nsource $1\n{}"), options_set, "echo \"${source[@]}\"");
     const auto& testscript_path = fmt::format(FMT_COMPILE("{}/.testscript"), kernel_name_path);
 
-    utils::write_to_file(testscript_path, testscript_src);
-    fs::permissions(testscript_path,
-        fs::perms::owner_exec | fs::perms::group_exec | fs::perms::others_exec,
-        fs::perm_options::add);
+    if (utils::write_to_file(testscript_path, testscript_src)) {
+        fs::permissions(testscript_path,
+            fs::perms::owner_exec | fs::perms::group_exec | fs::perms::others_exec,
+            fs::perm_options::add);
+    }
 
     const auto& src_entries = utils::exec(fmt::format(FMT_COMPILE("{} {}/PKGBUILD"), testscript_path, kernel_name_path));
     return utils::make_multiline(src_entries, ' ');
 }
 
-void insert_new_source_array_into_pkgbuild(std::string_view kernel_name_path, QListWidget* list_widget, const std::vector<std::string>& orig_source_array) noexcept {
+bool insert_new_source_array_into_pkgbuild(std::string_view kernel_name_path, QListWidget* list_widget, const std::vector<std::string>& orig_source_array) noexcept {
     static constexpr auto functor = [](auto&& rng) {
         auto rng_str = std::string_view(&*rng.begin(), static_cast<size_t>(ranges::distance(rng)));
         return !rng_str.ends_with(".patch");
@@ -231,7 +232,7 @@ void insert_new_source_array_into_pkgbuild(std::string_view kernel_name_path, QL
             pkgbuildsrc.insert(last_newline_before, new_source_array);
         }
     }
-    utils::write_to_file(pkgbuild_path, pkgbuildsrc);
+    return utils::write_to_file(pkgbuild_path, pkgbuildsrc);
 }
 
 auto convert_vector_of_strings_to_stringlist(const std::vector<std::string>& vec) noexcept {
@@ -566,7 +567,6 @@ void ConfWindow::on_execute() noexcept {
     const std::string_view cpusched_path = get_kernel_name_path(get_kernel_name(static_cast<size_t>(main_combo_index)));
     prepare_build_environment();
 
-
     const auto& all_set_values  = get_all_set_values();
     const auto& set_values_list = utils::make_multiline(all_set_values, '\n');
     for (const auto& expr : set_values_list) {
@@ -581,7 +581,8 @@ void ConfWindow::on_execute() noexcept {
 
     // Only files which end with .patch,
     // are considered as patches.
-    insert_new_source_array_into_pkgbuild(cpusched_path, patches_page_ui_obj->list_widget, get_source_array_from_pkgbuild(cpusched_path, all_set_values));
+    const auto& orig_src_array                 = get_source_array_from_pkgbuild(cpusched_path, all_set_values);
+    [[maybe_unused]] const auto& insert_status = insert_new_source_array_into_pkgbuild(cpusched_path, patches_page_ui_obj->list_widget, orig_src_array);
     fs::current_path(cpusched_path);
 
     // Run our build command!
