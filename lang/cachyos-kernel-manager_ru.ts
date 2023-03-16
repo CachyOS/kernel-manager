@@ -46,7 +46,7 @@
     <message>
         <location filename="../src/conf-options-page.ui" line="265"/>
         <source>Set performance governor as default</source>
-        <translation>Установить политику частот на "Производительность" по умолчанию</translation>
+        <translation>Установить политику частот на "performance" по умолчанию</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="294"/>
@@ -111,7 +111,7 @@
     <message>
         <location filename="../src/conf-options-page.ui" line="642"/>
         <source>Disable debug to lower the size of the kernel</source>
-        <translation>Отключить отладку чтобы уменьшить размер ядра</translation>
+        <translation>Удалить отладочную информацию чтобы уменьшить размер ядра</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="671"/>
