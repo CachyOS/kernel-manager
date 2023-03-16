@@ -56,12 +56,12 @@
     <message>
         <location filename="../src/conf-options-page.ui" line="323"/>
         <source>Running tick rate</source>
-        <translation>Текущая частота таймера (tickrate)</translation>
+        <translation>Текущая частота таймера прерываний (tickrate)</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="352"/>
         <source>Select tickless</source>
-        <translation>Выбрать режим работы таймера (tickless)</translation>
+        <translation>Выбрать режим работы таймера прерываний (tickless)</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="381"/>
