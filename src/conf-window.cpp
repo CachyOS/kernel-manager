@@ -130,19 +130,6 @@ void prepare_build_environment() noexcept {
     }
 }
 
-void execute_sed(std::string_view option, std::string_view value) noexcept {
-    const auto& sed_cmd = fmt::format(FMT_COMPILE("sed -i \"s/{}/{}-{}/\" PKGBUILD"), detail::default_option_map.at(option), detail::option_map.at(option), value);
-    if (std::system(sed_cmd.c_str()) != 0) {
-        std::perror("execute_sed");
-    }
-}
-
-inline constexpr void execute_sed_empty_wrapped(std::string_view option_name, bool option_enabled) noexcept {
-    if (option_enabled) {
-        execute_sed(option_name, "y");
-    }
-}
-
 inline bool checkstate_checked(QCheckBox* checkbox) noexcept {
     return (checkbox->checkState() == Qt::Checked);
 }
@@ -576,57 +563,18 @@ void ConfWindow::on_execute() noexcept {
     const std::string_view cpusched_path = get_kernel_name_path(get_kernel_name(static_cast<size_t>(main_combo_index)));
     prepare_build_environment();
 
+
+    const auto& all_set_values = get_all_set_values();
+    const auto& set_values_list = utils::make_multiline(all_set_values, '\n');
+    for (const auto& value : set_values_list) {
+        const auto cmd = fmt::format("export {}", value);
+        [[maybe_unused]] const auto ret_code = std::system(cmd.c_str());
+    }
+
     // Only files which end with .patch,
     // are considered as patches.
-    insert_new_source_array_into_pkgbuild(cpusched_path, patches_page_ui_obj->list_widget, get_source_array_from_pkgbuild(cpusched_path, get_all_set_values()));
+    insert_new_source_array_into_pkgbuild(cpusched_path, patches_page_ui_obj->list_widget, get_source_array_from_pkgbuild(cpusched_path, all_set_values));
     fs::current_path(cpusched_path);
-
-    // Execute 'sed' with checkboxes values
-    execute_sed("hardly", convert_checkstate(options_page_ui_obj->hardly_check));
-    execute_sed("per_gov", convert_checkstate(options_page_ui_obj->perfgovern_check));
-    execute_sed("tcp_bbr2", convert_checkstate(options_page_ui_obj->tcpbbr_check));
-    execute_sed("mqdeadline", convert_checkstate(options_page_ui_obj->mqdio_check));
-    execute_sed("kyber", convert_checkstate(options_page_ui_obj->kyber_check));
-    execute_sed("auto_optim", convert_checkstate(options_page_ui_obj->autooptim_check));
-
-    if (main_combo_index == 1 || main_combo_index == 2) {
-        execute_sed("latency_nice", convert_checkstate(options_page_ui_obj->latnice_check));
-    }
-
-    // Execute 'sed' with checkboxes values,
-    // which becomes enabled with any value passed,
-    // and if nothing passed means it's disabled.
-    const auto& is_cachyconfig_enabled = checkstate_checked(options_page_ui_obj->cachyconfig_check);
-    if (!is_cachyconfig_enabled) {
-        execute_sed("cachy_config", "'no'");
-    }
-    execute_sed_empty_wrapped("nconfig", checkstate_checked(options_page_ui_obj->nconfig_check));
-    execute_sed_empty_wrapped("menuconfig", checkstate_checked(options_page_ui_obj->menuconfig_check));
-    execute_sed_empty_wrapped("xconfig", checkstate_checked(options_page_ui_obj->xconfig_check));
-    execute_sed_empty_wrapped("gconfig", checkstate_checked(options_page_ui_obj->gconfig_check));
-    execute_sed_empty_wrapped("localmodcfg", checkstate_checked(options_page_ui_obj->localmodcfg_check));
-    execute_sed_empty_wrapped("numa", checkstate_checked(options_page_ui_obj->numa_check));
-    execute_sed_empty_wrapped("damon", checkstate_checked(options_page_ui_obj->damon_check));
-    execute_sed_empty_wrapped("lrng", checkstate_checked(options_page_ui_obj->lrng_check));
-    execute_sed_empty_wrapped("debug", checkstate_checked(options_page_ui_obj->debug_check));
-    execute_sed_empty_wrapped("zstd_comp", convert_checkstate(options_page_ui_obj->zstcomp_check));
-    execute_sed_empty_wrapped("builtin_zfs", checkstate_checked(options_page_ui_obj->builtin_zfs_check));
-    execute_sed_empty_wrapped("builtin_bcachefs", checkstate_checked(options_page_ui_obj->builtin_bcachefs_check));
-
-    // Execute 'sed' with combobox values
-    execute_sed("HZ_ticks", get_hz_tick(static_cast<size_t>(options_page_ui_obj->hzticks_combo_box->currentIndex())));
-    execute_sed("tickrate", get_tickless_mode(static_cast<size_t>(options_page_ui_obj->tickless_combo_box->currentIndex())));
-    execute_sed("preempt", get_preempt_mode(static_cast<size_t>(options_page_ui_obj->preempt_combo_box->currentIndex())));
-    execute_sed("lru_config", get_lru_config_mode(static_cast<size_t>(options_page_ui_obj->lru_config_combo_box->currentIndex())));
-    execute_sed("vma_config", get_lru_config_mode(static_cast<size_t>(options_page_ui_obj->vma_config_combo_box->currentIndex())));
-    execute_sed("zstd_level", get_zstd_comp_level(static_cast<size_t>(options_page_ui_obj->zstd_comp_levels_combo_box->currentIndex())));
-    execute_sed("hugepage", get_hugepage_mode(static_cast<size_t>(options_page_ui_obj->hugepage_combo_box->currentIndex())));
-    execute_sed("lto", get_lto_mode(static_cast<size_t>(options_page_ui_obj->lto_combo_box->currentIndex())));
-
-    const std::string_view cpu_opt_mode = get_cpu_opt_mode(static_cast<size_t>(options_page_ui_obj->processor_opt_combo_box->currentIndex()));
-    if (cpu_opt_mode != "manual") {
-        execute_sed("cpu_opt", cpu_opt_mode);
-    }
 
     // Run our build command!
     run_cmd_async("makepkg -sicf --cleanbuild --skipchecksums", &m_running);
