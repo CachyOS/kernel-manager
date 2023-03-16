@@ -6,27 +6,27 @@
     <message>
         <location filename="../src/conf-options-page.ui" line="33"/>
         <source>Enable CachyOS config</source>
-        <translation>Включить CachyOS конфиг</translation>
+        <translation>Включить рекомендуемые параметры CachyOS</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="62"/>
         <source>Tweak kernel options prior to a build via nconfig</source>
-        <translation>Настройте параметры ядра перед сборкой с помощью nconfig</translation>
+        <translation>Выполнить настройку параметров ядра с помощью nconfig</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="91"/>
         <source>Tweak kernel options prior to a build via menuconfig</source>
-        <translation>Настройте параметры ядра перед сборкой с помощью menuconfig</translation>
+        <translation>Выполнить настройку параметров ядра с помощью menuconfig</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="120"/>
         <source>Tweak kernel options prior to a build via xconfig</source>
-        <translation>Настройте параметры ядра перед сборкой с помощью xconfig</translation>
+        <translation>Выполнить настройку параметров ядра с помощью xconfig</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="149"/>
         <source>Tweak kernel options prior to a build via gconfig</source>
-        <translation>Настройте параметры ядра перед сборкой с помощью gconfig</translation>
+        <translation>Выполнить настройку параметров ядра с помощью gconfig</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="178"/>
@@ -41,12 +41,12 @@
     <message>
         <location filename="../src/conf-options-page.ui" line="236"/>
         <source>Enable KBUILD_CFLAGS -O3</source>
-        <translation>Включить KBUILD_CFLAGS -O3</translation>
+        <translation>Включить использование флага -O3</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="265"/>
         <source>Set performance governor as default</source>
-        <translation>Установить performance governor  по умолчанию</translation>
+        <translation>Установить политику частот на "Производительность" по умолчанию</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="294"/>
@@ -56,17 +56,17 @@
     <message>
         <location filename="../src/conf-options-page.ui" line="323"/>
         <source>Running tick rate</source>
-        <translation>Текущий tick rate</translation>
+        <translation>Текущая частота таймера (tickrate)</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="352"/>
         <source>Select tickless</source>
-        <translation>Выбрать tickless</translation>
+        <translation>Выбрать режим работы таймера (tickless)</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="381"/>
         <source>Select preempt</source>
-        <translation>Выбрать preempt</translation>
+        <translation>Выбрать PREEMPT</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="410"/>
@@ -86,7 +86,7 @@
     <message>
         <location filename="../src/conf-options-page.ui" line="497"/>
         <source>Enable per-VMA locking</source>
-        <translation>Включить блокировку для каждого VMA</translation>
+        <translation>Включить поддержку раздельных VMA блокировок</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="526"/>
@@ -111,7 +111,7 @@
     <message>
         <location filename="../src/conf-options-page.ui" line="642"/>
         <source>Disable debug to lower the size of the kernel</source>
-        <translation>Отключить debug, чтобы уменьшить размер ядра</translation>
+        <translation>Отключить отладку чтобы уменьшить размер ядра</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="671"/>
@@ -151,7 +151,7 @@
     <message>
         <location filename="../src/conf-options-page.ui" line="874"/>
         <source>Transparent Hugepages</source>
-        <translation></translation>
+        <translation>Установить режим работы для THP (Transparent Hugepages)</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="933"/>
@@ -270,7 +270,7 @@
 &lt;body&gt;
 &lt;p&gt;Здесь вы увидите информацию о текущих установленных и доступных ядрах Linux.&lt;/p&gt;
 &lt;p&gt;Вы можете установить и/или удалить пакеты ядра, используя флажки в левой колонке.&lt;/p&gt;
-&lt;p&gt;Это приложение не будет работать, если у вас уже запущен pacman instance.&lt;/p&gt;
+&lt;p&gt;Это приложение не будет работать, если у вас уже где-либо запущен pacman.&lt;/p&gt;
 &lt;/body&gt;
 &lt;/html&gt;</translation>
     </message>
