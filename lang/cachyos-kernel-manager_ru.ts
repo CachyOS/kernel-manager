@@ -230,22 +230,22 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="487"/>
+        <location filename="../src/conf-window.cpp" line="486"/>
         <source>Select one or more patch files</source>
         <translation>Выберите один или несколько файлов патчей</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="489"/>
+        <location filename="../src/conf-window.cpp" line="488"/>
         <source>Patch file (*.patch)</source>
         <translation>Файл патча (*.patch)</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="509"/>
+        <location filename="../src/conf-window.cpp" line="508"/>
         <source>Enter URL patch</source>
         <translation>Введите URL патча</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="510"/>
+        <location filename="../src/conf-window.cpp" line="509"/>
         <source>Patch URL:</source>
         <translation>URL патча:</translation>
     </message>

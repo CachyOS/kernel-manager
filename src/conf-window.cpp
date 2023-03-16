@@ -72,7 +72,7 @@ namespace fs = std::filesystem;
         return list_##name[index];                                          \
     }
 
-GENERATE_CONST_OPTION_VALUES(kernel_name, "bmq", "bore", "cfs", "hardened", "pds", "rc", "tt")
+GENERATE_CONST_OPTION_VALUES(kernel_name, "cachyos", "bmq", "bore", "cfs", "hardened", "pds", "rc", "tt")
 GENERATE_CONST_OPTION_VALUES(hz_tick, "1000", "750", "600", "500", "300", "250", "100")
 GENERATE_CONST_OPTION_VALUES(tickless_mode, "full", "idle", "perodic")
 GENERATE_CONST_OPTION_VALUES(preempt_mode, "full", "voluntary", "server")
@@ -84,7 +84,9 @@ GENERATE_CONST_OPTION_VALUES(cpu_opt_mode, "manual", "generic", "native_amd", "n
 
 constexpr auto get_kernel_name_path(std::string_view kernel_name) noexcept {
     using namespace std::string_view_literals;
-    if (kernel_name == "bmq"sv) {
+    if (kernel_name == "cachyos"sv) {
+        return "linux-cachyos"sv;
+    } else if (kernel_name == "bmq"sv) {
         return "linux-cachyos-bmq"sv;
     } else if (kernel_name == "bore"sv) {
         return "linux-cachyos-bore"sv;
@@ -280,7 +282,8 @@ std::string ConfWindow::get_all_set_values() noexcept {
     result += convert_to_var_assign("kyber", convert_checkstate(options_page_ui_obj->kyber_check));
     result += convert_to_var_assign("auto_optim", convert_checkstate(options_page_ui_obj->autooptim_check));
 
-    if (main_combo_index == 1 || main_combo_index == 2) {
+    // if BORE or CFS
+    if (main_combo_index == 2 || main_combo_index == 3) {
         result += convert_to_var_assign("latency_nice", convert_checkstate(options_page_ui_obj->latnice_check));
     }
 
@@ -358,7 +361,8 @@ ConfWindow::ConfWindow(QWidget* parent)
 
     // Selecting the CPU scheduler
     QStringList kernel_names;
-    kernel_names << tr("BMQ - BitMap Queue CPU scheduler")
+    kernel_names << tr("CachyOS - Bore + EEVDF + LATENCY NICE")
+                 << tr("BMQ - BitMap Queue CPU scheduler")
                  << tr("Bore - Burst-Oriented Response Enhancer")
                  << tr("CFS - Completely Fair Scheduler")
                  << tr("Hardened - Hardened kernel with the BORE Scheduler")
@@ -366,7 +370,6 @@ ConfWindow::ConfWindow(QWidget* parent)
                  << tr("RC - Release Candidate")
                  << tr("TT - Task Type Scheduler");
     options_page_ui_obj->main_combo_box->addItems(kernel_names);
-    options_page_ui_obj->main_combo_box->setCurrentIndex(1);
 
     // Setting default options
     options_page_ui_obj->cachyconfig_check->setCheckState(Qt::Checked);
@@ -450,13 +453,13 @@ ConfWindow::ConfWindow(QWidget* parent)
     connect(options_page_ui_obj->ok_button, SIGNAL(clicked()), this, SLOT(on_execute()));
     connect(options_page_ui_obj->main_combo_box, &QComboBox::currentIndexChanged, this, [options_page_ui_obj, this](std::int32_t index) {
         // Set to 1000HZ, if BMQ, PDS, TT
-        if (index == 0 || index == 4 || index == 6) {
+        if (index == 1 || index == 5 || index == 7) {
             options_page_ui_obj->hzticks_combo_box->setCurrentIndex(0);
         } else {
             options_page_ui_obj->hzticks_combo_box->setCurrentIndex(3);
         }
         // If not BORE or CFS.
-        if (index != 1 && index != 2) {
+        if (index != 2 && index != 3) {
             options_page_ui_obj->latnice_check->setEnabled(false);
             options_page_ui_obj->latnice_check->setCheckState(Qt::Unchecked);
             reset_patches_data_tab();
