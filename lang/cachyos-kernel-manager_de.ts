@@ -241,10 +241,6 @@
         <translation>Kategorie</translation>
     </message>
     <message>
-        <source>nothing here..                                                                                      </source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Configure</source>
         <translation>Konfigurieren Sie</translation>
     </message>
