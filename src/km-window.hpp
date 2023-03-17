@@ -123,11 +123,6 @@ class MainWindow final : public QMainWindow {
     std::unique_ptr<ConfWindow> m_confwindow = std::make_unique<ConfWindow>();
 
     void buildChangeList(QTreeWidgetItem* item) noexcept;
-#ifndef PKG_DUMMY_IMPL
-    int32_t m_last_percent{};
-    QString m_last_text{};
-    void paintLoop() noexcept;
-#endif
 };
 
 #endif  // MAINWINDOW_HPP_

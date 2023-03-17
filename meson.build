@@ -40,13 +40,8 @@ add_global_arguments('-DQT_DISABLE_DEPRECATED_BEFORE=0x050F00', language : 'cpp'
 if not is_dev_environment
     add_global_arguments('-DNDEVENV', language : 'cpp')
 endif
-if is_dummy_pkg_impl
-    add_global_arguments('-DPKG_DUMMY_IMPL', language : 'cpp')
-endif
-if is_dummy_pkg_impl and is_aur_kernels_enabled
+if is_aur_kernels_enabled
     add_global_arguments('-DENABLE_AUR_KERNELS', language : 'cpp')
-elif is_aur_kernels_enabled
-    warning('Not supported when set to -Dpkg_dummy_impl=false! Disabling AUR kernels support..')
 endif
 
 qt5 = import('qt5')

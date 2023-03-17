@@ -47,15 +47,12 @@
 
 namespace {
 
-#ifdef PKG_DUMMY_IMPL
-
 #ifdef ENABLE_AUR_KERNELS
 static std::vector<std::string_view> g_aur_kernel_install_list{};
 #endif
 
 static std::vector<std::string_view> g_kernel_install_list{};
 static std::vector<std::string_view> g_kernel_removal_list{};
-#endif
 
 }  // namespace
 
@@ -95,7 +92,6 @@ bool Kernel::is_installed() const noexcept {
 }
 
 bool Kernel::install() const noexcept {
-#ifdef PKG_DUMMY_IMPL
 #ifdef ENABLE_AUR_KERNELS
     if (m_repo == "aur") {
         g_aur_kernel_install_list.insert(g_aur_kernel_install_list.end(), {m_name.c_str()});
@@ -106,33 +102,12 @@ bool Kernel::install() const noexcept {
     const char* pkg_headers = alpm_pkg_get_name(m_headers);
     g_kernel_install_list.insert(g_kernel_install_list.end(), {pkg_name, pkg_headers});
     return true;
-#else
-    fmt::print(stderr, "installing ({})...\n", alpm_pkg_get_name(m_pkg));
-    if (alpm_add_pkg(m_handle, m_pkg) != 0) {
-        return false;
-    }
-    fmt::print(stderr, "installing headers ({})...\n", alpm_pkg_get_name(m_headers));
-    return alpm_add_pkg(m_handle, m_headers) == 0;
-#endif
 }
 
 bool Kernel::remove() const noexcept {
-#ifdef PKG_DUMMY_IMPL
     const char* pkg_headers = alpm_pkg_get_name(m_headers);
     g_kernel_removal_list.insert(g_kernel_removal_list.end(), {m_name, pkg_headers});
     return true;
-#else
-    auto* db  = alpm_get_localdb(m_handle);
-    auto* pkg = alpm_db_get_pkg(db, m_name.c_str());
-
-    fmt::print(stderr, "installing ({})...\n", alpm_pkg_get_name(m_pkg));
-    if (alpm_remove_pkg(m_handle, pkg) != 0) {
-        return false;
-    }
-    fmt::print(stderr, "installing headers ({})...\n", alpm_pkg_get_name(m_headers));
-    auto* headers = alpm_db_get_pkg(db, alpm_pkg_get_name(m_headers));
-    return alpm_remove_pkg(m_handle, headers) == 0;
-#endif
 }
 
 // Find kernel packages by finding packages which have words 'linux' and 'headers'.
@@ -233,8 +208,6 @@ std::vector<Kernel> Kernel::get_kernels(alpm_handle_t* handle) noexcept {
     return kernels;
 }
 
-#ifdef PKG_DUMMY_IMPL
-
 void Kernel::commit_transaction() noexcept {
 #ifdef ENABLE_AUR_KERNELS
     if (!g_aur_kernel_install_list.empty()) {
@@ -254,4 +227,3 @@ void Kernel::commit_transaction() noexcept {
         g_kernel_removal_list.clear();
     }
 }
-#endif

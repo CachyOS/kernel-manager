@@ -111,9 +111,7 @@ class Kernel {
     { return m_installed_db.c_str(); }
     /* clang-format on */
 
-#ifdef PKG_DUMMY_IMPL
     static void commit_transaction() noexcept;
-#endif
 
     static std::vector<Kernel> get_kernels(alpm_handle_t* handle) noexcept;
 
