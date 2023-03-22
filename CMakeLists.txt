@@ -26,7 +26,7 @@ include(CPM)
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
 find_package(Threads REQUIRED)
 find_package(PkgConfig REQUIRED)
-find_package(Qt5 COMPONENTS Widgets LinguistTools REQUIRED)
+find_package(Qt6 COMPONENTS Widgets LinguistTools REQUIRED)
 pkg_check_modules(
   LIBALPM
   REQUIRED
@@ -83,7 +83,7 @@ file(GLOB TS_FILES "${PROJECT_SOURCE_DIR}/lang/*.ts")
 file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lang")
 
 set_source_files_properties(${TS_FILES} PROPERTIES OUTPUT_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/lang") # set qm files output directory
-qt5_add_translation(QM_FILES ${TS_FILES})   # generate qm files
+qt_add_translation(QM_FILES ${TS_FILES})   # generate qm files
 
 add_custom_command(
     DEPENDS "${QM_FILES}"
@@ -127,7 +127,7 @@ enable_sanitizers(project_options)
 
 include_directories(${CMAKE_SOURCE_DIR}/src ${CMAKE_BINARY_DIR})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE project_warnings project_options Qt5::Widgets Threads::Threads fmt::fmt range-v3::range-v3 frozen::frozen PkgConfig::LIBALPM PkgConfig::LIBGLIB)
+target_link_libraries(${PROJECT_NAME} PRIVATE project_warnings project_options Qt6::Widgets Threads::Threads fmt::fmt range-v3::range-v3 frozen::frozen PkgConfig::LIBALPM PkgConfig::LIBGLIB)
 
 option(ENABLE_UNITY "Enable Unity builds of projects" OFF)
 if(ENABLE_UNITY)
