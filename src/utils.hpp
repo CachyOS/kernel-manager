@@ -34,6 +34,7 @@
 #pragma GCC diagnostic ignored "-Wsign-conversion"
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 #pragma GCC diagnostic ignored "-Wnull-dereference"
+#pragma GCC diagnostic ignored "-Wsuggest-attribute=pure"
 #endif
 
 #include <range/v3/algorithm/for_each.hpp>

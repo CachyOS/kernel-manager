@@ -31,6 +31,7 @@
 #if defined(__clang__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wsign-conversion"
+#pragma clang diagnostic ignored "-Wdouble-promotion"
 #pragma clang diagnostic ignored "-Wold-style-cast"
 #elif defined(__GNUC__)
 #pragma GCC diagnostic push
