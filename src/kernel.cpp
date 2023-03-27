@@ -53,6 +53,7 @@ static std::vector<std::string_view> g_aur_kernel_install_list{};
 
 static std::vector<std::string_view> g_kernel_install_list{};
 static std::vector<std::string_view> g_kernel_removal_list{};
+static const bool is_root_on_zfs = utils::exec("findmnt -ln -o FSTYPE /") == "zfs";
 
 }  // namespace
 
@@ -100,6 +101,9 @@ bool Kernel::install() const noexcept {
 #endif
     const char* pkg_name    = alpm_pkg_get_name(m_pkg);
     const char* pkg_headers = alpm_pkg_get_name(m_headers);
+    if (is_root_on_zfs && m_zfs_module != nullptr) {
+        g_kernel_install_list.push_back(alpm_pkg_get_name(m_zfs_module));
+    }
     g_kernel_install_list.insert(g_kernel_install_list.end(), {pkg_name, pkg_headers});
     return true;
 }
@@ -166,6 +170,10 @@ std::vector<Kernel> Kernel::get_kernels(alpm_handle_t* handle) noexcept {
                 if (pkg_installed_db != nullptr) {
                     kernel_obj.m_installed_db = pkg_installed_db;
                 }
+            }
+            if (pkg_name.starts_with("linux-cachyos")) {
+                pkg_name += "-zfs";
+                kernel_obj.m_zfs_module = alpm_db_get_pkg(db, pkg_name.c_str());
             }
 
             kernels.emplace_back(std::move(kernel_obj));
