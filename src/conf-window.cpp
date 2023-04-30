@@ -304,7 +304,6 @@ std::string ConfWindow::get_all_set_values() noexcept {
     result += convert_to_var_assign_empty_wrapped("damon", checkstate_checked(options_page_ui_obj->damon_check));
     result += convert_to_var_assign_empty_wrapped("lrng", checkstate_checked(options_page_ui_obj->lrng_check));
     result += convert_to_var_assign_empty_wrapped("debug", checkstate_checked(options_page_ui_obj->debug_check));
-    result += convert_to_var_assign_empty_wrapped("zstd_comp", convert_checkstate(options_page_ui_obj->zstcomp_check));
     result += convert_to_var_assign_empty_wrapped("builtin_zfs", checkstate_checked(options_page_ui_obj->builtin_zfs_check));
     result += convert_to_var_assign_empty_wrapped("builtin_bcachefs", checkstate_checked(options_page_ui_obj->builtin_bcachefs_check));
 

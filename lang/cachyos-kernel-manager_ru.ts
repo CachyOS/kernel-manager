@@ -115,46 +115,41 @@
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="671"/>
-        <source>Enable zram/zswap ZSTD compression</source>
-        <translation>Включить сжатие zram/zswap ZSTD</translation>
-    </message>
-    <message>
-        <location filename="../src/conf-options-page.ui" line="700"/>
         <source>Selecting the ZSTD kernel and modules compression level</source>
         <translation>Выбор уровня сжатия ядра и модулей ZSTD</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="729"/>
+        <location filename="../src/conf-options-page.ui" line="700"/>
         <source>Enable LTO</source>
         <translation>Включить LTO</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="758"/>
+        <location filename="../src/conf-options-page.ui" line="729"/>
         <source>Build the ZFS module</source>
         <translation>Собрать модуль ZFS</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="787"/>
+        <location filename="../src/conf-options-page.ui" line="758"/>
         <source>Build the BCACHEFS module</source>
         <translation>Собрать модуль BCACHEFS</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="816"/>
+        <location filename="../src/conf-options-page.ui" line="787"/>
         <source>Enable LATENCY NICE</source>
         <translation>Включить LATENCY NICE</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="845"/>
+        <location filename="../src/conf-options-page.ui" line="816"/>
         <source>Transparent Hugepages</source>
         <translation>Установить режим работы для THP (Transparent Hugepages)</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="904"/>
+        <location filename="../src/conf-options-page.ui" line="875"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="911"/>
+        <location filename="../src/conf-options-page.ui" line="882"/>
         <source>Execute</source>
         <translation>Выполнить</translation>
     </message>
@@ -190,62 +185,62 @@
         <translation>Патчи</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="365"/>
+        <location filename="../src/conf-window.cpp" line="364"/>
         <source>CachyOS - Bore + EEVDF + LATENCY NICE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="366"/>
+        <location filename="../src/conf-window.cpp" line="365"/>
         <source>BMQ - BitMap Queue CPU scheduler</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="367"/>
+        <location filename="../src/conf-window.cpp" line="366"/>
         <source>Bore - Burst-Oriented Response Enhancer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="368"/>
+        <location filename="../src/conf-window.cpp" line="367"/>
         <source>CFS - Completely Fair Scheduler</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="369"/>
+        <location filename="../src/conf-window.cpp" line="368"/>
         <source>Hardened - Hardened kernel with the BORE Scheduler</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="370"/>
+        <location filename="../src/conf-window.cpp" line="369"/>
         <source>PDS - Priority and Deadline based Skip list multiple queue CPU scheduler</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="371"/>
+        <location filename="../src/conf-window.cpp" line="370"/>
         <source>RC - Release Candidate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="372"/>
+        <location filename="../src/conf-window.cpp" line="371"/>
         <source>TT - Task Type Scheduler</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="488"/>
+        <location filename="../src/conf-window.cpp" line="487"/>
         <source>Select one or more patch files</source>
         <translation>Выберите один или несколько файлов патчей</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="490"/>
+        <location filename="../src/conf-window.cpp" line="489"/>
         <source>Patch file (*.patch)</source>
         <translation>Файл патча (*.patch)</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="510"/>
+        <location filename="../src/conf-window.cpp" line="509"/>
         <source>Enter URL patch</source>
         <translation>Введите URL патча</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="511"/>
+        <location filename="../src/conf-window.cpp" line="510"/>
         <source>Patch URL:</source>
         <translation>URL патча:</translation>
     </message>

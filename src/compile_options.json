@@ -22,7 +22,6 @@
         "cpu_opt": "_processor_opt",
         "auto_optim": "_use_auto_optimization",
         "debug": "_disable_debug",
-        "zstd_comp": "_zstd_compression",
         "zstd_level": "_zstd_level_value",
         "lto": "_use_llvm_lto",
         "builtin_zfs": "_build_zfs",
