@@ -19,7 +19,7 @@
 #include "utils.hpp"
 #include "ini.hpp"
 
-#include <cerrno>     // for errno
+#include <cerrno>  // for errno
 
 #include <fmt/core.h>
 

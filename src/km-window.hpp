@@ -39,8 +39,8 @@
 #endif
 
 #include <ui_km-window.h>
-#include <conf-window.hpp>
 
+#include "conf-window.hpp"
 #include "kernel.hpp"
 #include "utils.hpp"
 

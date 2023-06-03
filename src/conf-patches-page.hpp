@@ -55,7 +55,7 @@ class ConfPatchesPage final : public QWidget {
     Q_DISABLE_COPY_MOVE(ConfPatchesPage)
  public:
     explicit ConfPatchesPage(QWidget* parent = nullptr)
-        : QWidget(parent) { m_ui->setupUi(this); }
+      : QWidget(parent) { m_ui->setupUi(this); }
     ~ConfPatchesPage() = default;
 
     Ui::ConfPatchesPage* get_ui_obj() noexcept { return m_ui.get(); }

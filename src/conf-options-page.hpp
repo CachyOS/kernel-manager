@@ -54,7 +54,7 @@ class ConfOptionsPage final : public QWidget {
     Q_DISABLE_COPY_MOVE(ConfOptionsPage)
  public:
     explicit ConfOptionsPage(QWidget* parent = nullptr)
-        : QWidget(parent) { m_ui->setupUi(this); }
+      : QWidget(parent) { m_ui->setupUi(this); }
     ~ConfOptionsPage() = default;
 
     Ui::ConfOptionsPage* get_ui_obj() noexcept { return m_ui.get(); }

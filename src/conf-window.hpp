@@ -39,8 +39,8 @@
 
 #include <ui_conf-window.h>
 
-#include <memory>
 #include <functional>
+#include <memory>
 
 #include <QMainWindow>
 

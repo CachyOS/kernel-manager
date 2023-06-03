@@ -19,10 +19,10 @@
 #ifndef UTILS_HPP
 #define UTILS_HPP
 
+#include <span>         // for span
 #include <string>       // for string
 #include <string_view>  // for string_view
 #include <vector>       // for vector
-#include <span>         // for span
 
 #if defined(__clang__)
 #pragma clang diagnostic push
@@ -83,7 +83,7 @@ inline constexpr std::size_t remove_all(std::string& inout, std::string_view wha
 }
 
 [[nodiscard]] inline constexpr auto make_multiline(std::string_view str, char delim = '\n') noexcept -> std::vector<std::string> {
-    return [&]{
+    return [&] {
         constexpr auto functor = [](auto&& rng) {
             return std::string_view(&*rng.begin(), static_cast<size_t>(ranges::distance(rng)));
         };
@@ -100,7 +100,7 @@ inline constexpr std::size_t remove_all(std::string& inout, std::string_view wha
 }
 
 [[nodiscard]] inline constexpr auto join_vec(std::span<std::string_view> lines, std::string_view delim) noexcept -> std::string {
-    return [&]{ return lines | ranges::views::join(delim) | ranges::to<std::string>(); }();
+    return [&] { return lines | ranges::views::join(delim) | ranges::to<std::string>(); }();
 }
 
 }  // namespace utils

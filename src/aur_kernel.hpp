@@ -19,8 +19,8 @@
 #ifndef AUR_KERNEL_HPP
 #define AUR_KERNEL_HPP
 
-#include <string_view>
 #include <span>
+#include <string_view>
 
 namespace detail {
 void install_aur_kernels(std::span<std::string_view> kernel_list) noexcept;
