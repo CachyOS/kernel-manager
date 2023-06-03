@@ -353,7 +353,7 @@ ConfWindow::ConfWindow(QWidget* parent)
 
     // Selecting the CPU scheduler
     QStringList kernel_names;
-    kernel_names << tr("CachyOS - Bore + EEVDF + LATENCY NICE")
+    kernel_names << tr("CachyOS - Bore + EEVDF")
                  << tr("BMQ - BitMap Queue CPU scheduler")
                  << tr("Bore - Burst-Oriented Response Enhancer")
                  << tr("CFS - Completely Fair Scheduler")
