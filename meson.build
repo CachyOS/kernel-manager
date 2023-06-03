@@ -49,7 +49,7 @@ prog_python = import('python').find_installation('python3')
 qt5_dep = dependency('qt5', modules: ['Widgets'])
 
 # Common dependencies
-fmt = dependency('fmt', version : ['>=8.0.0'], fallback : ['fmt', 'fmt_dep'])
+fmt = dependency('fmt', version : ['>=10.0.0'], fallback : ['fmt', 'fmt_dep'])
 libalpm = dependency('libalpm', version : ['>=13.0.0'])
 glib = dependency('glib-2.0', version : ['>=2.72.1'])
 
