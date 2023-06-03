@@ -24,7 +24,7 @@ jobs:
 
       - name: install deps
         run: |
-          pacman -Syu --noconfirm cmake pkg-config ninja clang mold llvm qt5-base python git
+          pacman -Syu --noconfirm cmake pkg-config ninja clang mold llvm qt5-base qt5-tools python git
         shell: bash
 
       - name: Configure CMake
