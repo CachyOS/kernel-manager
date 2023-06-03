@@ -22,7 +22,6 @@
 #include <algorithm>  // for transform
 #include <cerrno>     // for errno
 #include <cstdint>    // for int32_t
-#include <unistd.h>   // for getuid
 
 #include <sys/utsname.h>
 
@@ -53,14 +52,6 @@
 #endif
 
 namespace utils {
-
-bool check_root() noexcept {
-#ifdef NDEVENV
-    return getuid() == 0;
-#else
-    return true;
-#endif
-}
 
 auto read_whole_file(const std::string_view& filepath) noexcept -> std::string {
     // Use std::fopen because it's faster than std::ifstream

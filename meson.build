@@ -9,7 +9,6 @@ project('cachyos-kernel-manager', 'cpp',
                           'b_ndebug=if-release'])
 
 is_debug_build          = get_option('buildtype').startswith('debug')
-is_dev_environment      = get_option('devenv')
 is_dummy_pkg_impl       = get_option('pkg_dummy_impl')
 is_aur_kernels_enabled  = get_option('aur_kernels')
 
@@ -37,9 +36,6 @@ if is_debug_build
 endif
 add_global_arguments('-DQT_DISABLE_DEPRECATED_BEFORE=0x050F00', language : 'cpp')
 
-if not is_dev_environment
-    add_global_arguments('-DNDEVENV', language : 'cpp')
-endif
 if is_aur_kernels_enabled
     add_global_arguments('-DENABLE_AUR_KERNELS', language : 'cpp')
 endif

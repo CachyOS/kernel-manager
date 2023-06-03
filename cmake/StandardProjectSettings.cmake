@@ -67,12 +67,6 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   add_definitions(-D_LIBCPP_ENABLE_ASSERTIONS=1)
 endif()
 
-# Enables dev environment.
-option(ENABLE_DEVENV "Enable dev environment" ON)
-if(NOT ENABLE_DEVENV)
-  add_definitions(-DNDEVENV)
-endif()
-
 # Choose pkg operation implementation.
 option(ENABLE_AUR_KERNELS "Enable AUR kernels support" OFF)
 if(ENABLE_AUR_KERNELS)
