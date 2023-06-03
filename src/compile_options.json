@@ -26,7 +26,6 @@
         "lto": "_use_llvm_lto",
         "builtin_zfs": "_build_zfs",
         "builtin_bcachefs": "_bcachefs",
-        "latency_nice": "_latency_nice",
         "hugepage": "_hugepage"
     }
 }
