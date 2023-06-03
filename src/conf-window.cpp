@@ -256,7 +256,6 @@ void ConfWindow::connect_all_checkboxes() noexcept {
     auto options_page_ui_obj = m_ui->conf_options_page_widget->get_ui_obj();
 
     std::array checkbox_list{
-        options_page_ui_obj->latnice_check,
         options_page_ui_obj->lrng_check,
         options_page_ui_obj->builtin_zfs_check,
         options_page_ui_obj->builtin_bcachefs_check,
@@ -273,8 +272,6 @@ std::string ConfWindow::get_all_set_values() noexcept {
     std::string result{};
     auto options_page_ui_obj = m_ui->conf_options_page_widget->get_ui_obj();
 
-    const std::int32_t main_combo_index = options_page_ui_obj->main_combo_box->currentIndex();
-
     // checkboxes values
     result += convert_to_var_assign("hardly", convert_checkstate(options_page_ui_obj->hardly_check));
     result += convert_to_var_assign("per_gov", convert_checkstate(options_page_ui_obj->perfgovern_check));
@@ -282,11 +279,6 @@ std::string ConfWindow::get_all_set_values() noexcept {
     result += convert_to_var_assign("mqdeadline", convert_checkstate(options_page_ui_obj->mqdio_check));
     result += convert_to_var_assign("kyber", convert_checkstate(options_page_ui_obj->kyber_check));
     result += convert_to_var_assign("auto_optim", convert_checkstate(options_page_ui_obj->autooptim_check));
-
-    // if BORE or CFS
-    if (main_combo_index == 2 || main_combo_index == 3) {
-        result += convert_to_var_assign("latency_nice", convert_checkstate(options_page_ui_obj->latnice_check));
-    }
 
     // Execute 'sed' with checkboxes values,
     // which becomes enabled with any value passed,
@@ -429,8 +421,6 @@ ConfWindow::ConfWindow(QWidget* parent)
     /* clang-format on */
 
     options_page_ui_obj->autooptim_check->setCheckState(Qt::Checked);
-    options_page_ui_obj->latnice_check->setCheckState(Qt::Unchecked);
-    options_page_ui_obj->latnice_check->setEnabled(false);
 
     QStringList zstd_comp_levels;
     zstd_comp_levels << "Ultra"
@@ -459,15 +449,6 @@ ConfWindow::ConfWindow(QWidget* parent)
         } else {
             options_page_ui_obj->hzticks_combo_box->setCurrentIndex(3);
         }
-        // If not BORE or CFS.
-        if (index != 2 && index != 3) {
-            options_page_ui_obj->latnice_check->setEnabled(false);
-            options_page_ui_obj->latnice_check->setCheckState(Qt::Unchecked);
-            reset_patches_data_tab();
-            return;
-        }
-        options_page_ui_obj->latnice_check->setEnabled(true);
-        options_page_ui_obj->latnice_check->setCheckState(Qt::Checked);
         reset_patches_data_tab();
     });
 
