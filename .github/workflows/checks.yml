@@ -18,8 +18,15 @@ concurrency:
 jobs:
   cpp-linter:
     runs-on: ubuntu-latest
+    container: archlinux:base-devel
     steps:
       - uses: actions/checkout@v3
+
+      - name: install deps
+        run: |
+          pacman -Syu --noconfirm cmake pkg-config ninja clang mold llvm qt5-base python git
+        shell: bash
+
       - name: Configure CMake
         run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Debug
 
