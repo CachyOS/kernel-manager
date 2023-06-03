@@ -57,7 +57,6 @@
 
 namespace utils {
 
-[[nodiscard]] bool check_root() noexcept;
 [[nodiscard]] auto read_whole_file(const std::string_view& filepath) noexcept -> std::string;
 bool write_to_file(const std::string_view& filepath, const std::string_view& data) noexcept;
 std::string exec(const std::string_view& command) noexcept;
