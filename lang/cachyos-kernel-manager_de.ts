@@ -108,10 +108,6 @@
         <translation>BCACHEFS Module kompilieren</translation>
     </message>
     <message>
-        <source>Enable LATENCY NICE</source>
-        <translation>LATENCY NICE aktivieren</translation>
-    </message>
-    <message>
         <source>Transparent Hugepages</source>
         <translation>Transparente Hugepages</translation>
     </message>
@@ -194,7 +190,7 @@
         <translation>Patch URL:</translation>
     </message>
     <message>
-        <source>CachyOS - Bore + EEVDF + LATENCY NICE</source>
+        <source>CachyOS - Bore + EEVDF</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
