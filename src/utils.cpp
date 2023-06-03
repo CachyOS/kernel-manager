@@ -139,6 +139,7 @@ std::string fix_path(std::string&& path) noexcept {
     return path;
 }
 
+/* clang-format off */
 namespace {
 
 void parse_cachedirs(alpm_handle_t* handle) noexcept {
@@ -221,6 +222,7 @@ void parse_repos(alpm_handle_t* handle) noexcept {
     }
 }
 }  // namespace
+/* clang-format on */
 
 alpm_handle_t* parse_alpm(std::string_view root, std::string_view dbpath, alpm_errno_t* err) noexcept {
     // Initialize alpm.
