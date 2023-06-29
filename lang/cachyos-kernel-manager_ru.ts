@@ -115,36 +115,31 @@
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="671"/>
-        <source>Selecting the ZSTD kernel and modules compression level</source>
-        <translation>Выбор уровня сжатия ядра и модулей ZSTD</translation>
-    </message>
-    <message>
-        <location filename="../src/conf-options-page.ui" line="700"/>
         <source>Enable LTO</source>
         <translation>Включить LTO</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="729"/>
+        <location filename="../src/conf-options-page.ui" line="700"/>
         <source>Build the ZFS module</source>
         <translation>Собрать модуль ZFS</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="758"/>
+        <location filename="../src/conf-options-page.ui" line="729"/>
         <source>Build the BCACHEFS module</source>
         <translation>Собрать модуль BCACHEFS</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="787"/>
+        <location filename="../src/conf-options-page.ui" line="758"/>
         <source>Transparent Hugepages</source>
         <translation>Установить режим работы для THP (Transparent Hugepages)</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="846"/>
+        <location filename="../src/conf-options-page.ui" line="817"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="853"/>
+        <location filename="../src/conf-options-page.ui" line="824"/>
         <source>Execute</source>
         <translation>Выполнить</translation>
     </message>
@@ -180,62 +175,62 @@
         <translation>Патчи</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="356"/>
+        <location filename="../src/conf-window.cpp" line="389"/>
         <source>CachyOS - Bore + EEVDF</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="357"/>
+        <location filename="../src/conf-window.cpp" line="390"/>
         <source>BMQ - BitMap Queue CPU scheduler</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="358"/>
+        <location filename="../src/conf-window.cpp" line="391"/>
         <source>Bore - Burst-Oriented Response Enhancer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="359"/>
+        <location filename="../src/conf-window.cpp" line="392"/>
         <source>CFS - Completely Fair Scheduler</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="360"/>
+        <location filename="../src/conf-window.cpp" line="393"/>
         <source>Hardened - Hardened kernel with the BORE Scheduler</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="361"/>
+        <location filename="../src/conf-window.cpp" line="394"/>
         <source>PDS - Priority and Deadline based Skip list multiple queue CPU scheduler</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="362"/>
+        <location filename="../src/conf-window.cpp" line="395"/>
         <source>RC - Release Candidate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="363"/>
+        <location filename="../src/conf-window.cpp" line="396"/>
         <source>TT - Task Type Scheduler</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="468"/>
+        <location filename="../src/conf-window.cpp" line="495"/>
         <source>Select one or more patch files</source>
         <translation>Выберите один или несколько файлов патчей</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="470"/>
+        <location filename="../src/conf-window.cpp" line="497"/>
         <source>Patch file (*.patch)</source>
         <translation>Файл патча (*.patch)</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="490"/>
+        <location filename="../src/conf-window.cpp" line="517"/>
         <source>Enter URL patch</source>
         <translation>Введите URL патча</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="491"/>
+        <location filename="../src/conf-window.cpp" line="518"/>
         <source>Patch URL:</source>
         <translation>URL патча:</translation>
     </message>

@@ -92,10 +92,6 @@
         <translation>Debugging deaktivieren, um die Größe des Kernels zu verringern</translation>
     </message>
     <message>
-        <source>Selecting the ZSTD kernel and modules compression level</source>
-        <translation>Auswahl der Komprimierungsstufe für den ZSTD kernel und das Module</translation>
-    </message>
-    <message>
         <source>Enable LTO</source>
         <translation>LTO aktivieren</translation>
     </message>
