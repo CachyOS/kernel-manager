@@ -24,6 +24,7 @@
 #include <cstdlib>
 
 #include <filesystem>
+#include <string_view>
 
 #if defined(__clang__)
 #pragma clang diagnostic push
@@ -72,7 +73,19 @@ namespace fs = std::filesystem;
         return list_##name[index];                                          \
     }
 
+#define GENERATE_CONST_LOOKUP_VALUES(name, ...)                                       \
+    [[gnu::pure]] consteval ssize_t lookup_##name(std::string_view needle) noexcept { \
+        constexpr std::array list_##name{__VA_ARGS__};                                \
+        for (size_t i = 0; i < list_##name.size(); ++i) {                             \
+            if (std::string_view{list_##name[i]} == needle) {                         \
+                return static_cast<ssize_t>(i);                                       \
+            }                                                                         \
+        }                                                                             \
+        return -1;                                                                    \
+    }
+
 GENERATE_CONST_OPTION_VALUES(kernel_name, "cachyos", "bmq", "bore", "cfs", "hardened", "pds", "rc", "tt")
+GENERATE_CONST_LOOKUP_VALUES(kernel_name, "cachyos", "bmq", "bore", "cfs", "hardened", "pds", "rc", "tt")
 GENERATE_CONST_OPTION_VALUES(hz_tick, "1000", "750", "600", "500", "300", "250", "100")
 GENERATE_CONST_OPTION_VALUES(tickless_mode, "full", "idle", "perodic")
 GENERATE_CONST_OPTION_VALUES(preempt_mode, "full", "voluntary", "server")
@@ -80,6 +93,15 @@ GENERATE_CONST_OPTION_VALUES(lru_config_mode, "standard", "stats", "none")
 GENERATE_CONST_OPTION_VALUES(lto_mode, "none", "full", "thin")
 GENERATE_CONST_OPTION_VALUES(hugepage_mode, "always", "madvise")
 GENERATE_CONST_OPTION_VALUES(cpu_opt_mode, "manual", "generic", "native_amd", "native_intel", "zen", "zen2", "zen3", "sandybridge", "ivybridge", "haswell", "icelake", "tigerlake", "alderlake")
+
+static_assert(lookup_kernel_name("cachyos") == 0, "Invalid position");
+static_assert(lookup_kernel_name("bmq") == 1, "Invalid position");
+static_assert(lookup_kernel_name("bore") == 2, "Invalid position");
+static_assert(lookup_kernel_name("cfs") == 3, "Invalid position");
+static_assert(lookup_kernel_name("hardened") == 4, "Invalid position");
+static_assert(lookup_kernel_name("pds") == 5, "Invalid position");
+static_assert(lookup_kernel_name("rc") == 6, "Invalid position");
+static_assert(lookup_kernel_name("tt") == 7, "Invalid position");
 
 constexpr auto get_kernel_name_path(std::string_view kernel_name) noexcept {
     using namespace std::string_view_literals;
@@ -436,7 +458,7 @@ ConfWindow::ConfWindow(QWidget* parent)
     connect(options_page_ui_obj->ok_button, SIGNAL(clicked()), this, SLOT(on_execute()));
     connect(options_page_ui_obj->main_combo_box, &QComboBox::currentIndexChanged, this, [options_page_ui_obj, this](std::int32_t index) {
         // Set to 1000HZ, if BMQ, PDS, TT
-        if (index == 1 || index == 5 || index == 7) {
+        if (index == lookup_kernel_name("bmq") || index == lookup_kernel_name("pds") || index == lookup_kernel_name("tt")) {
             options_page_ui_obj->hzticks_combo_box->setCurrentIndex(0);
         } else {
             options_page_ui_obj->hzticks_combo_box->setCurrentIndex(3);
