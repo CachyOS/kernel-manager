@@ -79,7 +79,6 @@ GENERATE_CONST_OPTION_VALUES(preempt_mode, "full", "voluntary", "server")
 GENERATE_CONST_OPTION_VALUES(lru_config_mode, "standard", "stats", "none")
 GENERATE_CONST_OPTION_VALUES(lto_mode, "none", "full", "thin")
 GENERATE_CONST_OPTION_VALUES(hugepage_mode, "always", "madvise")
-GENERATE_CONST_OPTION_VALUES(zstd_comp_level, "ultra", "normal")
 GENERATE_CONST_OPTION_VALUES(cpu_opt_mode, "manual", "generic", "native_amd", "native_intel", "zen", "zen2", "zen3", "sandybridge", "ivybridge", "haswell", "icelake", "tigerlake", "alderlake")
 
 constexpr auto get_kernel_name_path(std::string_view kernel_name) noexcept {
@@ -305,7 +304,6 @@ std::string ConfWindow::get_all_set_values() noexcept {
     result += convert_to_var_assign("preempt", get_preempt_mode(static_cast<size_t>(options_page_ui_obj->preempt_combo_box->currentIndex())));
     result += convert_to_var_assign("lru_config", get_lru_config_mode(static_cast<size_t>(options_page_ui_obj->lru_config_combo_box->currentIndex())));
     result += convert_to_var_assign("vma_config", get_lru_config_mode(static_cast<size_t>(options_page_ui_obj->vma_config_combo_box->currentIndex())));
-    result += convert_to_var_assign("zstd_level", get_zstd_comp_level(static_cast<size_t>(options_page_ui_obj->zstd_comp_levels_combo_box->currentIndex())));
     result += convert_to_var_assign("hugepage", get_hugepage_mode(static_cast<size_t>(options_page_ui_obj->hugepage_combo_box->currentIndex())));
     result += convert_to_var_assign("lto", get_lto_mode(static_cast<size_t>(options_page_ui_obj->lto_combo_box->currentIndex())));
 
@@ -421,12 +419,6 @@ ConfWindow::ConfWindow(QWidget* parent)
     /* clang-format on */
 
     options_page_ui_obj->autooptim_check->setCheckState(Qt::Checked);
-
-    QStringList zstd_comp_levels;
-    zstd_comp_levels << "Ultra"
-                     << "Normal";
-    options_page_ui_obj->zstd_comp_levels_combo_box->addItems(zstd_comp_levels);
-    options_page_ui_obj->zstd_comp_levels_combo_box->setCurrentIndex(1);
 
     QStringList lto_modes;
     lto_modes << "No"

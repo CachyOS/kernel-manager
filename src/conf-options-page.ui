@@ -663,35 +663,6 @@
          </widget>
         </item>
         <item>
-         <widget class="QWidget" name="zstd_comp_levels_widget" native="true">
-          <layout class="QHBoxLayout" name="zstd_comp_levels_horizontal_layout">
-           <item>
-            <widget class="QLabel" name="zstd_comp_levels_label">
-             <property name="text">
-              <string>Selecting the ZSTD kernel and modules compression level</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="zstd_comp_levels_horizontal_spacer">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QComboBox" name="zstd_comp_levels_combo_box"/>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
          <widget class="QWidget" name="lto_widget" native="true">
           <layout class="QHBoxLayout" name="lto_horizontal_layout">
            <item>
