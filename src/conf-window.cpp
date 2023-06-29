@@ -73,6 +73,11 @@ namespace fs = std::filesystem;
         return list_##name[index];                                          \
     }
 
+/**
+ * GENERATE_CONST_LOOKUP_VALUES(name, ...):
+ *
+ * Used to define lookup values of option.
+ */
 #define GENERATE_CONST_LOOKUP_VALUES(name, ...)                                       \
     [[gnu::pure]] consteval ssize_t lookup_##name(std::string_view needle) noexcept { \
         constexpr std::array list_##name{__VA_ARGS__};                                \
@@ -84,8 +89,16 @@ namespace fs = std::filesystem;
         return -1;                                                                    \
     }
 
-GENERATE_CONST_OPTION_VALUES(kernel_name, "cachyos", "bmq", "bore", "cfs", "hardened", "pds", "rc", "tt")
-GENERATE_CONST_LOOKUP_VALUES(kernel_name, "cachyos", "bmq", "bore", "cfs", "hardened", "pds", "rc", "tt")
+/**
+ * GENERATE_CONST_LOOKUP_OPTION_VALUES(name, ...):
+ *
+ * Generates both values lookup and const values functions.
+ */
+#define GENERATE_CONST_LOOKUP_OPTION_VALUES(name, ...) \
+    GENERATE_CONST_OPTION_VALUES(name, __VA_ARGS__)    \
+    GENERATE_CONST_LOOKUP_VALUES(name, __VA_ARGS__)
+
+GENERATE_CONST_LOOKUP_OPTION_VALUES(kernel_name, "cachyos", "bmq", "bore", "cfs", "hardened", "pds", "rc", "tt")
 GENERATE_CONST_OPTION_VALUES(hz_tick, "1000", "750", "600", "500", "300", "250", "100")
 GENERATE_CONST_OPTION_VALUES(tickless_mode, "full", "idle", "perodic")
 GENERATE_CONST_OPTION_VALUES(preempt_mode, "full", "voluntary", "server")
