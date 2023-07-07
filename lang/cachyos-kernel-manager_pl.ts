@@ -37,7 +37,7 @@
     </message>
     <message>
         <source>Set performance governor as default</source>
-        <translation>Wybierz zarządcę "Performance" jako domyślny/translation>
+        <translation>Wybierz zarządcę "Performance" jako domyślny</translation>
     </message>
     <message>
         <source>Enable TCP_CONG_BBR2</source>
