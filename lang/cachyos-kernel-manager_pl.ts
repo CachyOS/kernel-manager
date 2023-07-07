@@ -211,7 +211,7 @@
         <translation>&lt;html&gt;
 &lt;body&gt;
 &lt;p&gt;Tutaj znajdziesz informację na temat aktualnie zainstalowanego kernela jak również kerneli dostępnych do zainstalowania.&lt;/p&gt;
-&lt;p&gt;Możesz zainstalować i/lub odinstalować pakiety jądra za pomocą pól wyboru w kolumnie po lewej stronie.&lt;/p&gt;
+&lt;p&gt;Możesz zainstalować i/lub odinstalować pakiety kernela za pomocą pól wyboru w kolumnie po lewej stronie.&lt;/p&gt;
 &lt;p&gt;Ta aplikacja nie będzie działać, jeśli używasz już instancji pacmana.&lt;/p&gt;
 &lt;/body&gt;
 &lt;/html&gt;</translation>
