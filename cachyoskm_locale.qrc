@@ -2,6 +2,7 @@
 <RCC version="1.0">
     <qresource prefix="/translations">
         <file alias="de">lang/cachyos-kernel-manager_de.qm</file>
+        <file alias="pl">lang/cachyos-kernel-manager_pl.qm</file>
         <file alias="ru">lang/cachyos-kernel-manager_ru.qm</file>
     </qresource>
 </RCC>
