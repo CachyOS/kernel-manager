@@ -175,62 +175,67 @@
         <translation>Патчи</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="389"/>
+        <location filename="../src/conf-window.cpp" line="392"/>
         <source>CachyOS - Bore + EEVDF</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="390"/>
+        <location filename="../src/conf-window.cpp" line="393"/>
         <source>BMQ - BitMap Queue CPU scheduler</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="391"/>
+        <location filename="../src/conf-window.cpp" line="394"/>
         <source>Bore - Burst-Oriented Response Enhancer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="392"/>
+        <location filename="../src/conf-window.cpp" line="395"/>
         <source>CFS - Completely Fair Scheduler</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="393"/>
+        <location filename="../src/conf-window.cpp" line="396"/>
         <source>Hardened - Hardened kernel with the BORE Scheduler</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="394"/>
+        <location filename="../src/conf-window.cpp" line="397"/>
         <source>PDS - Priority and Deadline based Skip list multiple queue CPU scheduler</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="395"/>
+        <location filename="../src/conf-window.cpp" line="398"/>
         <source>RC - Release Candidate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="396"/>
+        <location filename="../src/conf-window.cpp" line="399"/>
+        <source>RT - Realtime kernel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/conf-window.cpp" line="400"/>
         <source>TT - Task Type Scheduler</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="495"/>
+        <location filename="../src/conf-window.cpp" line="499"/>
         <source>Select one or more patch files</source>
         <translation>Выберите один или несколько файлов патчей</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="497"/>
+        <location filename="../src/conf-window.cpp" line="501"/>
         <source>Patch file (*.patch)</source>
         <translation>Файл патча (*.patch)</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="517"/>
+        <location filename="../src/conf-window.cpp" line="521"/>
         <source>Enter URL patch</source>
         <translation>Введите URL патча</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="518"/>
+        <location filename="../src/conf-window.cpp" line="522"/>
         <source>Patch URL:</source>
         <translation>URL патча:</translation>
     </message>

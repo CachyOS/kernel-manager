@@ -189,6 +189,10 @@
         <source>CachyOS - Bore + EEVDF</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>RT - Realtime kernel</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
