@@ -13,8 +13,6 @@
         "HZ_ticks": "_HZ_ticks",
         "tickrate": "_tickrate",
         "preempt": "_preempt",
-        "mqdeadline": "_mq_deadline_disable",
-        "kyber": "_kyber_disable",
         "lru_config": "_lru_config",
         "vma_config": "_vma_config",
         "damon": "_damon",

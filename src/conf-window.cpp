@@ -313,8 +313,6 @@ std::string ConfWindow::get_all_set_values() noexcept {
     result += convert_to_var_assign("hardly", convert_checkstate(options_page_ui_obj->hardly_check));
     result += convert_to_var_assign("per_gov", convert_checkstate(options_page_ui_obj->perfgovern_check));
     result += convert_to_var_assign("tcp_bbr2", convert_checkstate(options_page_ui_obj->tcpbbr_check));
-    result += convert_to_var_assign("mqdeadline", convert_checkstate(options_page_ui_obj->mqdio_check));
-    result += convert_to_var_assign("kyber", convert_checkstate(options_page_ui_obj->kyber_check));
     result += convert_to_var_assign("auto_optim", convert_checkstate(options_page_ui_obj->autooptim_check));
 
     // Execute 'sed' with checkboxes values,
@@ -428,9 +426,6 @@ ConfWindow::ConfWindow(QWidget* parent)
                   << "Voluntary"
                   << "Server";
     options_page_ui_obj->preempt_combo_box->addItems(preempt_modes);
-
-    options_page_ui_obj->mqdio_check->setCheckState(Qt::Checked);
-    options_page_ui_obj->kyber_check->setCheckState(Qt::Checked);
 
     QStringList lru_config_modes;
     lru_config_modes << "Standard"

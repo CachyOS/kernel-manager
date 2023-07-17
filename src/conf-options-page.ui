@@ -402,64 +402,6 @@
          </widget>
         </item>
         <item>
-         <widget class="QWidget" name="mqdio_widget" native="true">
-          <layout class="QHBoxLayout" name="mqdio_horizontal_layout">
-           <item>
-            <widget class="QLabel" name="mqdio_label">
-             <property name="text">
-              <string>Disable MQ-Deadline I/O scheduler</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="mqdio_horizontal_spacer">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="mqdio_check"/>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="QWidget" name="kyber_widget" native="true">
-          <layout class="QHBoxLayout" name="kyber_horizontal_layout">
-           <item>
-            <widget class="QLabel" name="kyber_label">
-             <property name="text">
-              <string>Disable Kyber I/O scheduler</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="kyber_horizontal_spacer">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="kyber_check"/>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
          <widget class="QWidget" name="lru_config_widget" native="true">
           <layout class="QHBoxLayout" name="lru_config_horizontal_layout">
            <item>
