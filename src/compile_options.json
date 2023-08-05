@@ -9,7 +9,7 @@
         "localmodcfg": "_localmodcfg",
         "hardly": "_cc_harder",
         "per_gov": "_per_gov",
-        "tcp_bbr2": "_tcp_bbr2",
+        "tcp_bbr3": "_tcp_bbr3",
         "HZ_ticks": "_HZ_ticks",
         "tickrate": "_tickrate",
         "preempt": "_preempt",

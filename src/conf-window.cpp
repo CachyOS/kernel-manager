@@ -312,7 +312,7 @@ std::string ConfWindow::get_all_set_values() noexcept {
     // checkboxes values
     result += convert_to_var_assign("hardly", convert_checkstate(options_page_ui_obj->hardly_check));
     result += convert_to_var_assign("per_gov", convert_checkstate(options_page_ui_obj->perfgovern_check));
-    result += convert_to_var_assign("tcp_bbr2", convert_checkstate(options_page_ui_obj->tcpbbr_check));
+    result += convert_to_var_assign("tcp_bbr3", convert_checkstate(options_page_ui_obj->tcpbbr_check));
     result += convert_to_var_assign("auto_optim", convert_checkstate(options_page_ui_obj->autooptim_check));
 
     // Execute 'sed' with checkboxes values,
