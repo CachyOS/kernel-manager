@@ -57,11 +57,11 @@
     </message>
     <message>
         <source>Disable MQ-Deadline I/O scheduler</source>
-        <translation>MQ-Deadline I/O-Scheduler deaktivieren</translation>
+        <translation type="vanished">MQ-Deadline I/O-Scheduler deaktivieren</translation>
     </message>
     <message>
         <source>Disable Kyber I/O scheduler</source>
-        <translation>Kyber I/O scheduler deaktivieren</translation>
+        <translation type="vanished">Kyber I/O scheduler deaktivieren</translation>
     </message>
     <message>
         <source>Enable multigenerational LRU</source>

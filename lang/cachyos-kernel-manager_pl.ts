@@ -37,7 +37,7 @@
     </message>
     <message>
         <source>Set performance governor as default</source>
-        <translation>Wybierz zarządcę "Performance" jako domyślny</translation>
+        <translation>Wybierz zarządcę &quot;Performance&quot; jako domyślny</translation>
     </message>
     <message>
         <source>Enable TCP_CONG_BBR2</source>
@@ -45,23 +45,23 @@
     </message>
     <message>
         <source>Running tick rate</source>
-        <translation>Wybierz "rick rate"</translation>
+        <translation>Wybierz &quot;rick rate&quot;</translation>
     </message>
     <message>
         <source>Select tickless</source>
-        <translation>Wybierz "tickless"</translation>
+        <translation>Wybierz &quot;tickless&quot;</translation>
     </message>
     <message>
         <source>Select preempt</source>
-        <translation>Wybierz "preempt"</translation>
+        <translation>Wybierz &quot;preempt&quot;</translation>
     </message>
     <message>
         <source>Disable MQ-Deadline I/O scheduler</source>
-        <translation>Wyłącz planistę I/O MQ-Deadline </translation>
+        <translation type="vanished">Wyłącz planistę I/O MQ-Deadline </translation>
     </message>
     <message>
         <source>Disable Kyber I/O scheduler</source>
-        <translation>Wyłącz planistę I/O Kyber</translation>
+        <translation type="vanished">Wyłącz planistę I/O Kyber</translation>
     </message>
     <message>
         <source>Enable multigenerational LRU</source>
