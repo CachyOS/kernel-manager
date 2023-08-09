@@ -248,7 +248,7 @@
         <source>No kernels found!
 Please run `pacman -Sy` to update DB!
 This is needed for the app to work properly</source>
-        <translation>Keine Kernel gefunden!
+        <translation>Nie znaleziono zainstalowanego kernela!
 Proszę wykonać `pacman -Sy` aby zaktualizować bazę danych!
 Jest to wymagana do prawidłowego działania pakietu</translation>
     </message>
