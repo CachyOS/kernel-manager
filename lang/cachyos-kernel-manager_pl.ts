@@ -105,7 +105,7 @@
     </message>
     <message>
         <source>Transparent Hugepages</source>
-        <translation>Transparente Hugepages</translation>
+        <translation>Ustawianie trybu pracy (Transparent Hugepages)</translation>
     </message>
     <message>
         <source>Cancel</source>
