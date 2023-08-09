@@ -191,7 +191,7 @@
     </message>
     <message>
         <source>RT - Realtime kernel</source>
-        <translation>RT - Realtime kernel</translation>
+        <translation>RT - Kernel czasu rzeczywistego</translation>
     </message>
 </context>
 <context>
