@@ -131,7 +131,7 @@
     <name>ConfWindow</name>
     <message>
         <source>CachyOS Kernel Manager Configure</source>
-        <translation></translation>
+        <translation>Konfiguracja menedżera kerneli CachyOS</translation>
     </message>
     <message>
         <source>Options</source>
@@ -143,31 +143,31 @@
     </message>
     <message>
         <source>BMQ - BitMap Queue CPU scheduler</source>
-        <translation type="unfinished"></translation>
+        <translation>Planista BMQ - BitMap Queue CPU scheduler</translation>
     </message>
     <message>
         <source>Bore - Burst-Oriented Response Enhancer</source>
-        <translation type="unfinished"></translation>
+        <translation>Planista BORE- Burst-Oriented Response Enhancer</translation>
     </message>
     <message>
         <source>CFS - Completely Fair Scheduler</source>
-        <translation type="unfinished"></translation>
+        <translation>Planista CFS - Completely Fair Scheduler</translation>
     </message>
     <message>
         <source>Hardened - Hardened kernel with the BORE Scheduler</source>
-        <translation type="unfinished"></translation>
+        <translation>Hardened - Hardened kernel with the BORE Scheduler</translation>
     </message>
     <message>
         <source>PDS - Priority and Deadline based Skip list multiple queue CPU scheduler</source>
-        <translation type="unfinished"></translation>
+        <translation>Planista PDS - Priority and Deadline based Skip list multiple queue CPU scheduler</translation>
     </message>
     <message>
         <source>RC - Release Candidate</source>
-        <translation type="unfinished"></translation>
+        <translation>RC - Release Candidate</translation>
     </message>
     <message>
         <source>TT - Task Type Scheduler</source>
-        <translation type="unfinished"></translation>
+        <translation>Planista TT - Task Type Scheduler</translation>
     </message>
     <message>
         <source>Select one or more patch files</source>
@@ -187,11 +187,11 @@
     </message>
     <message>
         <source>CachyOS - Bore + EEVDF</source>
-        <translation type="unfinished"></translation>
+        <translation>Planista CachyOS - BORE + EEVDF</translation>
     </message>
     <message>
         <source>RT - Realtime kernel</source>
-        <translation type="unfinished"></translation>
+        <translation>RT - Realtime kernel</translation>
     </message>
 </context>
 <context>
