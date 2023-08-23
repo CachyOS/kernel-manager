@@ -438,7 +438,6 @@ ConfWindow::ConfWindow(QWidget* parent)
                      << "Stats"
                      << "None";
     options_page_ui_obj->vma_config_combo_box->addItems(vma_config_modes);
-    options_page_ui_obj->vma_config_combo_box->setCurrentIndex(2);
 
     /* clang-format off */
     QStringList cpu_optims;
