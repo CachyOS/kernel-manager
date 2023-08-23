@@ -50,8 +50,8 @@
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="294"/>
-        <source>Enable TCP_CONG_BBR2</source>
-        <translation>Включить TCP_CONG_BBR2</translation>
+        <source>Enable TCP_CONG_BBR3</source>
+        <translation>Включить TCP_CONG_BBR3</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="323"/>

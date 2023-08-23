@@ -291,7 +291,7 @@
            <item>
             <widget class="QLabel" name="tcpbbr_label">
              <property name="text">
-              <string>Enable TCP_CONG_BBR2</string>
+              <string>Enable TCP_CONG_BBR3</string>
              </property>
             </widget>
            </item>

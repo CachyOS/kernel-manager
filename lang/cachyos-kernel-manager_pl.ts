@@ -40,8 +40,8 @@
         <translation>Wybierz zarządcę &quot;Performance&quot; jako domyślny</translation>
     </message>
     <message>
-        <source>Enable TCP_CONG_BBR2</source>
-        <translation>Aktywuj TCP_CONG_BBR2</translation>
+        <source>Enable TCP_CONG_BBR3</source>
+        <translation>Aktywuj TCP_CONG_BBR3</translation>
     </message>
     <message>
         <source>Running tick rate</source>

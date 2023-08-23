@@ -40,8 +40,8 @@
         <translation>Performance Governor aktivieren als Standard</translation>
     </message>
     <message>
-        <source>Enable TCP_CONG_BBR2</source>
-        <translation>TCP_CONG_BBR2 aktivieren</translation>
+        <source>Enable TCP_CONG_BBR3</source>
+        <translation>TCP_CONG_BBR3 aktivieren</translation>
     </message>
     <message>
         <source>Running tick rate</source>
