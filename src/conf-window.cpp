@@ -401,7 +401,6 @@ ConfWindow::ConfWindow(QWidget* parent)
     // Setting default options
     options_page_ui_obj->cachyconfig_check->setCheckState(Qt::Checked);
     options_page_ui_obj->hardly_check->setCheckState(Qt::Checked);
-    options_page_ui_obj->perfgovern_check->setCheckState(Qt::Checked);
     options_page_ui_obj->tcpbbr_check->setCheckState(Qt::Checked);
 
     QStringList hz_ticks;
