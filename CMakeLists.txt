@@ -41,19 +41,19 @@ pkg_check_modules(
 CPMAddPackage(
   NAME fmt
   GITHUB_REPOSITORY fmtlib/fmt
-  GIT_TAG 10.0.0
+  GIT_TAG 10.1.1
   EXCLUDE_FROM_ALL YES
 )
 CPMAddPackage(
   NAME frozen
   GITHUB_REPOSITORY serge-sans-paille/frozen
-  GIT_TAG f75fffcc077e5cda0bf3c87121dca103855d2be5
+  GIT_TAG c241d64279d30a013be2601d42564280f950bcb8
   EXCLUDE_FROM_ALL YES
 )
 CPMAddPackage(
   NAME range-v3
   GITHUB_REPOSITORY ericniebler/range-v3
-  GIT_TAG 4624c63972c6f2c2871c7b87813c42048ddb80ad
+  GIT_TAG 9aa41d6b8ded2cf5e8007e66a0efd1ab33dbf9a5
   EXCLUDE_FROM_ALL YES
 )
 
