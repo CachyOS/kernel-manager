@@ -30,6 +30,13 @@ jobs:
           pacman -Syu --noconfirm cmake pkg-config ninja clang mold llvm qt5-base qt5-tools polkit-qt5 python git unzip
         shell: bash
 
+      - name: install CachyOS pacman
+        run: |
+          git clone https://github.com/CachyOS/CachyOS-PKGBUILDS.git
+          cd CachyOS-PKGBUILDS/pacman
+          makepkg --rmdeps -sicf --cleanbuild --nocheck
+        shell: bash
+
       - name: Install sonar-scanner and build-wrapper
         uses: SonarSource/sonarcloud-github-c-cpp@v1
 

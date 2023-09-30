@@ -27,6 +27,13 @@ jobs:
           pacman -Syu --noconfirm cmake pkg-config ninja clang mold llvm qt5-base qt5-tools polkit-qt5 python git
         shell: bash
 
+      - name: install CachyOS pacman
+        run: |
+          git clone https://github.com/CachyOS/CachyOS-PKGBUILDS.git
+          cd CachyOS-PKGBUILDS/pacman
+          makepkg --rmdeps -sicf --cleanbuild --nocheck
+        shell: bash
+
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
         run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
