@@ -134,7 +134,7 @@ std::vector<Kernel> Kernel::get_kernels(alpm_handle_t* handle) noexcept {
     std::vector<Kernel> kernels{};
 
     auto* dbs      = alpm_get_syncdbs(handle);
-    auto* local_db = alpm_get_localdb(handle);
+    [[maybe_unused]] auto* local_db = alpm_get_localdb(handle);
     for (alpm_list_t* i = dbs; i != nullptr; i = i->next) {
         static constexpr auto needle = "linux[^ ]*-headers";
         alpm_list_t* needles         = nullptr;
@@ -164,6 +164,7 @@ std::vector<Kernel> Kernel::get_kernels(alpm_handle_t* handle) noexcept {
 
             auto kernel_obj = Kernel{handle, pkg, headers, db_name, fmt::format(FMT_COMPILE("{}/{}"), db_name, pkg_name)};
 
+#ifdef HAVE_ALPM_INSTALLED_DB
             auto* local_pkg = alpm_db_get_pkg(local_db, pkg_name.c_str());
             if (local_pkg) {
                 const char* pkg_installed_db = alpm_pkg_get_installed_db(local_pkg);
@@ -171,6 +172,7 @@ std::vector<Kernel> Kernel::get_kernels(alpm_handle_t* handle) noexcept {
                     kernel_obj.m_installed_db = pkg_installed_db;
                 }
             }
+#endif
             if (pkg_name.starts_with("linux-cachyos")) {
                 pkg_name += "-zfs";
                 kernel_obj.m_zfs_module = alpm_db_get_pkg(db, pkg_name.c_str());

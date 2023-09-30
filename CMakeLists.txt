@@ -16,6 +16,7 @@ project(cachyos-kernel-manager
 ##
 include(GNUInstallDirs)
 include(StandardProjectSettings)
+include(CheckSymbolExists)
 include(CompilerWarnings)
 include(EnableCcache)
 include(Linker)
@@ -72,6 +73,12 @@ if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
    set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} -flto=thin -fwhole-program-vtables")
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -flto -fwhole-program -fuse-linker-plugin")
+endif()
+
+list(APPEND CMAKE_REQUIRED_LINK_OPTIONS "-lalpm")
+check_symbol_exists(alpm_pkg_get_installed_db "alpm.h" HAVE_ALPM_INSTALLED_DB)
+if(HAVE_ALPM_INSTALLED_DB)
+    add_compile_options(-DHAVE_ALPM_INSTALLED_DB)
 endif()
 
 # Link this 'library' to set the c++ standard / compile-time options requested
