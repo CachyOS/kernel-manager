@@ -477,6 +477,8 @@ ConfWindow::ConfWindow(QWidget* parent)
     });
 
     // Setup patches page
+    // TODO(vnepogodin): make it lazy loading, only if the user launched the configure window.
+    // on window opening setup the page(clone git repo & reset values) run in the background -> show progress bar.
     prepare_build_environment();
     reset_patches_data_tab();
     connect_all_checkboxes();
@@ -572,6 +574,8 @@ void ConfWindow::on_execute() noexcept {
     const std::string_view cpusched_path = get_kernel_name_path(get_kernel_name(static_cast<size_t>(main_combo_index)));
     prepare_build_environment();
 
+    // TODO(vnepogodin): save envs before setting config values.
+    // then restore envs before setting new config values.
     const auto& all_set_values  = get_all_set_values();
     const auto& set_values_list = utils::make_multiline_view(all_set_values, '\n');
     for (const auto& expr : set_values_list) {
