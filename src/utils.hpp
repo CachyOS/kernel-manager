@@ -83,7 +83,7 @@ inline constexpr std::size_t remove_all(std::string& inout, std::string_view wha
 }
 
 [[nodiscard]] inline constexpr auto make_multiline(std::string_view str, char delim = '\n') noexcept -> std::vector<std::string> {
-    return [&] {
+    return [&]() constexpr {
         constexpr auto functor = [](auto&& rng) {
             return std::string_view(&*rng.begin(), static_cast<size_t>(ranges::distance(rng)));
         };
@@ -94,6 +94,23 @@ inline constexpr std::size_t remove_all(std::string& inout, std::string_view wha
             | ranges::views::transform(functor);
 
         std::vector<std::string> lines{};
+        ranges::for_each(view_res | ranges::views::filter(second), [&](auto&& rng) { lines.emplace_back(rng); });
+        return lines;
+    }();
+}
+
+[[nodiscard]] inline constexpr auto make_multiline_view(std::string_view str, char delim) noexcept -> std::vector<std::string_view> {
+    return [&]() constexpr {
+        constexpr auto functor = [](auto&& rng) {
+            return std::string_view(&*rng.begin(), static_cast<size_t>(ranges::distance(rng)));
+        };
+        constexpr auto second = [](auto&& rng) { return rng != ""; };
+
+        auto&& view_res = str
+            | ranges::views::split(delim)
+            | ranges::views::transform(functor);
+
+        std::vector<std::string_view> lines{};
         ranges::for_each(view_res | ranges::views::filter(second), [&](auto&& rng) { lines.emplace_back(rng); });
         return lines;
     }();

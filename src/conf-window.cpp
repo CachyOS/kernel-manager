@@ -573,13 +573,13 @@ void ConfWindow::on_execute() noexcept {
     prepare_build_environment();
 
     const auto& all_set_values  = get_all_set_values();
-    const auto& set_values_list = utils::make_multiline(all_set_values, '\n');
+    const auto& set_values_list = utils::make_multiline_view(all_set_values, '\n');
     for (const auto& expr : set_values_list) {
-        const auto& expr_split = utils::make_multiline(expr, '=');
+        const auto& expr_split = utils::make_multiline_view(expr, '=');
         const auto& var_name   = expr_split[0];
         const auto& var_val    = expr_split[1];
 
-        if (setenv(var_name.c_str(), var_val.c_str(), 1) != 0) {
+        if (setenv(var_name.data(), var_val.data(), 1) != 0) {
             fmt::print(stderr, "Cannot set environment variable!");
         }
     }
