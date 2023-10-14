@@ -574,8 +574,15 @@ void ConfWindow::on_execute() noexcept {
     const std::string_view cpusched_path = get_kernel_name_path(get_kernel_name(static_cast<size_t>(main_combo_index)));
     prepare_build_environment();
 
-    // TODO(vnepogodin): save envs before setting config values.
-    // then restore envs before setting new config values.
+    // Restore clean environment.
+    // Unset env variables before appplying new ones.
+    for (auto&& previous_option : m_previously_set_options) {
+        if (unsetenv(previous_option.c_str()) != 0) {
+            fmt::print(stderr, "Cannot unset environment variable!: {}\n", std::strerror(errno));
+        }
+    }
+    m_previously_set_options.clear();
+
     const auto& all_set_values  = get_all_set_values();
     const auto& set_values_list = utils::make_multiline_view(all_set_values, '\n');
     for (const auto& expr : set_values_list) {
@@ -585,7 +592,11 @@ void ConfWindow::on_execute() noexcept {
 
         if (setenv(var_name.c_str(), var_val.c_str(), 1) != 0) {
             fmt::print(stderr, "Cannot set environment variable!: {}\n", std::strerror(errno));
+            continue;
         }
+
+        // Save env name to unset it before running the next compilation.
+        m_previously_set_options.push_back(var_name);
     }
 
     // Only files which end with .patch,

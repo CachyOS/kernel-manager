@@ -41,6 +41,8 @@
 
 #include <functional>
 #include <memory>
+#include <string>
+#include <vector>
 
 #include <QMainWindow>
 
@@ -66,6 +68,7 @@ class ConfWindow final : public QMainWindow {
 
  private:
     bool m_running{};
+    std::vector<std::string> m_previously_set_options{};
     std::unique_ptr<Ui::ConfWindow> m_ui = std::make_unique<Ui::ConfWindow>();
 
     std::string get_all_set_values() noexcept;
