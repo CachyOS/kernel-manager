@@ -59,6 +59,8 @@ class ConfWindow final : public QMainWindow {
     explicit ConfWindow(QWidget* parent = nullptr);
     ~ConfWindow() = default;
 
+    void reset_patches_data_tab() noexcept;
+
  private slots:
     void on_cancel() noexcept;
     void on_execute() noexcept;
@@ -73,7 +75,6 @@ class ConfWindow final : public QMainWindow {
 
     std::string get_all_set_values() noexcept;
     void clear_patches_data_tab() noexcept;
-    void reset_patches_data_tab() noexcept;
     void connect_all_checkboxes() noexcept;
 };
 

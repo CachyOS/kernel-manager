@@ -141,34 +141,6 @@ constexpr auto get_kernel_name_path(std::string_view kernel_name) noexcept {
     return "linux-cachyos"sv;
 }
 
-void prepare_build_environment() noexcept {
-    static const fs::path app_path       = utils::fix_path("~/.cache/cachyos-km");
-    static const fs::path pkgbuilds_path = utils::fix_path("~/.cache/cachyos-km/pkgbuilds");
-    if (!fs::exists(app_path)) {
-        fs::create_directories(app_path);
-    }
-
-    fs::current_path(app_path);
-
-    // Check if folder exits, but .git doesn't.
-    if (fs::exists(pkgbuilds_path) && !fs::exists(pkgbuilds_path / ".git")) {
-        fs::remove_all(pkgbuilds_path);
-    }
-
-    std::int32_t cmd_status{};
-    if (!fs::exists(pkgbuilds_path)) {
-        cmd_status = std::system("git clone https://github.com/cachyos/linux-cachyos.git pkgbuilds");
-    }
-
-    fs::current_path(pkgbuilds_path);
-    cmd_status += std::system("git checkout --force master");
-    cmd_status += std::system("git clean -fd");
-    cmd_status += std::system("git pull");
-    if (cmd_status != 0) {
-        std::perror("prepare_build_environment");
-    }
-}
-
 inline bool checkstate_checked(QCheckBox* checkbox) noexcept {
     return (checkbox->checkState() == Qt::Checked);
 }
@@ -479,8 +451,8 @@ ConfWindow::ConfWindow(QWidget* parent)
     // Setup patches page
     // TODO(vnepogodin): make it lazy loading, only if the user launched the configure window.
     // on window opening setup the page(clone git repo & reset values) run in the background -> show progress bar.
-    prepare_build_environment();
-    reset_patches_data_tab();
+    //prepare_build_environment();
+    //reset_patches_data_tab();
     connect_all_checkboxes();
 
     connect(options_page_ui_obj->vma_config_combo_box, &QComboBox::currentIndexChanged, this, [this](std::int32_t) {
@@ -572,7 +544,7 @@ void ConfWindow::on_execute() noexcept {
 
     const std::int32_t main_combo_index  = options_page_ui_obj->main_combo_box->currentIndex();
     const std::string_view cpusched_path = get_kernel_name_path(get_kernel_name(static_cast<size_t>(main_combo_index)));
-    prepare_build_environment();
+    utils::prepare_build_environment();
 
     // Restore clean environment.
     // Unset env variables before appplying new ones.

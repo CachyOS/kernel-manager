@@ -20,6 +20,10 @@
 #include "ini.hpp"
 
 #include <cerrno>  // for errno
+#include <cstdio>
+#include <cstdlib>
+
+#include <filesystem>
 
 #include <fmt/core.h>
 
@@ -46,6 +50,8 @@
 #elif defined(__GNUC__)
 #pragma GCC diagnostic pop
 #endif
+
+namespace fs = std::filesystem;
 
 namespace utils {
 
@@ -165,6 +171,34 @@ void release_alpm(alpm_handle_t* handle, alpm_errno_t* err) noexcept {
     alpm_release(handle);
 
     *err = alpm_errno(handle);
+}
+
+void prepare_build_environment() noexcept {
+    static const fs::path app_path       = utils::fix_path("~/.cache/cachyos-km");
+    static const fs::path pkgbuilds_path = utils::fix_path("~/.cache/cachyos-km/pkgbuilds");
+    if (!fs::exists(app_path)) {
+        fs::create_directories(app_path);
+    }
+
+    fs::current_path(app_path);
+
+    // Check if folder exits, but .git doesn't.
+    if (fs::exists(pkgbuilds_path) && !fs::exists(pkgbuilds_path / ".git")) {
+        fs::remove_all(pkgbuilds_path);
+    }
+
+    std::int32_t cmd_status{};
+    if (!fs::exists(pkgbuilds_path)) {
+        cmd_status = std::system("git clone https://github.com/cachyos/linux-cachyos.git pkgbuilds");
+    }
+
+    fs::current_path(pkgbuilds_path);
+    cmd_status += std::system("git checkout --force master");
+    cmd_status += std::system("git clean -fd");
+    cmd_status += std::system("git pull");
+    if (cmd_status != 0) {
+        std::perror("prepare_build_environment");
+    }
 }
 
 }  // namespace utils

@@ -33,6 +33,9 @@
 #include <QShortcut>
 #include <QTimer>
 #include <QTreeWidgetItem>
+#include <QFutureWatcher>
+#include <QtConcurrent/QtConcurrent>
+#include <QProcess>
 
 bool install_packages(alpm_handle_t* handle, const std::span<Kernel>& kernels, const std::span<std::string>& selected_list) {
     for (const auto& selected : selected_list) {
@@ -96,11 +99,34 @@ MainWindow::MainWindow(QWidget* parent)
     // name to appear in ps, task manager, etc.
     m_worker_th->setObjectName("WorkerThread");
 
+    // Setup progress dialog
+    set_progress_dialog();
+
+    // Setup configure window
+    connect(&m_future_watcher, &QFutureWatcher<void>::finished, this, [&]() {
+        m_conf_progress_dialog->hide();
+        if (m_future_watcher.future().isCanceled()) {
+            return;
+        }
+        if (m_future_watcher.future().isFinished()) {
+            m_confwindow->show();
+            return;
+        }
+        QMessageBox::critical(this, "CachyOS Kernel Manager", tr("Failed to clone repository!\nPlease check your internet connection and try again"));
+    });
+    connect(m_conf_progress_dialog, &QProgressDialog::canceled, this, [&]() {
+        fmt::print("the operation was canceled!\n");
+        // that doesn't really stop execution, it just hides the progress dialog
+        m_future_watcher.cancel();
+    });
+
+    // Setup tree widget
     auto* tree_kernels = m_ui->treeKernels;
     tree_kernels->hideColumn(TreeCol::Displayed);  // Displayed status true/false
     tree_kernels->hideColumn(TreeCol::Immutable);  // Immutable status true/false
     tree_kernels->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
+    // Set context menu policy
     tree_kernels->setContextMenuPolicy(Qt::CustomContextMenu);
 
     tree_kernels->blockSignals(true);
@@ -160,6 +186,28 @@ MainWindow::~MainWindow() {
     }
 }
 
+// Setup progress dialog
+void MainWindow::set_progress_dialog() noexcept {
+    m_conf_progress_dialog = new QProgressDialog(this);
+    m_conf_progress_bar    = new QProgressBar(m_conf_progress_dialog);
+
+    // Set progress dialog
+    m_conf_progress_bar->setMinimum(0);
+    m_conf_progress_bar->setMaximum(0);
+    m_conf_progress_dialog->setMinimum(0);
+    m_conf_progress_dialog->setMaximum(0);
+
+    // Set progress dialog properties
+    m_conf_progress_dialog->setWindowModality(Qt::WindowModal);
+    m_conf_progress_dialog->setWindowFlags(Qt::Dialog | Qt::CustomizeWindowHint | Qt::WindowTitleHint
+        | Qt::WindowSystemMenuHint | Qt::WindowStaysOnTopHint);
+    m_conf_progress_dialog->setLabelText(tr("Please wait...\nWe are preparing configuration window for you\ncloning PKGBUILDs.."));
+    m_conf_progress_dialog->setAutoClose(false);
+    m_conf_progress_dialog->setBar(m_conf_progress_bar);
+    m_conf_progress_bar->setTextVisible(false);
+    m_conf_progress_dialog->reset();
+}
+
 void MainWindow::checkUncheckItem() noexcept {
     if (auto t_widget = qobject_cast<QTreeWidget*>(focusWidget())) {
         if (t_widget->currentItem() == nullptr || t_widget->currentItem()->childCount() > 0) {
@@ -213,7 +261,15 @@ void MainWindow::closeEvent(QCloseEvent* event) {
 }
 
 void MainWindow::on_configure() noexcept {
-    m_confwindow->show();
+    // show progress dialog to indicate user something is happening
+    m_conf_progress_dialog->show();
+
+    // NOTE: the future created by QtConcurrent::run is not cancelable.
+    // prepare in the background, without blocking the UI
+    m_future_watcher.setFuture(QtConcurrent::run([this]{
+        utils::prepare_build_environment();
+        m_confwindow->reset_patches_data_tab();
+    }));
 }
 
 void MainWindow::on_cancel() noexcept {

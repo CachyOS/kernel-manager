@@ -56,6 +56,9 @@
 #include <QMainWindow>
 #include <QThread>
 #include <QTimer>
+#include <QProgressBar>
+#include <QProgressDialog>
+#include <QFutureWatcher>
 
 #if defined(__clang__)
 #pragma clang diagnostic pop
@@ -68,7 +71,7 @@ class Work final : public QObject {
 
  public:
     using function_t = std::function<void()>;
-    explicit Work(function_t func)
+    explicit Work(function_t&& func)
       : m_func(std::move(func)) { }
     ~Work() = default;
 
@@ -115,6 +118,10 @@ class MainWindow final : public QMainWindow {
 
     QStringList m_change_list{};
 
+    QProgressDialog* m_conf_progress_dialog{nullptr};
+    QProgressBar* m_conf_progress_bar{nullptr};
+    QFutureWatcher<void> m_future_watcher{};
+
     QThread* m_worker_th = new QThread(this);
     Work* m_worker{nullptr};
 
@@ -125,6 +132,7 @@ class MainWindow final : public QMainWindow {
     std::unique_ptr<ConfWindow> m_confwindow = std::make_unique<ConfWindow>();
 
     void buildChangeList(QTreeWidgetItem* item) noexcept;
+    void set_progress_dialog() noexcept;
 };
 
 #endif  // MAINWINDOW_HPP_
