@@ -252,5 +252,16 @@ This is needed for the app to work properly</source>
 Bitte führen Sie `pacman -Sy` aus, um die DB zu aktualisieren!
 Dies ist notwendig, damit die Anwendung richtig funktioniert</translation>
     </message>
+    <message>
+        <source>Failed to clone repository!
+Please check your internet connection and try again</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please wait...
+We are preparing configuration window for you
+cloning PKGBUILDs..</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>
