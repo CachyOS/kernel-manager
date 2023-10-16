@@ -19,9 +19,9 @@
 #include "utils.hpp"
 #include "ini.hpp"
 
-#include <cerrno>  // for errno
-#include <cstdio>
-#include <cstdlib>
+#include <cerrno>   // for errno
+#include <cstdio>   // for fopen, fclose, fread, fseek, ftell, SEEK_END, SEEK_SET
+#include <cstdlib>  // for system
 
 #include <filesystem>
 

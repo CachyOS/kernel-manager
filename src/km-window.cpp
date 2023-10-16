@@ -28,14 +28,13 @@
 #include <fmt/core.h>
 
 #include <QCoreApplication>
+#include <QFutureWatcher>
 #include <QMessageBox>
 #include <QScreen>
 #include <QShortcut>
 #include <QTimer>
 #include <QTreeWidgetItem>
-#include <QFutureWatcher>
 #include <QtConcurrent/QtConcurrent>
-#include <QProcess>
 
 bool install_packages(alpm_handle_t* handle, const std::span<Kernel>& kernels, const std::span<std::string>& selected_list) {
     for (const auto& selected : selected_list) {
@@ -89,6 +88,10 @@ MainWindow::MainWindow(QWidget* parent)
                 remove_packages(m_handle, m_kernels, change_list);
                 Kernel::commit_transaction();
 
+                // TODO(vnepogodin): re-init kernels after execution run
+                // Don't re-init kernels, if nothing has changed!
+                // Verify that packages in change_list were either installed or removed,
+                // if nothing has changed -> do nothing
                 m_running.store(false, std::memory_order_relaxed);
                 m_ui->ok->setEnabled(true);
             }
@@ -109,7 +112,7 @@ MainWindow::MainWindow(QWidget* parent)
             return;
         }
         if (m_future_watcher.future().isFinished()) {
-            m_confwindow->show();
+            m_conf_window->show();
             return;
         }
         QMessageBox::critical(this, "CachyOS Kernel Manager", tr("Failed to clone repository!\nPlease check your internet connection and try again"));
@@ -167,12 +170,12 @@ MainWindow::MainWindow(QWidget* parent)
 
     // check/uncheck tree items space-bar press or double-click
     auto* shortcutToggle = new QShortcut(Qt::Key_Space, this);
-    connect(shortcutToggle, &QShortcut::activated, this, &MainWindow::checkUncheckItem);
+    connect(shortcutToggle, &QShortcut::activated, this, &MainWindow::check_uncheck_item);
 
     // Connect tree widget
     connect(tree_kernels, &QTreeWidget::itemChanged, this, &MainWindow::item_changed);
     connect(tree_kernels, &QTreeWidget::itemDoubleClicked, [&](QTreeWidgetItem* item) { m_ui->treeKernels->setCurrentItem(item); });
-    connect(tree_kernels, &QTreeWidget::itemDoubleClicked, this, &MainWindow::checkUncheckItem);
+    connect(tree_kernels, &QTreeWidget::itemDoubleClicked, this, &MainWindow::check_uncheck_item);
 
     // Wait for async function to finish
     a2.wait();
@@ -208,7 +211,7 @@ void MainWindow::set_progress_dialog() noexcept {
     m_conf_progress_dialog->reset();
 }
 
-void MainWindow::checkUncheckItem() noexcept {
+void MainWindow::check_uncheck_item() noexcept {
     if (auto t_widget = qobject_cast<QTreeWidget*>(focusWidget())) {
         if (t_widget->currentItem() == nullptr || t_widget->currentItem()->childCount() > 0) {
             return;
@@ -222,11 +225,11 @@ void MainWindow::checkUncheckItem() noexcept {
 void MainWindow::item_changed(QTreeWidgetItem* item, int) noexcept {
     if (item->checkState(TreeCol::Check) == Qt::Checked)
         m_ui->treeKernels->setCurrentItem(item);
-    buildChangeList(item);
+    build_change_list(item);
 }
 
 // Build the change_list when selecting on item in the tree
-void MainWindow::buildChangeList(QTreeWidgetItem* item) noexcept {
+void MainWindow::build_change_list(QTreeWidgetItem* item) noexcept {
     auto item_text = item->text(TreeCol::PkgName);
     auto immutable = item->text(TreeCol::Immutable);
     if (immutable == "true" && item->checkState(0) == Qt::Unchecked) {
@@ -266,9 +269,9 @@ void MainWindow::on_configure() noexcept {
 
     // NOTE: the future created by QtConcurrent::run is not cancelable.
     // prepare in the background, without blocking the UI
-    m_future_watcher.setFuture(QtConcurrent::run([this]{
+    m_future_watcher.setFuture(QtConcurrent::run([this] {
         utils::prepare_build_environment();
-        m_confwindow->reset_patches_data_tab();
+        m_conf_window->reset_patches_data_tab();
     }));
 }
 

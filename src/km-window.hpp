@@ -53,12 +53,12 @@
 
 #include <alpm.h>
 
+#include <QFutureWatcher>
 #include <QMainWindow>
-#include <QThread>
-#include <QTimer>
 #include <QProgressBar>
 #include <QProgressDialog>
-#include <QFutureWatcher>
+#include <QThread>
+#include <QTimer>
 
 #if defined(__clang__)
 #pragma clang diagnostic pop
@@ -103,7 +103,7 @@ class MainWindow final : public QMainWindow {
     void on_execute() noexcept;
     void on_configure() noexcept;
 
-    void checkUncheckItem() noexcept;
+    void check_uncheck_item() noexcept;
 
     void item_changed(QTreeWidgetItem* item, int column) noexcept;
 
@@ -126,12 +126,12 @@ class MainWindow final : public QMainWindow {
     Work* m_worker{nullptr};
 
     alpm_errno_t m_err{};
-    alpm_handle_t* m_handle                  = utils::parse_alpm("/", "/var/lib/pacman/", &m_err);
-    std::vector<Kernel> m_kernels            = Kernel::get_kernels(m_handle);
-    std::unique_ptr<Ui::MainWindow> m_ui     = std::make_unique<Ui::MainWindow>();
-    std::unique_ptr<ConfWindow> m_confwindow = std::make_unique<ConfWindow>();
+    alpm_handle_t* m_handle                   = utils::parse_alpm("/", "/var/lib/pacman/", &m_err);
+    std::vector<Kernel> m_kernels             = Kernel::get_kernels(m_handle);
+    std::unique_ptr<Ui::MainWindow> m_ui      = std::make_unique<Ui::MainWindow>();
+    std::unique_ptr<ConfWindow> m_conf_window = std::make_unique<ConfWindow>();
 
-    void buildChangeList(QTreeWidgetItem* item) noexcept;
+    void build_change_list(QTreeWidgetItem* item) noexcept;
     void set_progress_dialog() noexcept;
 };
 
