@@ -166,11 +166,13 @@ alpm_handle_t* parse_alpm(std::string_view root, std::string_view dbpath, alpm_e
     return alpm_handle;
 }
 
-void release_alpm(alpm_handle_t* handle, alpm_errno_t* err) noexcept {
+std::int32_t release_alpm(alpm_handle_t* handle, alpm_errno_t* err) noexcept {
     // Release libalpm handle
-    alpm_release(handle);
+    std::int32_t ret = alpm_release(handle);
 
     *err = alpm_errno(handle);
+
+    return ret;
 }
 
 void prepare_build_environment() noexcept {

@@ -88,12 +88,83 @@ MainWindow::MainWindow(QWidget* parent)
                 remove_packages(m_handle, m_kernels, change_list);
                 Kernel::commit_transaction();
 
+                // check if we need to re-init kernels
+                auto& kernel_install_list = Kernel::get_install_list();
+                auto& kernel_removal_list = Kernel::get_removal_list();
+
+                // NOTE: we dont want to override handle, because we would need to invalidate kernels.
+                auto* temp_handle = utils::parse_alpm("/", "/var/lib/pacman/", &m_err);
+
+                bool is_kernel_status_changed{};
+                {
+                    auto* local_db = alpm_get_localdb(m_handle);
+
+                    for (auto&& kernel_install : kernel_install_list) {
+                        auto* pkg = alpm_db_get_pkg(local_db, kernel_install.data());
+                        if (pkg != nullptr) {
+                            is_kernel_status_changed = true;
+                            break;
+                        }
+                    }
+                    for (auto&& kernel_removal : kernel_removal_list) {
+                        auto* pkg = alpm_db_get_pkg(local_db, kernel_removal.data());
+                        if (pkg == nullptr) {
+                            is_kernel_status_changed = true;
+                            break;
+                        }
+                    }
+                }
+
                 // TODO(vnepogodin): re-init kernels after execution run
                 // Don't re-init kernels, if nothing has changed!
                 // Verify that packages in change_list were either installed or removed,
                 // if nothing has changed -> do nothing
+
+                // Re-init kernels
+                if (is_kernel_status_changed) {
+                    if (m_handle != nullptr && utils::release_alpm(m_handle, &m_err) != 0) {
+                        QMessageBox::critical(this, "CachyOS Kernel Manager", tr("Failed to release alpm handle (%1)").arg(alpm_strerror(m_err)));
+                    }
+
+                    // clear install and removal lists
+                    kernel_install_list.clear();
+                    kernel_removal_list.clear();
+
+                    m_handle = temp_handle;
+                    m_kernels.clear();
+                    m_kernels = Kernel::get_kernels(m_handle);
+
+                    m_conf_progress_dialog->show();
+
+                    auto* tree_kernels = m_ui->treeKernels;
+                    tree_kernels->blockSignals(true);
+                    tree_kernels->clear();
+                    auto a2 = std::async(std::launch::deferred, [&] {
+                        const std::lock_guard<std::mutex> guard(m_mutex);
+                        for (auto& kernel : m_kernels) {
+                            auto widget_item = new QTreeWidgetItem(tree_kernels);
+                            widget_item->setCheckState(TreeCol::Check, Qt::Unchecked);
+                            widget_item->setText(TreeCol::PkgName, kernel.get_raw());
+                            widget_item->setText(TreeCol::Version, kernel.version().c_str());
+                            widget_item->setText(TreeCol::Category, kernel.category().data());
+                            widget_item->setText(TreeCol::Displayed, QStringLiteral("true"));
+                            if (kernel.is_installed()) {
+                                const std::string_view kernel_installed_db = kernel.get_installed_db();
+                                if (!kernel_installed_db.empty() && kernel_installed_db != kernel.get_repo()) {
+                                    continue;
+                                }
+                                widget_item->setText(TreeCol::Immutable, QStringLiteral("true"));
+                                widget_item->setCheckState(TreeCol::Check, Qt::Checked);
+                            }
+                        }
+                    });
+                    a2.wait();
+                    tree_kernels->blockSignals(false);
+                    m_conf_progress_dialog->hide();
+                }
+
                 m_running.store(false, std::memory_order_relaxed);
-                m_ui->ok->setEnabled(true);
+                m_ui->ok->setEnabled(!is_kernel_status_changed);
             }
         }
     });
@@ -101,6 +172,8 @@ MainWindow::MainWindow(QWidget* parent)
     m_worker->moveToThread(m_worker_th);
     // name to appear in ps, task manager, etc.
     m_worker_th->setObjectName("WorkerThread");
+
+    m_ui->ok->setEnabled(false);
 
     // Setup progress dialog
     set_progress_dialog();
