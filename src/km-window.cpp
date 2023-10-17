@@ -36,6 +36,7 @@
 #include <QTreeWidgetItem>
 #include <QtConcurrent/QtConcurrent>
 
+namespace {
 bool install_packages(alpm_handle_t* handle, const std::span<Kernel>& kernels, const std::span<std::string>& selected_list) {
     for (const auto& selected : selected_list) {
         const auto& kernel = ranges::find_if(kernels, [selected](auto&& el) { return el.get_raw() == selected; });
@@ -60,6 +61,44 @@ bool remove_packages(alpm_handle_t* handle, const std::span<Kernel>& kernels, co
 
     return true;
 }
+
+bool is_kernels_change_state(alpm_handle_t* handle, std::span<std::string_view> kernel_install_list, std::span<std::string_view> kernel_removal_list) {
+    auto* local_db = alpm_get_localdb(handle);
+
+    for (auto&& kernel_install : kernel_install_list) {
+        auto* pkg = alpm_db_get_pkg(local_db, kernel_install.data());
+        if (pkg != nullptr) {
+            return true;
+        }
+    }
+    for (auto&& kernel_removal : kernel_removal_list) {
+        auto* pkg = alpm_db_get_pkg(local_db, kernel_removal.data());
+        if (pkg == nullptr) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void init_kernels_tree_widget(QTreeWidget* tree_kernels, std::span<Kernel> kernels) noexcept {
+    for (auto& kernel : kernels) {
+        auto widget_item = new QTreeWidgetItem(tree_kernels);
+        widget_item->setCheckState(TreeCol::Check, Qt::Unchecked);
+        widget_item->setText(TreeCol::PkgName, kernel.get_raw());
+        widget_item->setText(TreeCol::Version, kernel.version().c_str());
+        widget_item->setText(TreeCol::Category, kernel.category().data());
+        widget_item->setText(TreeCol::Displayed, QStringLiteral("true"));
+        if (kernel.is_installed()) {
+            const std::string_view kernel_installed_db = kernel.get_installed_db();
+            if (!kernel_installed_db.empty() && kernel_installed_db != kernel.get_repo()) {
+                continue;
+            }
+            widget_item->setText(TreeCol::Immutable, QStringLiteral("true"));
+            widget_item->setCheckState(TreeCol::Check, Qt::Checked);
+        }
+    }
+}
+}  // namespace
 
 MainWindow::MainWindow(QWidget* parent)
   : QMainWindow(parent) {
@@ -89,38 +128,24 @@ MainWindow::MainWindow(QWidget* parent)
                 Kernel::commit_transaction();
 
                 // check if we need to re-init kernels
+                // [1.1]
                 auto& kernel_install_list = Kernel::get_install_list();
                 auto& kernel_removal_list = Kernel::get_removal_list();
 
-                // NOTE: we dont want to override handle, because we would need to invalidate kernels.
+                // NOTE: we don't want to override handle, because we would need to invalidate kernels then.
                 auto* temp_handle = utils::parse_alpm("/", "/var/lib/pacman/", &m_err);
-
-                bool is_kernel_status_changed{};
-                {
-                    auto* local_db = alpm_get_localdb(m_handle);
-
-                    for (auto&& kernel_install : kernel_install_list) {
-                        auto* pkg = alpm_db_get_pkg(local_db, kernel_install.data());
-                        if (pkg != nullptr) {
-                            is_kernel_status_changed = true;
-                            break;
-                        }
-                    }
-                    for (auto&& kernel_removal : kernel_removal_list) {
-                        auto* pkg = alpm_db_get_pkg(local_db, kernel_removal.data());
-                        if (pkg == nullptr) {
-                            is_kernel_status_changed = true;
-                            break;
-                        }
-                    }
+                if (temp_handle == nullptr) {
+                    QMessageBox::critical(this, "CachyOS Kernel Manager", tr("Failed to initialize alpm handle (%1)").arg(alpm_strerror(m_err)));
                 }
 
-                // TODO(vnepogodin): re-init kernels after execution run
-                // Don't re-init kernels, if nothing has changed!
-                // Verify that packages in change_list were either installed or removed,
-                // if nothing has changed -> do nothing
+                // [1.2]
+                // iterate over install and removal lists and check if any of the packages
+                // in the lists were either installed or removed
+                const bool is_kernel_status_changed = is_kernels_change_state(temp_handle, std::span{kernel_install_list}, std::span{kernel_removal_list});
 
-                // Re-init kernels
+                // [1.3]
+                // if kernel status has changed, then re-init alpm handler,
+                // fetch kernels and repopulate tree widget again
                 if (is_kernel_status_changed) {
                     if (m_handle != nullptr && utils::release_alpm(m_handle, &m_err) != 0) {
                         QMessageBox::critical(this, "CachyOS Kernel Manager", tr("Failed to release alpm handle (%1)").arg(alpm_strerror(m_err)));
@@ -141,22 +166,7 @@ MainWindow::MainWindow(QWidget* parent)
                     tree_kernels->clear();
                     auto a2 = std::async(std::launch::deferred, [&] {
                         const std::lock_guard<std::mutex> guard(m_mutex);
-                        for (auto& kernel : m_kernels) {
-                            auto widget_item = new QTreeWidgetItem(tree_kernels);
-                            widget_item->setCheckState(TreeCol::Check, Qt::Unchecked);
-                            widget_item->setText(TreeCol::PkgName, kernel.get_raw());
-                            widget_item->setText(TreeCol::Version, kernel.version().c_str());
-                            widget_item->setText(TreeCol::Category, kernel.category().data());
-                            widget_item->setText(TreeCol::Displayed, QStringLiteral("true"));
-                            if (kernel.is_installed()) {
-                                const std::string_view kernel_installed_db = kernel.get_installed_db();
-                                if (!kernel_installed_db.empty() && kernel_installed_db != kernel.get_repo()) {
-                                    continue;
-                                }
-                                widget_item->setText(TreeCol::Immutable, QStringLiteral("true"));
-                                widget_item->setCheckState(TreeCol::Check, Qt::Checked);
-                            }
-                        }
+                        init_kernels_tree_widget(tree_kernels, std::span{m_kernels});
                     });
                     a2.wait();
                     tree_kernels->blockSignals(false);
@@ -210,22 +220,7 @@ MainWindow::MainWindow(QWidget* parent)
     // TODO(vnepogodin): parallelize it
     auto a2 = std::async(std::launch::deferred, [&] {
         const std::lock_guard<std::mutex> guard(m_mutex);
-        for (auto& kernel : m_kernels) {
-            auto widget_item = new QTreeWidgetItem(tree_kernels);
-            widget_item->setCheckState(TreeCol::Check, Qt::Unchecked);
-            widget_item->setText(TreeCol::PkgName, kernel.get_raw());
-            widget_item->setText(TreeCol::Version, kernel.version().c_str());
-            widget_item->setText(TreeCol::Category, kernel.category().data());
-            widget_item->setText(TreeCol::Displayed, QStringLiteral("true"));
-            if (kernel.is_installed()) {
-                const std::string_view kernel_installed_db = kernel.get_installed_db();
-                if (!kernel_installed_db.empty() && kernel_installed_db != kernel.get_repo()) {
-                    continue;
-                }
-                widget_item->setText(TreeCol::Immutable, QStringLiteral("true"));
-                widget_item->setCheckState(TreeCol::Check, Qt::Checked);
-            }
-        }
+        init_kernels_tree_widget(tree_kernels, std::span{m_kernels});
     });
 
     if (m_kernels.empty()) {
