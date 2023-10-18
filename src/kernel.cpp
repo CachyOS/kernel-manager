@@ -134,7 +134,7 @@ std::vector<Kernel> Kernel::get_kernels(alpm_handle_t* handle) noexcept {
     static constexpr std::string_view replace_part = "-headers";
     std::vector<Kernel> kernels{};
 
-    auto* dbs      = alpm_get_syncdbs(handle);
+    auto* dbs                       = alpm_get_syncdbs(handle);
     [[maybe_unused]] auto* local_db = alpm_get_localdb(handle);
     for (alpm_list_t* i = dbs; i != nullptr; i = i->next) {
         static constexpr auto needle = "linux[^ ]*-headers";

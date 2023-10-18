@@ -451,8 +451,8 @@ ConfWindow::ConfWindow(QWidget* parent)
     // Setup patches page
     // TODO(vnepogodin): make it lazy loading, only if the user launched the configure window.
     // on window opening setup the page(clone git repo & reset values) run in the background -> show progress bar.
-    //prepare_build_environment();
-    //reset_patches_data_tab();
+    // prepare_build_environment();
+    // reset_patches_data_tab();
     connect_all_checkboxes();
 
     connect(options_page_ui_obj->vma_config_combo_box, &QComboBox::currentIndexChanged, this, [this](std::int32_t) {
