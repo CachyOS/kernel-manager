@@ -110,8 +110,18 @@ bool Kernel::install() const noexcept {
 
 bool Kernel::remove() const noexcept {
     // TODO(vnepogodin): invalidate if the kernel headers package is not installed
-    const char* pkg_headers = alpm_pkg_get_name(m_headers);
-    g_kernel_removal_list.insert(g_kernel_removal_list.end(), {m_name, pkg_headers});
+    g_kernel_removal_list.push_back(m_name);
+
+    if (m_headers != nullptr) {
+        const char* pkg_headers = alpm_pkg_get_name(m_headers);
+
+        // check if headers package installed
+        auto* db  = alpm_get_localdb(m_handle);
+        auto* pkg = alpm_db_get_pkg(db, pkg_headers);
+        if (pkg != nullptr) {
+            g_kernel_removal_list.push_back(pkg_headers);
+        }
+    }
     return true;
 }
 
