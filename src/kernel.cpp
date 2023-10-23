@@ -109,7 +109,9 @@ bool Kernel::install() const noexcept {
 }
 
 bool Kernel::remove() const noexcept {
-    // TODO(vnepogodin): invalidate if the kernel headers package is not installed
+    if (!is_installed()) {
+        return false;
+    }
     g_kernel_removal_list.push_back(m_name);
 
     if (m_headers != nullptr) {
