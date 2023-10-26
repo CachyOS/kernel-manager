@@ -41,7 +41,7 @@ jobs:
 
       - name: Run clang-tidy
         run: |
-          clang-tidy -p ${{github.workspace}}/build src/*.cpp
+          clang-tidy -p ${{github.workspace}}/build/Debug src/*.cpp
         shell: bash
 
   check_clang_format:
