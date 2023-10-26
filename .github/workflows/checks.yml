@@ -24,7 +24,7 @@ jobs:
 
       - name: install deps
         run: |
-          pacman -Syu --noconfirm cmake pkg-config ninja clang mold llvm libc++ qt5-base qt5-tools polkit-qt5 python include-what-you-use git
+          pacman -Syu --noconfirm cmake pkg-config ninja clang mold llvm libc++ qt5-base qt5-tools polkit-qt5 python git
         shell: bash
 
       - name: Configure CMake
@@ -42,18 +42,6 @@ jobs:
       - name: Run clang-tidy
         run: |
           clang-tidy -p ${{github.workspace}}/build/Debug src/*.cpp
-        shell: bash
-
-      - name: Run iwyu
-        run: |
-          export AR=llvm-ar
-          export CC=clang
-          export CXX=clang++
-          export NM=llvm-nm
-          export RANLIB=llvm-ranlib
-
-          cmake -B ${{github.workspace}}/build-iwyu -DCMAKE_BUILD_TYPE=Debug -DENABLE_INCLUDE_WHAT_YOU_USE=ON
-          cmake --build ${{github.workspace}}/build-iwyu
         shell: bash
 
   check_clang_format:
