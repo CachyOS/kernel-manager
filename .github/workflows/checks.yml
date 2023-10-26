@@ -24,7 +24,7 @@ jobs:
 
       - name: install deps
         run: |
-          pacman -Syu --noconfirm cmake pkg-config ninja clang mold llvm qt5-base qt5-tools polkit-qt5 python git
+          pacman -Syu --noconfirm cmake pkg-config ninja clang mold llvm libc++ qt5-base qt5-tools polkit-qt5 python git
         shell: bash
 
       - name: Configure CMake
@@ -35,8 +35,8 @@ jobs:
           export NM=llvm-nm
           export RANLIB=llvm-ranlib
 
-          cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Debug
-          cmake --build ${{github.workspace}}/build
+          ./configure.sh -t=Debug -p=${{github.workspace}}/build --use_clang
+          ./build.sh
         shell: bash
 
       - name: Run clang-tidy
