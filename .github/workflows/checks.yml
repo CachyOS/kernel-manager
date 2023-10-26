@@ -36,6 +36,7 @@ jobs:
           export RANLIB=llvm-ranlib
 
           cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Debug
+          cmake --build ${{github.workspace}}/build
         shell: bash
 
       - name: Run clang-tidy
