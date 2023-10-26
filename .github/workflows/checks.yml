@@ -28,7 +28,15 @@ jobs:
         shell: bash
 
       - name: Configure CMake
-        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Debug
+        run: |
+          export AR=llvm-ar
+          export CC=clang
+          export CXX=clang++
+          export NM=llvm-nm
+          export RANLIB=llvm-ranlib
+
+          cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=Debug
+        shell: bash
 
       - name: Run clang-tidy
         run: |
