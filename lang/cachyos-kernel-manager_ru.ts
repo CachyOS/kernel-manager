@@ -6,7 +6,7 @@
     <message>
         <location filename="../src/conf-options-page.ui" line="33"/>
         <source>Custom package name</source>
-        <translation type="unfinished"></translation>
+        <translation>Кастомное название пакета</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="53"/>
@@ -126,7 +126,7 @@
     <message>
         <location filename="../src/conf-options-page.ui" line="704"/>
         <source>Build the NVIDIA module</source>
-        <translation type="unfinished"></translation>
+        <translation>Собрать модуль NVIDIA</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="733"/>

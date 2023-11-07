@@ -125,7 +125,7 @@
     </message>
     <message>
         <source>Build the NVIDIA module</source>
-        <translation type="unfinished"></translation>
+        <translation>NVIDIA Module kompilieren</translation>
     </message>
 </context>
 <context>
