@@ -98,7 +98,7 @@ namespace fs = std::filesystem;
     GENERATE_CONST_OPTION_VALUES(name, __VA_ARGS__)    \
     GENERATE_CONST_LOOKUP_VALUES(name, __VA_ARGS__)
 
-GENERATE_CONST_LOOKUP_OPTION_VALUES(kernel_name, "cachyos", "bmq", "bore", "cfs", "hardened", "pds", "rc", "rt", "tt")
+GENERATE_CONST_LOOKUP_OPTION_VALUES(kernel_name, "cachyos", "bore", "rc", "rt")
 GENERATE_CONST_OPTION_VALUES(hz_tick, "1000", "750", "600", "500", "300", "250", "100")
 GENERATE_CONST_OPTION_VALUES(tickless_mode, "full", "idle", "perodic")
 GENERATE_CONST_OPTION_VALUES(preempt_mode, "full", "voluntary", "server")
@@ -108,14 +108,9 @@ GENERATE_CONST_OPTION_VALUES(hugepage_mode, "always", "madvise")
 GENERATE_CONST_OPTION_VALUES(cpu_opt_mode, "manual", "generic", "native_amd", "native_intel", "zen", "zen2", "zen3", "sandybridge", "ivybridge", "haswell", "icelake", "tigerlake", "alderlake")
 
 static_assert(lookup_kernel_name("cachyos") == 0, "Invalid position");
-static_assert(lookup_kernel_name("bmq") == 1, "Invalid position");
-static_assert(lookup_kernel_name("bore") == 2, "Invalid position");
-static_assert(lookup_kernel_name("cfs") == 3, "Invalid position");
-static_assert(lookup_kernel_name("hardened") == 4, "Invalid position");
-static_assert(lookup_kernel_name("pds") == 5, "Invalid position");
-static_assert(lookup_kernel_name("rc") == 6, "Invalid position");
-static_assert(lookup_kernel_name("rt") == 7, "Invalid position");
-static_assert(lookup_kernel_name("tt") == 8, "Invalid position");
+static_assert(lookup_kernel_name("bore") == 1, "Invalid position");
+static_assert(lookup_kernel_name("rc") == 2, "Invalid position");
+static_assert(lookup_kernel_name("rt") == 3, "Invalid position");
 
 constexpr auto get_kernel_name_path(std::string_view kernel_name) noexcept {
     using namespace std::string_view_literals;
@@ -359,15 +354,10 @@ ConfWindow::ConfWindow(QWidget* parent)
 
     // Selecting the CPU scheduler
     QStringList kernel_names;
-    kernel_names << tr("CachyOS - Bore + EEVDF")
-                 << tr("BMQ - BitMap Queue CPU scheduler")
+    kernel_names << tr("CachyOS - Bore")
                  << tr("Bore - Burst-Oriented Response Enhancer")
-                 << tr("CFS - Completely Fair Scheduler")
-                 << tr("Hardened - Hardened kernel with the BORE Scheduler")
-                 << tr("PDS - Priority and Deadline based Skip list multiple queue CPU scheduler")
                  << tr("RC - Release Candidate")
-                 << tr("RT - Realtime kernel")
-                 << tr("TT - Task Type Scheduler");
+                 << tr("RT - Realtime kernel");
     options_page_ui_obj->main_combo_box->addItems(kernel_names);
 
     // Setting default options
@@ -384,6 +374,8 @@ ConfWindow::ConfWindow(QWidget* parent)
              << "250Hz"
              << "100Hz";
     options_page_ui_obj->hzticks_combo_box->addItems(hz_ticks);
+    
+    // Set to 500HZ
     options_page_ui_obj->hzticks_combo_box->setCurrentIndex(3);
 
     QStringList tickless_modes;
@@ -438,13 +430,7 @@ ConfWindow::ConfWindow(QWidget* parent)
     // Connect buttons signal
     connect(options_page_ui_obj->cancel_button, SIGNAL(clicked()), this, SLOT(on_cancel()));
     connect(options_page_ui_obj->ok_button, SIGNAL(clicked()), this, SLOT(on_execute()));
-    connect(options_page_ui_obj->main_combo_box, &QComboBox::currentIndexChanged, this, [options_page_ui_obj, this](std::int32_t index) {
-        // Set to 1000HZ, if BMQ, PDS, TT
-        if (index == lookup_kernel_name("bmq") || index == lookup_kernel_name("pds") || index == lookup_kernel_name("tt")) {
-            options_page_ui_obj->hzticks_combo_box->setCurrentIndex(0);
-        } else {
-            options_page_ui_obj->hzticks_combo_box->setCurrentIndex(3);
-        }
+    connect(options_page_ui_obj->main_combo_box, &QComboBox::currentIndexChanged, this, [this](std::int32_t) {
         reset_patches_data_tab();
     });
 
