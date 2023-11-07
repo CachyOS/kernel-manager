@@ -262,6 +262,7 @@ void ConfWindow::connect_all_checkboxes() noexcept {
     std::array checkbox_list{
         options_page_ui_obj->lrng_check,
         options_page_ui_obj->builtin_zfs_check,
+        options_page_ui_obj->builtin_nvidia_check,
         options_page_ui_obj->builtin_bcachefs_check,
     };
 
@@ -299,6 +300,7 @@ std::string ConfWindow::get_all_set_values() noexcept {
     result += convert_to_var_assign_empty_wrapped("lrng", checkstate_checked(options_page_ui_obj->lrng_check));
     result += convert_to_var_assign_empty_wrapped("debug", checkstate_checked(options_page_ui_obj->debug_check));
     result += convert_to_var_assign_empty_wrapped("builtin_zfs", checkstate_checked(options_page_ui_obj->builtin_zfs_check));
+    result += convert_to_var_assign_empty_wrapped("builtin_nvidia", checkstate_checked(options_page_ui_obj->builtin_nvidia_check));
     result += convert_to_var_assign_empty_wrapped("builtin_bcachefs", checkstate_checked(options_page_ui_obj->builtin_bcachefs_check));
 
     // Execute 'sed' with combobox values
