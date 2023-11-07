@@ -159,18 +159,20 @@ MainWindow::MainWindow(QWidget* parent)
                     m_kernels.clear();
                     m_kernels = Kernel::get_kernels(m_handle);
 
+                    m_conf_progress_dialog->setLabelText(tr("Please wait...\nInitializing kernels.."));
                     m_conf_progress_dialog->show();
 
                     auto* tree_kernels = m_ui->treeKernels;
                     tree_kernels->blockSignals(true);
                     tree_kernels->clear();
-                    auto a2 = std::async(std::launch::deferred, [&] {
-                        const std::lock_guard<std::mutex> guard(m_mutex);
-                        init_kernels_tree_widget(tree_kernels, std::span{m_kernels});
-                    });
-                    a2.wait();
+
+                    // NOTE: I don't think this should be parallelized, because it's already not running on the main thread
+                    init_kernels_tree_widget(tree_kernels, std::span{m_kernels});
+
                     tree_kernels->blockSignals(false);
                     m_conf_progress_dialog->hide();
+
+                    m_ui->ok->setEnabled(false);
                 }
 
                 m_running.store(false, std::memory_order_relaxed);
@@ -333,6 +335,7 @@ void MainWindow::closeEvent(QCloseEvent* event) {
 
 void MainWindow::on_configure() noexcept {
     // show progress dialog to indicate user something is happening
+    m_conf_progress_dialog->setLabelText(tr("Please wait...\nWe are preparing configuration window for you\ncloning PKGBUILDs.."));
     m_conf_progress_dialog->show();
 
     // NOTE: the future created by QtConcurrent::run is not cancelable.
