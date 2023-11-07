@@ -115,6 +115,18 @@
         <source>Execute</source>
         <translation>Ausführen</translation>
     </message>
+    <message>
+        <source>Custom package name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>$pkgbase</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Build the NVIDIA module</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConfPatchesPage</name>
@@ -142,31 +154,11 @@
         <translation>Patches</translation>
     </message>
     <message>
-        <source>BMQ - BitMap Queue CPU scheduler</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Bore - Burst-Oriented Response Enhancer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>CFS - Completely Fair Scheduler</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Hardened - Hardened kernel with the BORE Scheduler</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>PDS - Priority and Deadline based Skip list multiple queue CPU scheduler</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>RC - Release Candidate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>TT - Task Type Scheduler</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -186,11 +178,19 @@
         <translation>Patch URL:</translation>
     </message>
     <message>
-        <source>CachyOS - Bore + EEVDF</source>
+        <source>RT - Realtime kernel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>RT - Realtime kernel</source>
+        <source>CachyOS - Bore</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RT-Bore</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sched-Ext - BPF extensible scheduler class</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

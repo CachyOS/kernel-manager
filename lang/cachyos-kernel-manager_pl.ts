@@ -115,6 +115,18 @@
         <source>Execute</source>
         <translation>Wykonaj</translation>
     </message>
+    <message>
+        <source>Custom package name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>$pkgbase</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Build the NVIDIA module</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConfPatchesPage</name>
@@ -143,7 +155,7 @@
     </message>
     <message>
         <source>BMQ - BitMap Queue CPU scheduler</source>
-        <translation>Planista BMQ - BitMap Queue CPU scheduler</translation>
+        <translation type="vanished">Planista BMQ - BitMap Queue CPU scheduler</translation>
     </message>
     <message>
         <source>Bore - Burst-Oriented Response Enhancer</source>
@@ -151,15 +163,15 @@
     </message>
     <message>
         <source>CFS - Completely Fair Scheduler</source>
-        <translation>Planista CFS - Completely Fair Scheduler</translation>
+        <translation type="vanished">Planista CFS - Completely Fair Scheduler</translation>
     </message>
     <message>
         <source>Hardened - Hardened kernel with the BORE Scheduler</source>
-        <translation>Hardened - Hardened kernel with the BORE Scheduler</translation>
+        <translation type="vanished">Hardened - Hardened kernel with the BORE Scheduler</translation>
     </message>
     <message>
         <source>PDS - Priority and Deadline based Skip list multiple queue CPU scheduler</source>
-        <translation>Planista PDS - Priority and Deadline based Skip list multiple queue CPU scheduler</translation>
+        <translation type="vanished">Planista PDS - Priority and Deadline based Skip list multiple queue CPU scheduler</translation>
     </message>
     <message>
         <source>RC - Release Candidate</source>
@@ -167,7 +179,7 @@
     </message>
     <message>
         <source>TT - Task Type Scheduler</source>
-        <translation>Planista TT - Task Type Scheduler</translation>
+        <translation type="vanished">Planista TT - Task Type Scheduler</translation>
     </message>
     <message>
         <source>Select one or more patch files</source>
@@ -187,11 +199,23 @@
     </message>
     <message>
         <source>CachyOS - Bore + EEVDF</source>
-        <translation>Planista CachyOS - BORE + EEVDF</translation>
+        <translation type="vanished">Planista CachyOS - BORE + EEVDF</translation>
     </message>
     <message>
         <source>RT - Realtime kernel</source>
         <translation>RT - Kernel czasu rzeczywistego</translation>
+    </message>
+    <message>
+        <source>CachyOS - Bore</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>RT-Bore</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sched-Ext - BPF extensible scheduler class</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

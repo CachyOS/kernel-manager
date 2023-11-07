@@ -5,131 +5,146 @@
     <name>ConfOptionsPage</name>
     <message>
         <location filename="../src/conf-options-page.ui" line="33"/>
+        <source>Custom package name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/conf-options-page.ui" line="53"/>
+        <source>$pkgbase</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/conf-options-page.ui" line="66"/>
         <source>Enable CachyOS config</source>
         <translation>Включить рекомендуемые параметры CachyOS</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="62"/>
+        <location filename="../src/conf-options-page.ui" line="95"/>
         <source>Tweak kernel options prior to a build via nconfig</source>
         <translation>Выполнить настройку параметров ядра с помощью nconfig</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="91"/>
+        <location filename="../src/conf-options-page.ui" line="124"/>
         <source>Tweak kernel options prior to a build via menuconfig</source>
         <translation>Выполнить настройку параметров ядра с помощью menuconfig</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="120"/>
+        <location filename="../src/conf-options-page.ui" line="153"/>
         <source>Tweak kernel options prior to a build via xconfig</source>
         <translation>Выполнить настройку параметров ядра с помощью xconfig</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="149"/>
+        <location filename="../src/conf-options-page.ui" line="182"/>
         <source>Tweak kernel options prior to a build via gconfig</source>
         <translation>Выполнить настройку параметров ядра с помощью gconfig</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="178"/>
+        <location filename="../src/conf-options-page.ui" line="211"/>
         <source>Disable NUMA</source>
         <translation>Отключить NUMA</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="207"/>
+        <location filename="../src/conf-options-page.ui" line="240"/>
         <source>Use Modprobed-db</source>
         <translation>Использовать Modprobed-db</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="236"/>
+        <location filename="../src/conf-options-page.ui" line="269"/>
         <source>Enable KBUILD_CFLAGS -O3</source>
         <translation>Включить использование флага -O3</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="265"/>
+        <location filename="../src/conf-options-page.ui" line="298"/>
         <source>Set performance governor as default</source>
         <translation>Установить политику частот на &quot;performance&quot; по умолчанию</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="294"/>
+        <location filename="../src/conf-options-page.ui" line="327"/>
         <source>Enable TCP_CONG_BBR3</source>
         <translation>Включить TCP_CONG_BBR3</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="323"/>
+        <location filename="../src/conf-options-page.ui" line="356"/>
         <source>Running tick rate</source>
         <translation>Текущая частота таймера прерываний (tickrate)</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="352"/>
+        <location filename="../src/conf-options-page.ui" line="385"/>
         <source>Select tickless</source>
         <translation>Выбрать режим работы таймера прерываний (tickless)</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="381"/>
+        <location filename="../src/conf-options-page.ui" line="414"/>
         <source>Select preempt</source>
         <translation>Выбрать PREEMPT</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="410"/>
+        <location filename="../src/conf-options-page.ui" line="443"/>
         <source>Enable multigenerational LRU</source>
         <translation>Включить multigenerational LRU</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="439"/>
+        <location filename="../src/conf-options-page.ui" line="472"/>
         <source>Enable per-VMA locking</source>
         <translation>Включить поддержку раздельных VMA блокировок</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="468"/>
+        <location filename="../src/conf-options-page.ui" line="501"/>
         <source>Enable DAMON</source>
         <translation>Включить DAMON</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="497"/>
+        <location filename="../src/conf-options-page.ui" line="530"/>
         <source>Enable Linux Random Number Generator</source>
         <translation>Включить генератор случайных чисел Linux</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="526"/>
+        <location filename="../src/conf-options-page.ui" line="559"/>
         <source>CPU compiler optimizations</source>
         <translation>Оптимизация для процессора</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="555"/>
+        <location filename="../src/conf-options-page.ui" line="588"/>
         <source>Apply automatic CPU Optimization</source>
         <translation>Применяйте автоматическую оптимизацию процессора</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="584"/>
+        <location filename="../src/conf-options-page.ui" line="617"/>
         <source>Disable debug to lower the size of the kernel</source>
         <translation>Удалить отладочную информацию чтобы уменьшить размер ядра</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="613"/>
+        <location filename="../src/conf-options-page.ui" line="646"/>
         <source>Enable LTO</source>
         <translation>Включить LTO</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="642"/>
+        <location filename="../src/conf-options-page.ui" line="675"/>
         <source>Build the ZFS module</source>
         <translation>Собрать модуль ZFS</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="671"/>
+        <location filename="../src/conf-options-page.ui" line="704"/>
+        <source>Build the NVIDIA module</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/conf-options-page.ui" line="733"/>
         <source>Build the BCACHEFS module</source>
         <translation>Собрать модуль BCACHEFS</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="700"/>
+        <location filename="../src/conf-options-page.ui" line="762"/>
         <source>Transparent Hugepages</source>
         <translation>Установить режим работы для THP (Transparent Hugepages)</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="759"/>
+        <location filename="../src/conf-options-page.ui" line="821"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="766"/>
+        <location filename="../src/conf-options-page.ui" line="828"/>
         <source>Execute</source>
         <translation>Выполнить</translation>
     </message>
@@ -165,67 +180,52 @@
         <translation>Патчи</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="362"/>
-        <source>CachyOS - Bore + EEVDF</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/conf-window.cpp" line="363"/>
-        <source>BMQ - BitMap Queue CPU scheduler</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/conf-window.cpp" line="364"/>
+        <location filename="../src/conf-window.cpp" line="377"/>
         <source>Bore - Burst-Oriented Response Enhancer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="365"/>
-        <source>CFS - Completely Fair Scheduler</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/conf-window.cpp" line="366"/>
-        <source>Hardened - Hardened kernel with the BORE Scheduler</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/conf-window.cpp" line="367"/>
-        <source>PDS - Priority and Deadline based Skip list multiple queue CPU scheduler</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/conf-window.cpp" line="368"/>
+        <location filename="../src/conf-window.cpp" line="378"/>
         <source>RC - Release Candidate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="369"/>
+        <location filename="../src/conf-window.cpp" line="379"/>
         <source>RT - Realtime kernel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="370"/>
-        <source>TT - Task Type Scheduler</source>
+        <location filename="../src/conf-window.cpp" line="376"/>
+        <source>CachyOS - Bore</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="466"/>
+        <location filename="../src/conf-window.cpp" line="380"/>
+        <source>RT-Bore</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/conf-window.cpp" line="381"/>
+        <source>Sched-Ext - BPF extensible scheduler class</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/conf-window.cpp" line="473"/>
         <source>Select one or more patch files</source>
         <translation>Выберите один или несколько файлов патчей</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="468"/>
+        <location filename="../src/conf-window.cpp" line="475"/>
         <source>Patch file (*.patch)</source>
         <translation>Файл патча (*.patch)</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="488"/>
+        <location filename="../src/conf-window.cpp" line="495"/>
         <source>Enter URL patch</source>
         <translation>Введите URL патча</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="489"/>
+        <location filename="../src/conf-window.cpp" line="496"/>
         <source>Patch URL:</source>
         <translation>URL патча:</translation>
     </message>
