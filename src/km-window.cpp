@@ -63,6 +63,9 @@ bool remove_packages(alpm_handle_t* handle, const std::span<Kernel>& kernels, co
 }
 
 bool is_kernels_change_state(alpm_handle_t* handle, std::span<std::string_view> kernel_install_list, std::span<std::string_view> kernel_removal_list) {
+    if (handle == nullptr) {
+        return false;
+    }
     auto* local_db = alpm_get_localdb(handle);
 
     for (auto&& kernel_install : kernel_install_list) {
@@ -173,6 +176,9 @@ MainWindow::MainWindow(QWidget* parent)
                     m_conf_progress_dialog->hide();
 
                     m_ui->ok->setEnabled(false);
+                    m_thread_running.store(false, std::memory_order_relaxed);
+
+                    QMessageBox::critical(this, "CachyOS Kernel Manager", tr("Please restart Kernel Manager if you want to run 'Execute' again"));
                 }
 
                 m_running.store(false, std::memory_order_relaxed);
