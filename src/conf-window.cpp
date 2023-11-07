@@ -239,6 +239,19 @@ bool insert_new_source_array_into_pkgbuild(std::string_view kernel_name_path, QL
     return utils::write_to_file(pkgbuild_path, pkgbuildsrc);
 }
 
+bool set_custom_name_in_pkgbuild(std::string_view kernel_name_path, std::string_view custom_name) noexcept {
+    const auto& pkgbuild_path = fmt::format(FMT_COMPILE("{}/PKGBUILD"), kernel_name_path);
+    auto pkgbuildsrc          = utils::read_whole_file(pkgbuild_path);
+
+    const auto& custom_name_var = fmt::format(FMT_COMPILE("\n\npkgbase=\"{}\""), custom_name);
+    if (auto foundpos = pkgbuildsrc.find("_major="); foundpos != std::string::npos) {
+        if (auto last_newline_before = pkgbuildsrc.find_last_of('\n', foundpos); last_newline_before != std::string::npos) {
+            pkgbuildsrc.insert(last_newline_before, custom_name_var);
+        }
+    }
+    return utils::write_to_file(pkgbuild_path, pkgbuildsrc);
+}
+
 auto convert_vector_of_strings_to_stringlist(const std::vector<std::string>& vec) noexcept {
     QStringList result{};
 
@@ -374,7 +387,7 @@ ConfWindow::ConfWindow(QWidget* parent)
              << "250Hz"
              << "100Hz";
     options_page_ui_obj->hzticks_combo_box->addItems(hz_ticks);
-    
+
     // Set to 500HZ
     options_page_ui_obj->hzticks_combo_box->setCurrentIndex(3);
 
@@ -559,8 +572,9 @@ void ConfWindow::on_execute() noexcept {
 
     // Only files which end with .patch,
     // are considered as patches.
-    const auto& orig_src_array                 = get_source_array_from_pkgbuild(cpusched_path, all_set_values);
-    [[maybe_unused]] const auto& insert_status = insert_new_source_array_into_pkgbuild(cpusched_path, patches_page_ui_obj->list_widget, orig_src_array);
+    const auto& orig_src_array          = get_source_array_from_pkgbuild(cpusched_path, all_set_values);
+    [[maybe_unused]] auto insert_status = insert_new_source_array_into_pkgbuild(cpusched_path, patches_page_ui_obj->list_widget, orig_src_array);
+    insert_status                       = set_custom_name_in_pkgbuild(cpusched_path, options_page_ui_obj->custom_name_edit->text().toStdString());
     fs::current_path(cpusched_path);
 
     // Run our build command!

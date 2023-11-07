@@ -25,6 +25,39 @@
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
+         <widget class="QWidget" name="custom_name_widget" native="true">
+          <layout class="QHBoxLayout" name="custom_name_horizontal_layout">
+           <item>
+            <widget class="QLabel" name="custom_name_label">
+             <property name="text">
+              <string>Custom package name</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="custom_name_horizontal_spacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="custom_name_edit">
+             <property name="text">
+              <string>$pkgbase</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
          <widget class="QWidget" name="cachyconfig_widget" native="true">
           <layout class="QHBoxLayout" name="cachyconfig_horizontal_layout">
            <item>
