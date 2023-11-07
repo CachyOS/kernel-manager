@@ -263,5 +263,18 @@ We are preparing configuration window for you
 cloning PKGBUILDs..</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Failed to initialize alpm handle (%1)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Failed to release alpm handle (%1)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please wait...
+Initializing kernels..</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

@@ -69,14 +69,6 @@
         <translation>Выбрать PREEMPT</translation>
     </message>
     <message>
-        <source>Disable MQ-Deadline I/O scheduler</source>
-        <translation type="vanished">Отключить планировщик I/O MQ-Deadline</translation>
-    </message>
-    <message>
-        <source>Disable Kyber I/O scheduler</source>
-        <translation type="vanished">Отключить планировщик I/O Kyber</translation>
-    </message>
-    <message>
         <location filename="../src/conf-options-page.ui" line="410"/>
         <source>Enable multigenerational LRU</source>
         <translation>Включить multigenerational LRU</translation>
@@ -298,13 +290,31 @@
         <translation>Отменить</translation>
     </message>
     <message>
-        <location filename="../src/km-window.cpp" line="118"/>
-        <source>Failed to clone repository!
-Please check your internet connection and try again</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/km-window.cpp" line="138"/>
+        <source>Failed to initialize alpm handle (%1)</source>
+        <translation>Не удалось инициализировать хэндл alpm (%1)</translation>
     </message>
     <message>
-        <location filename="../src/km-window.cpp" line="159"/>
+        <location filename="../src/km-window.cpp" line="151"/>
+        <source>Failed to release alpm handle (%1)</source>
+        <translation>Не удалось освободить хэндл alpm (%1)</translation>
+    </message>
+    <message>
+        <location filename="../src/km-window.cpp" line="162"/>
+        <source>Please wait...
+Initializing kernels..</source>
+        <translation>Пожалуйста, подождите...
+Инициализация ядер..</translation>
+    </message>
+    <message>
+        <location filename="../src/km-window.cpp" line="203"/>
+        <source>Failed to clone repository!
+Please check your internet connection and try again</source>
+        <translation>Не удалось клонировать репозиторий!
+Пожалуйста, проверьте подключение к Интернету и повторите попытку</translation>
+    </message>
+    <message>
+        <location filename="../src/km-window.cpp" line="229"/>
         <source>No kernels found!
 Please run `pacman -Sy` to update DB!
 This is needed for the app to work properly</source>
@@ -313,11 +323,14 @@ This is needed for the app to work properly</source>
 Это необходимо для правильной работы приложения</translation>
     </message>
     <message>
-        <location filename="../src/km-window.cpp" line="207"/>
+        <location filename="../src/km-window.cpp" line="277"/>
+        <location filename="../src/km-window.cpp" line="338"/>
         <source>Please wait...
 We are preparing configuration window for you
 cloning PKGBUILDs..</source>
-        <translation type="unfinished"></translation>
+        <translation>Пожалуйста, подождите...
+Мы готовим для вас окно конфигурации
+клонированием PKGBUILDs..</translation>
     </message>
 </context>
 </TS>
