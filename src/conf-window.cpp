@@ -98,7 +98,7 @@ namespace fs = std::filesystem;
     GENERATE_CONST_OPTION_VALUES(name, __VA_ARGS__)    \
     GENERATE_CONST_LOOKUP_VALUES(name, __VA_ARGS__)
 
-GENERATE_CONST_LOOKUP_OPTION_VALUES(kernel_name, "cachyos", "bore", "rc", "rt")
+GENERATE_CONST_LOOKUP_OPTION_VALUES(kernel_name, "cachyos", "bore", "rc", "rt", "rt-bore", "sched-ext")
 GENERATE_CONST_OPTION_VALUES(hz_tick, "1000", "750", "600", "500", "300", "250", "100")
 GENERATE_CONST_OPTION_VALUES(tickless_mode, "full", "idle", "perodic")
 GENERATE_CONST_OPTION_VALUES(preempt_mode, "full", "voluntary", "server")
@@ -111,6 +111,8 @@ static_assert(lookup_kernel_name("cachyos") == 0, "Invalid position");
 static_assert(lookup_kernel_name("bore") == 1, "Invalid position");
 static_assert(lookup_kernel_name("rc") == 2, "Invalid position");
 static_assert(lookup_kernel_name("rt") == 3, "Invalid position");
+static_assert(lookup_kernel_name("rt-bore") == 4, "Invalid position");
+static_assert(lookup_kernel_name("sched-ext") == 5, "Invalid position");
 
 constexpr auto get_kernel_name_path(std::string_view kernel_name) noexcept {
     using namespace std::string_view_literals;
@@ -132,6 +134,10 @@ constexpr auto get_kernel_name_path(std::string_view kernel_name) noexcept {
         return "linux-cachyos-rt"sv;
     } else if (kernel_name == "tt"sv) {
         return "linux-cachyos-tt"sv;
+    } else if (kernel_name == "rt-bore"sv) {
+        return "linux-cachyos-rt-bore"sv;
+    } else if (kernel_name == "sched-ext"sv) {
+        return "linux-cachyos-sched-ext"sv;
     }
     return "linux-cachyos"sv;
 }
@@ -370,7 +376,9 @@ ConfWindow::ConfWindow(QWidget* parent)
     kernel_names << tr("CachyOS - Bore")
                  << tr("Bore - Burst-Oriented Response Enhancer")
                  << tr("RC - Release Candidate")
-                 << tr("RT - Realtime kernel");
+                 << tr("RT - Realtime kernel")
+                 << tr("RT-Bore")
+                 << tr("Sched-Ext - BPF extensible scheduler class");
     options_page_ui_obj->main_combo_box->addItems(kernel_names);
 
     // Setting default options
