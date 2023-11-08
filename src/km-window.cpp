@@ -154,10 +154,6 @@ MainWindow::MainWindow(QWidget* parent)
                         QMessageBox::critical(this, "CachyOS Kernel Manager", tr("Failed to release alpm handle (%1)").arg(alpm_strerror(m_err)));
                     }
 
-                    // clear install and removal lists
-                    kernel_install_list.clear();
-                    kernel_removal_list.clear();
-
                     m_handle = temp_handle;
                     m_kernels.clear();
                     m_kernels = Kernel::get_kernels(m_handle);
@@ -165,6 +161,10 @@ MainWindow::MainWindow(QWidget* parent)
                     // schedule init_kernels to be executed in the main thread
                     QMetaObject::invokeMethod(this, "init_kernels", Qt::QueuedConnection);
                 }
+
+                // clear install and removal lists
+                kernel_install_list.clear();
+                kernel_removal_list.clear();
 
                 m_running.store(false, std::memory_order_relaxed);
                 m_ui->ok->setEnabled(!is_kernel_status_changed);
