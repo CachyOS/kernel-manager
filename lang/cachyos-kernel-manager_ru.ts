@@ -290,31 +290,31 @@
         <translation>Отменить</translation>
     </message>
     <message>
-        <location filename="../src/km-window.cpp" line="138"/>
+        <location filename="../src/km-window.cpp" line="141"/>
         <source>Failed to initialize alpm handle (%1)</source>
         <translation>Не удалось инициализировать хэндл alpm (%1)</translation>
     </message>
     <message>
-        <location filename="../src/km-window.cpp" line="151"/>
+        <location filename="../src/km-window.cpp" line="154"/>
         <source>Failed to release alpm handle (%1)</source>
         <translation>Не удалось освободить хэндл alpm (%1)</translation>
     </message>
     <message>
-        <location filename="../src/km-window.cpp" line="162"/>
+        <location filename="../src/km-window.cpp" line="350"/>
         <source>Please wait...
 Initializing kernels..</source>
         <translation>Пожалуйста, подождите...
 Инициализация ядер..</translation>
     </message>
     <message>
-        <location filename="../src/km-window.cpp" line="203"/>
+        <location filename="../src/km-window.cpp" line="194"/>
         <source>Failed to clone repository!
 Please check your internet connection and try again</source>
         <translation>Не удалось клонировать репозиторий!
 Пожалуйста, проверьте подключение к Интернету и повторите попытку</translation>
     </message>
     <message>
-        <location filename="../src/km-window.cpp" line="229"/>
+        <location filename="../src/km-window.cpp" line="220"/>
         <source>No kernels found!
 Please run `pacman -Sy` to update DB!
 This is needed for the app to work properly</source>
@@ -323,8 +323,8 @@ This is needed for the app to work properly</source>
 Это необходимо для правильной работы приложения</translation>
     </message>
     <message>
-        <location filename="../src/km-window.cpp" line="277"/>
-        <location filename="../src/km-window.cpp" line="338"/>
+        <location filename="../src/km-window.cpp" line="268"/>
+        <location filename="../src/km-window.cpp" line="329"/>
         <source>Please wait...
 We are preparing configuration window for you
 cloning PKGBUILDs..</source>
