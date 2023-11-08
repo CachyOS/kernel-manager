@@ -107,6 +107,8 @@ class MainWindow final : public QMainWindow {
 
     void item_changed(QTreeWidgetItem* item, int column) noexcept;
 
+    void init_kernels() noexcept;
+
  protected:
     void closeEvent(QCloseEvent* event) override;
 

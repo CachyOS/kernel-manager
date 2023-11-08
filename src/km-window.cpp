@@ -162,23 +162,8 @@ MainWindow::MainWindow(QWidget* parent)
                     m_kernels.clear();
                     m_kernels = Kernel::get_kernels(m_handle);
 
-                    m_conf_progress_dialog->setLabelText(tr("Please wait...\nInitializing kernels.."));
-                    m_conf_progress_dialog->show();
-
-                    auto* tree_kernels = m_ui->treeKernels;
-                    tree_kernels->blockSignals(true);
-                    tree_kernels->clear();
-
-                    // NOTE: I don't think this should be parallelized, because it's already not running on the main thread
-                    init_kernels_tree_widget(tree_kernels, std::span{m_kernels});
-
-                    tree_kernels->blockSignals(false);
-                    m_conf_progress_dialog->hide();
-
-                    m_ui->ok->setEnabled(false);
-                    m_thread_running.store(false, std::memory_order_relaxed);
-
-                    QMessageBox::critical(this, "CachyOS Kernel Manager", tr("Please restart Kernel Manager if you want to run 'Execute' again"));
+                    // schedule init_kernels to be executed in the main thread
+                    QMetaObject::invokeMethod(this, "init_kernels", Qt::QueuedConnection);
                 }
 
                 m_running.store(false, std::memory_order_relaxed);
@@ -358,6 +343,22 @@ void MainWindow::on_cancel() noexcept {
 
 void Work::doHeavyCalculations() {
     m_func();
+}
+
+void MainWindow::init_kernels() noexcept {
+    // show progress dialog to indicate user something is happening
+    m_conf_progress_dialog->setLabelText(tr("Please wait...\nInitializing kernels.."));
+    m_conf_progress_dialog->show();
+
+    auto* tree_kernels = m_ui->treeKernels;
+    tree_kernels->blockSignals(true);
+    tree_kernels->clear();
+
+    // NOTE: I don't think this should be parallelized, because it's already not running on the main thread
+    init_kernels_tree_widget(tree_kernels, std::span{m_kernels});
+
+    tree_kernels->blockSignals(false);
+    m_conf_progress_dialog->hide();
 }
 
 void MainWindow::on_execute() noexcept {
