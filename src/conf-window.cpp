@@ -281,6 +281,7 @@ void ConfWindow::connect_all_checkboxes() noexcept {
     std::array checkbox_list{
         options_page_ui_obj->lrng_check,
         options_page_ui_obj->builtin_bcachefs_check,
+        options_page_ui_obj->builtin_nvidia_check,
     };
 
     for (auto checkbox : checkbox_list) {
