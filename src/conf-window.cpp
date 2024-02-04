@@ -357,10 +357,8 @@ void ConfWindow::reset_patches_data_tab() noexcept {
     const std::string_view cpusched_path = get_kernel_name_path(get_kernel_name(static_cast<size_t>(main_combo_index)));
 
     auto current_array_items = get_source_array_from_pkgbuild(cpusched_path, get_all_set_values());
+    std::erase_if(current_array_items, [](auto&& item_el) { return !item_el.ends_with(".patch"); });
 
-    current_array_items.erase(std::remove_if(current_array_items.begin(), current_array_items.end(),
-                                  [](auto&& item_el) { return !item_el.ends_with(".patch"); }),
-        current_array_items.end());
     clear_patches_data_tab();
     patches_page_ui_obj->list_widget->addItems(convert_vector_of_strings_to_stringlist(current_array_items));
 
