@@ -1,24 +1,39 @@
-Checks: '-android-cloexec-fopen,
-         -cppcoreguidelines-*,
-         -fuchsia-default-arguments-calls,
-         -fuchsia-default-arguments-declarations,
-         -fuchsia-overloaded-operator,
-         -google-explicit-constructor,
-         -google-readability-function-size,
-         -google-runtime-int,
-         -google-runtime-references,
-         -hicpp-*,
-         -llvm-header-guard,
-         -llvm-include-order,
-         -llvmlibc-*,
-         -misc-*,
-         -modernize-*,
-         -readability-*,
-         -performance-*'
+Checks: '-*,
+         bugprone-*,
+         cert-*,
+         clang-analyzer-*,
+         cppcoreguidelines-*,
+         fuchsia-multiple-inheritance,
+         google-*,
+         hicpp-*,
+         misc-*,
+         modernize-*,
+         performance-*,
+         readability-*,
+         -bugprone-easily-swappable-parameters,
+         -bugprone-exception-escape,
+         -cert-dcl21-cpp,
+         -cert-dcl58-cpp,
+         -cert-err58-cpp,
+         -cert-env33-c,
+         -cert-err33-c,
+         -cppcoreguidelines-owning-memory,
+         -cppcoreguidelines-avoid-magic-numbers,
+         -cppcoreguidelines-pro-bounds-constant-array-index,
+         -cppcoreguidelines-pro-type-reinterpret-cast,
+         -hicpp-uppercase-literal-suffix,
+         -misc-include-cleaner,
+         -modernize-use-trailing-return-type,
+         -readability-else-after-return,
+         -readability-function-cognitive-complexity,
+         -readability-identifier-length,
+         -readability-implicit-bool-conversion,
+         -readability-magic-numbers,
+         -readability-uppercase-literal-suffix'
 FormatStyle: 'file'
+
+WarningsAsErrors: '*'
 
 CheckOptions:
   - key: hicpp-special-member-functions.AllowSoleDefaultDtor
     value: 1
-
-HeaderFilterRegex: '.*hpp$'
