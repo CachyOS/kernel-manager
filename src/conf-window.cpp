@@ -335,6 +335,12 @@ std::string ConfWindow::get_all_set_values() noexcept {
         result += convert_to_var_assign("cpu_opt", cpu_opt_mode);
     }
 
+    // NOTE: workaround PKGBUILD incorrectly working with custom pkgname
+    const std::string_view lto_mode = get_lto_mode(static_cast<size_t>(options_page_ui_obj->lto_combo_box->currentIndex()));
+    if (lto_mode != "none" && options_page_ui_obj->custom_name_edit->text() != "$pkgbase") {
+        result += "_use_lto_suffix=n\n";
+    }
+
     return result;
 }
 
@@ -563,7 +569,8 @@ void ConfWindow::on_execute() noexcept {
     }
     m_previously_set_options.clear();
 
-    const auto& all_set_values  = get_all_set_values();
+    const auto& all_set_values = get_all_set_values();
+    fmt::print("all_set_values :=\n{}\n", all_set_values);
     const auto& set_values_list = utils::make_multiline_view(all_set_values, '\n');
     for (const auto& expr : set_values_list) {
         const auto& expr_split = utils::make_multiline(expr, '=');
