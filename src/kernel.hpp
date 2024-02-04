@@ -133,6 +133,7 @@ class Kernel {
     alpm_pkg_t* m_pkg{nullptr};
     alpm_pkg_t* m_headers{nullptr};
     alpm_pkg_t* m_zfs_module{nullptr};
+    alpm_pkg_t* m_nvidia_module{nullptr};
     alpm_handle_t* m_handle{nullptr};
 };
 

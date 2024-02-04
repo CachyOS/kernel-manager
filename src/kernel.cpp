@@ -34,6 +34,7 @@
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 #endif
 
+#include <range/v3/algorithm/any_of.hpp>
 #include <range/v3/algorithm/find_if.hpp>
 
 #if defined(__clang__)
@@ -54,6 +55,12 @@ static std::vector<std::string_view> g_aur_kernel_install_list{};
 static std::vector<std::string_view> g_kernel_install_list{};
 static std::vector<std::string_view> g_kernel_removal_list{};
 static const bool is_root_on_zfs = utils::exec("findmnt -ln -o FSTYPE /") == "zfs";
+
+static const bool is_nvidia_card_prebuild_module = [] {
+    const auto& profile_names           = utils::exec("chwd --list -d | grep Name | awk '{print $4}'");
+    const auto& available_profile_names = utils::make_multiline_view(profile_names, '\n');
+    return ranges::any_of(available_profile_names, [](auto&& profile_name) { return profile_name == "nvidia-dkms" || profile_name == "nvidia-dkms.40xxcards"; });
+}();
 
 }  // namespace
 
@@ -103,6 +110,14 @@ bool Kernel::install() const noexcept {
     const char* pkg_headers = alpm_pkg_get_name(m_headers);
     if (is_root_on_zfs && m_zfs_module != nullptr) {
         g_kernel_install_list.push_back(alpm_pkg_get_name(m_zfs_module));
+    }
+
+    const bool is_nvidia_dkms_installed = [handle = m_handle] {
+        static constexpr std::string_view NVIDIA_DKMS_PKG = "nvidia-dkms";
+        return alpm_db_get_pkg(alpm_get_localdb(handle), NVIDIA_DKMS_PKG.data()) != nullptr;
+    }();
+    if (!is_nvidia_dkms_installed && is_nvidia_card_prebuild_module && m_nvidia_module != nullptr) {
+        g_kernel_install_list.push_back(alpm_pkg_get_name(m_nvidia_module));
     }
     g_kernel_install_list.insert(g_kernel_install_list.end(), {pkg_name, pkg_headers});
     return true;
@@ -187,8 +202,11 @@ std::vector<Kernel> Kernel::get_kernels(alpm_handle_t* handle) noexcept {
             }
 #endif
             if (pkg_name.starts_with("linux-cachyos")) {
-                pkg_name += "-zfs";
-                kernel_obj.m_zfs_module = alpm_db_get_pkg(db, pkg_name.c_str());
+                const auto& zfs_pkgname = fmt::format(FMT_COMPILE("{}-zfs"), pkg_name);
+                kernel_obj.m_zfs_module = alpm_db_get_pkg(db, zfs_pkgname.c_str());
+
+                const auto& nvidia_pkgname = fmt::format(FMT_COMPILE("{}-nvidia"), pkg_name);
+                kernel_obj.m_nvidia_module = alpm_db_get_pkg(db, nvidia_pkgname.c_str());
             }
 
             kernels.emplace_back(std::move(kernel_obj));
