@@ -49,12 +49,12 @@
 namespace {
 
 #ifdef ENABLE_AUR_KERNELS
-static std::vector<std::string_view> g_aur_kernel_install_list{}; // NOLINT
+static std::vector<std::string_view> g_aur_kernel_install_list{};  // NOLINT
 #endif
 
-static std::vector<std::string_view> g_kernel_install_list{}; // NOLINT
-static std::vector<std::string_view> g_kernel_removal_list{}; // NOLINT
-static const bool is_root_on_zfs = utils::exec("findmnt -ln -o FSTYPE /") == "zfs"; // NOLINT
+static std::vector<std::string_view> g_kernel_install_list{};                        // NOLINT
+static std::vector<std::string_view> g_kernel_removal_list{};                        // NOLINT
+static const bool is_root_on_zfs = utils::exec("findmnt -ln -o FSTYPE /") == "zfs";  // NOLINT
 
 // NOLINTNEXTLINE
 static const bool is_nvidia_card_prebuild_module = [] {

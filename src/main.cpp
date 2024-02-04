@@ -137,5 +137,5 @@ auto main(int argc, char** argv) -> std::int32_t {
 
     MainWindow w;
     w.show();
-    return app.exec(); // NOLINT
+    return app.exec();  // NOLINT
 }
