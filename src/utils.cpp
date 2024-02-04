@@ -64,7 +64,7 @@ auto read_whole_file(const std::string_view& filepath) noexcept -> std::string {
     }
 
     std::fseek(file, 0u, SEEK_END);
-    const std::size_t size = static_cast<std::size_t>(std::ftell(file));
+    const auto size = static_cast<std::size_t>(std::ftell(file));
     std::fseek(file, 0u, SEEK_SET);
 
     std::string buf;
@@ -96,8 +96,8 @@ bool write_to_file(const std::string_view& filepath, const std::string_view& dat
 // https://stackoverflow.com/questions/11342868/c-interface-for-interactive-bash
 // https://github.com/hniksic/rust-subprocess
 std::string exec(const std::string_view& command) noexcept {
+    // NOLINTNEXTLINE
     std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(command.data(), "r"), pclose);
-
     if (!pipe) {
         fmt::print(stderr, "popen failed! '{}'\n", command);
         return "-1";
@@ -135,10 +135,10 @@ int runCmdTerminal(QString cmd, bool escalate) noexcept {
 
 std::string fix_path(std::string&& path) noexcept {
     /* clang-format off */
-    if (path[0] != '~') { return path; }
+    if (path[0] != '~') { return std::move(path); }
     /* clang-format on */
     utils::replace_all(path, "~", g_get_home_dir());
-    return path;
+    return std::move(path);
 }
 
 alpm_handle_t* parse_alpm(std::string_view root, std::string_view dbpath, alpm_errno_t* err) noexcept {
@@ -149,7 +149,7 @@ alpm_handle_t* parse_alpm(std::string_view root, std::string_view dbpath, alpm_e
     static constexpr auto pacman_conf_path = "/etc/pacman.conf";
     static constexpr auto ignored_repo     = "testing";
 
-    mINI::INIFile file(pacman_conf_path);
+    const mINI::INIFile file(pacman_conf_path);
     // next, create a structure that will hold data
     mINI::INIStructure ini;
 
@@ -168,7 +168,7 @@ alpm_handle_t* parse_alpm(std::string_view root, std::string_view dbpath, alpm_e
 
 std::int32_t release_alpm(alpm_handle_t* handle, alpm_errno_t* err) noexcept {
     // Release libalpm handle
-    std::int32_t ret = alpm_release(handle);
+    const std::int32_t ret = alpm_release(handle);
 
     *err = alpm_errno(handle);
 

@@ -62,6 +62,8 @@
 
 namespace fs = std::filesystem;
 
+// NOLINTBEGIN(cppcoreguidelines-macro-usage)
+
 /**
  * GENERATE_CONST_OPTION_VALUES(name, ...):
  *
@@ -106,6 +108,8 @@ GENERATE_CONST_OPTION_VALUES(lru_config_mode, "standard", "stats", "none")
 GENERATE_CONST_OPTION_VALUES(lto_mode, "none", "full", "thin")
 GENERATE_CONST_OPTION_VALUES(hugepage_mode, "always", "madvise")
 GENERATE_CONST_OPTION_VALUES(cpu_opt_mode, "manual", "generic", "native_amd", "native_intel", "zen", "zen2", "zen3", "sandybridge", "ivybridge", "haswell", "icelake", "tigerlake", "alderlake")
+
+// NOLINTEND(cppcoreguidelines-macro-usage)
 
 static_assert(lookup_kernel_name("cachyos") == 0, "Invalid position");
 static_assert(lookup_kernel_name("bore") == 1, "Invalid position");
@@ -276,15 +280,15 @@ inline void list_widget_apply_edit_flag(QListWidget* list_widget) noexcept {
 }
 
 void ConfWindow::connect_all_checkboxes() noexcept {
-    auto options_page_ui_obj = m_ui->conf_options_page_widget->get_ui_obj();
+    auto* options_page_ui_obj = m_ui->conf_options_page_widget->get_ui_obj();
 
-    std::array checkbox_list{
+    const std::array checkbox_list{
         options_page_ui_obj->lrng_check,
         options_page_ui_obj->builtin_bcachefs_check,
         options_page_ui_obj->builtin_nvidia_check,
     };
 
-    for (auto checkbox : checkbox_list) {
+    for (auto* checkbox : checkbox_list) {
         connect(checkbox, &QCheckBox::stateChanged, this, [this](std::int32_t) {
             reset_patches_data_tab();
         });
@@ -293,7 +297,7 @@ void ConfWindow::connect_all_checkboxes() noexcept {
 
 std::string ConfWindow::get_all_set_values() noexcept {
     std::string result{};
-    auto options_page_ui_obj = m_ui->conf_options_page_widget->get_ui_obj();
+    auto* options_page_ui_obj = m_ui->conf_options_page_widget->get_ui_obj();
 
     // checkboxes values
     result += convert_to_var_assign("hardly", convert_checkstate(options_page_ui_obj->hardly_check));
@@ -345,13 +349,13 @@ std::string ConfWindow::get_all_set_values() noexcept {
 }
 
 void ConfWindow::clear_patches_data_tab() noexcept {
-    auto patches_page_ui_obj = m_ui->conf_patches_page_widget->get_ui_obj();
+    auto* patches_page_ui_obj = m_ui->conf_patches_page_widget->get_ui_obj();
     patches_page_ui_obj->list_widget->clear();
 }
 
 void ConfWindow::reset_patches_data_tab() noexcept {
-    auto options_page_ui_obj = m_ui->conf_options_page_widget->get_ui_obj();
-    auto patches_page_ui_obj = m_ui->conf_patches_page_widget->get_ui_obj();
+    auto* options_page_ui_obj = m_ui->conf_options_page_widget->get_ui_obj();
+    auto* patches_page_ui_obj = m_ui->conf_patches_page_widget->get_ui_obj();
 
     const std::int32_t main_combo_index  = options_page_ui_obj->main_combo_box->currentIndex();
     const std::string_view cpusched_path = get_kernel_name_path(get_kernel_name(static_cast<size_t>(main_combo_index)));
@@ -373,8 +377,8 @@ ConfWindow::ConfWindow(QWidget* parent)
     setAttribute(Qt::WA_NativeWindow);
     setWindowFlags(Qt::Window);  // for the close, min and max buttons
 
-    auto options_page_ui_obj = m_ui->conf_options_page_widget->get_ui_obj();
-    auto patches_page_ui_obj = m_ui->conf_patches_page_widget->get_ui_obj();
+    auto* options_page_ui_obj = m_ui->conf_options_page_widget->get_ui_obj();
+    auto* patches_page_ui_obj = m_ui->conf_patches_page_widget->get_ui_obj();
 
     // Selecting the CPU scheduler
     QStringList kernel_names;
@@ -485,7 +489,7 @@ ConfWindow::ConfWindow(QWidget* parent)
         // Prepend 'file://' to each selected patch file.
         std::transform(files.cbegin(), files.cend(),
             files.begin(),  // write to the same location
-            [](auto&& file_path) { return QString("file://") + std::move(file_path); });
+            [](auto&& file_path) { return QString("file://") + std::forward<decltype(file_path)>(file_path); });
 
         patches_page_ui_obj->list_widget->addItems(files);
 
@@ -523,14 +527,14 @@ ConfWindow::ConfWindow(QWidget* parent)
     // move up
     connect(patches_page_ui_obj->move_up_button, &QPushButton::clicked, this, [patches_page_ui_obj]() {
         const auto& current_index = patches_page_ui_obj->list_widget->currentRow();
-        auto current_item         = patches_page_ui_obj->list_widget->takeItem(current_index);
+        auto* current_item        = patches_page_ui_obj->list_widget->takeItem(current_index);
         patches_page_ui_obj->list_widget->insertItem(current_index - 1, current_item);
         patches_page_ui_obj->list_widget->setCurrentRow(current_index - 1);
     });
     // move down
     connect(patches_page_ui_obj->move_down_button, &QPushButton::clicked, this, [patches_page_ui_obj]() {
         const auto& current_index = patches_page_ui_obj->list_widget->currentRow();
-        auto current_item         = patches_page_ui_obj->list_widget->takeItem(current_index);
+        auto* current_item        = patches_page_ui_obj->list_widget->takeItem(current_index);
         patches_page_ui_obj->list_widget->insertItem(current_index + 1, current_item);
         patches_page_ui_obj->list_widget->setCurrentRow(current_index + 1);
     });
@@ -551,8 +555,8 @@ void ConfWindow::on_execute() noexcept {
     /* clang-format on */
     m_running = true;
 
-    auto options_page_ui_obj = m_ui->conf_options_page_widget->get_ui_obj();
-    auto patches_page_ui_obj = m_ui->conf_patches_page_widget->get_ui_obj();
+    auto* options_page_ui_obj = m_ui->conf_options_page_widget->get_ui_obj();
+    auto* patches_page_ui_obj = m_ui->conf_patches_page_widget->get_ui_obj();
 
     const std::int32_t main_combo_index  = options_page_ui_obj->main_combo_box->currentIndex();
     const std::string_view cpusched_path = get_kernel_name_path(get_kernel_name(static_cast<size_t>(main_combo_index)));

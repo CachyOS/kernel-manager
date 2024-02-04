@@ -85,7 +85,7 @@ bool is_kernels_change_state(alpm_handle_t* handle, std::span<std::string_view> 
 
 void init_kernels_tree_widget(QTreeWidget* tree_kernels, std::span<Kernel> kernels) noexcept {
     for (auto& kernel : kernels) {
-        auto widget_item = new QTreeWidgetItem(tree_kernels);
+        auto* widget_item = new QTreeWidgetItem(tree_kernels);
         widget_item->setCheckState(TreeCol::Check, Qt::Unchecked);
         widget_item->setText(TreeCol::PkgName, kernel.get_raw());
         widget_item->setText(TreeCol::Version, kernel.version().c_str());
@@ -273,7 +273,7 @@ void MainWindow::set_progress_dialog() noexcept {
 }
 
 void MainWindow::check_uncheck_item() noexcept {
-    if (auto t_widget = qobject_cast<QTreeWidget*>(focusWidget())) {
+    if (auto* t_widget = qobject_cast<QTreeWidget*>(focusWidget())) {
         if (t_widget->currentItem() == nullptr || t_widget->currentItem()->childCount() > 0) {
             return;
         }
@@ -283,9 +283,10 @@ void MainWindow::check_uncheck_item() noexcept {
 }
 
 // When selecting on item in the list
-void MainWindow::item_changed(QTreeWidgetItem* item, int) noexcept {
-    if (item->checkState(TreeCol::Check) == Qt::Checked)
+void MainWindow::item_changed(QTreeWidgetItem* item, int /*unused*/) noexcept {
+    if (item->checkState(TreeCol::Check) == Qt::Checked) {
         m_ui->treeKernels->setCurrentItem(item);
+    }
     build_change_list(item);
 }
 
@@ -362,8 +363,9 @@ void MainWindow::init_kernels() noexcept {
 }
 
 void MainWindow::on_execute() noexcept {
-    if (m_running.load(std::memory_order_consume))
+    if (m_running.load(std::memory_order_consume)) {
         return;
+    }
     m_running.store(true, std::memory_order_relaxed);
     m_thread_running.store(true, std::memory_order_relaxed);
     m_cv.notify_all();

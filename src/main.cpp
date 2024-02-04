@@ -40,7 +40,9 @@
 #pragma GCC diagnostic pop
 #endif
 
-static bool IsInstanceAlreadyRunning(QSharedMemory& memoryLock) {
+namespace {
+
+bool IsInstanceAlreadyRunning(QSharedMemory& memoryLock) noexcept {
     if (!memoryLock.create(1)) {
         memoryLock.attach();
         memoryLock.detach();
@@ -57,7 +59,7 @@ static bool IsInstanceAlreadyRunning(QSharedMemory& memoryLock) {
  * Licensed under MIT
  */
 /** Set up translations */
-static void initTranslations(QTranslator& qtTranslatorBase, QTranslator& qtTranslator, QTranslator& translatorBase, QTranslator& translator) {
+void initTranslations(QTranslator& qtTranslatorBase, QTranslator& qtTranslator, QTranslator& translatorBase, QTranslator& translator) noexcept {
     // Remove old translators
     QApplication::removeTranslator(&qtTranslatorBase);
     QApplication::removeTranslator(&qtTranslator);
@@ -66,7 +68,7 @@ static void initTranslations(QTranslator& qtTranslatorBase, QTranslator& qtTrans
 
     // Get desired locale (e.g. "de_DE")
     // 1) System default language
-    QString lang_territory = QLocale::system().name();
+    const auto lang_territory = QLocale::system().name();
 
     // Convert to "de" only by truncating "_DE"
     QString lang = lang_territory;
@@ -77,9 +79,9 @@ static void initTranslations(QTranslator& qtTranslatorBase, QTranslator& qtTrans
     // - Then load the more specific locale translator
 
 #if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
-    const QString translation_path{QLibraryInfo::location(QLibraryInfo::TranslationsPath)};
+    const auto translation_path{QLibraryInfo::location(QLibraryInfo::TranslationsPath)};
 #else
-    const QString translation_path{QLibraryInfo::path(QLibraryInfo::TranslationsPath)};
+    const auto translation_path{QLibraryInfo::path(QLibraryInfo::TranslationsPath)};
 #endif
 
     // Load e.g. qt_de.qm
@@ -103,6 +105,8 @@ static void initTranslations(QTranslator& qtTranslatorBase, QTranslator& qtTrans
     }
 }
 
+}  // namespace
+
 auto main(int argc, char** argv) -> std::int32_t {
     QSharedMemory sharedMemoryLock("CachyOS-KM-lock");
     if (IsInstanceAlreadyRunning(sharedMemoryLock)) {
@@ -122,13 +126,16 @@ auto main(int argc, char** argv) -> std::int32_t {
     QApplication::setApplicationName("CachyOS-KM");
 
     // Set application attributes
-    QApplication app(argc, argv);
+    const QApplication app(argc, argv);
 
     /// 3. Initialization of translations
-    QTranslator qtTranslatorBase, qtTranslator, translatorBase, translator;
+    QTranslator qtTranslatorBase;
+    QTranslator qtTranslator;
+    QTranslator translatorBase;
+    QTranslator translator;
     initTranslations(qtTranslatorBase, qtTranslator, translatorBase, translator);
 
     MainWindow w;
     w.show();
-    return app.exec();
+    return app.exec(); // NOLINT
 }

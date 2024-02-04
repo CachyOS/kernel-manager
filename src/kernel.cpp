@@ -49,13 +49,14 @@
 namespace {
 
 #ifdef ENABLE_AUR_KERNELS
-static std::vector<std::string_view> g_aur_kernel_install_list{};
+static std::vector<std::string_view> g_aur_kernel_install_list{}; // NOLINT
 #endif
 
-static std::vector<std::string_view> g_kernel_install_list{};
-static std::vector<std::string_view> g_kernel_removal_list{};
-static const bool is_root_on_zfs = utils::exec("findmnt -ln -o FSTYPE /") == "zfs";
+static std::vector<std::string_view> g_kernel_install_list{}; // NOLINT
+static std::vector<std::string_view> g_kernel_removal_list{}; // NOLINT
+static const bool is_root_on_zfs = utils::exec("findmnt -ln -o FSTYPE /") == "zfs"; // NOLINT
 
+// NOLINTNEXTLINE
 static const bool is_nvidia_card_prebuild_module = [] {
     const auto& profile_names           = utils::exec("chwd --list -d | grep Name | awk '{print $4}'");
     const auto& available_profile_names = utils::make_multiline_view(profile_names, '\n');
@@ -63,8 +64,6 @@ static const bool is_nvidia_card_prebuild_module = [] {
 }();
 
 }  // namespace
-
-namespace fs = std::filesystem;
 
 std::string Kernel::version() noexcept {
 #ifdef ENABLE_AUR_KERNELS
@@ -109,7 +108,7 @@ bool Kernel::install() const noexcept {
     const char* pkg_name    = alpm_pkg_get_name(m_pkg);
     const char* pkg_headers = alpm_pkg_get_name(m_headers);
     if (is_root_on_zfs && m_zfs_module != nullptr) {
-        g_kernel_install_list.push_back(alpm_pkg_get_name(m_zfs_module));
+        g_kernel_install_list.emplace_back(alpm_pkg_get_name(m_zfs_module));
     }
 
     const bool is_nvidia_dkms_installed = [handle = m_handle] {
@@ -117,7 +116,7 @@ bool Kernel::install() const noexcept {
         return alpm_db_get_pkg(alpm_get_localdb(handle), NVIDIA_DKMS_PKG.data()) != nullptr;
     }();
     if (!is_nvidia_dkms_installed && is_nvidia_card_prebuild_module && m_nvidia_module != nullptr) {
-        g_kernel_install_list.push_back(alpm_pkg_get_name(m_nvidia_module));
+        g_kernel_install_list.emplace_back(alpm_pkg_get_name(m_nvidia_module));
     }
     g_kernel_install_list.insert(g_kernel_install_list.end(), {pkg_name, pkg_headers});
     return true;
@@ -136,7 +135,7 @@ bool Kernel::remove() const noexcept {
         auto* db  = alpm_get_localdb(m_handle);
         auto* pkg = alpm_db_get_pkg(db, pkg_headers);
         if (pkg != nullptr) {
-            g_kernel_removal_list.push_back(pkg_headers);
+            g_kernel_removal_list.emplace_back(pkg_headers);
         }
     }
     return true;
@@ -217,6 +216,8 @@ std::vector<Kernel> Kernel::get_kernels(alpm_handle_t* handle) noexcept {
     }
 
 #ifdef ENABLE_AUR_KERNELS
+    namespace fs = std::filesystem;
+
     bool is_paru_installed{true};
     if (!fs::exists("/sbin/paru") && !fs::exists("/sbin/awk")) {
         fmt::print(stderr, "Paru & AWK are not installed! Disabling AUR kernels support\n");
