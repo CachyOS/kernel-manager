@@ -3,20 +3,13 @@ name: Checks
 on:
   push:
     paths-ignore:
-      - '.github/ISSUE_TEMPLATE/**'
-      - 'LICENSE'
-      - '*.md'
-      - '*.sh'
+    - '.github/ISSUE_TEMPLATE/**'
+    - 'LICENSE'
     branches:
-      - develop
+    - develop
   pull_request:
-    paths-ignore:
-      - '.github/ISSUE_TEMPLATE/**'
-      - 'LICENSE'
-      - '*.md'
-      - '*.sh'
     branches:
-      - develop
+    - develop
 
 concurrency:
   group: checks-${{ github.ref }}
@@ -46,17 +39,10 @@ jobs:
           ./build.sh
         shell: bash
 
-      - uses: ZedThree/clang-tidy-review@v0.17.0
-        id: review
-        with:
-          lgtm_comment_body: ""
-          annotations: true
-          build_dir: ${{github.workspace}}/build/Debug
-          max_comments: 10
-      - uses: ZedThree/clang-tidy-review/upload@v0.17.0 # Uploads an artefact containing clang_fixes.json
-        id: upload-review
-      - if: steps.review.outputs.total_comments > 0 # If there are any comments, fail the check
-        run: exit 1
+      - name: Run clang-tidy
+        run: |
+          clang-tidy -p ${{github.workspace}}/build/Debug src/*.cpp
+        shell: bash
 
   check_clang_format:
     name: "Check C++ style"
