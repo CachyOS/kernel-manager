@@ -166,7 +166,9 @@ std::vector<Kernel> Kernel::get_kernels(alpm_handle_t* handle) noexcept {
         static constexpr auto needle = "linux[^ ]*-headers";
         alpm_list_t* needles         = nullptr;
         alpm_list_t* ret_list        = nullptr;
-        needles                      = alpm_list_add(needles, const_cast<void*>(reinterpret_cast<const void*>(needle)));
+
+        // NOLINTNEXTLINE
+        needles = alpm_list_add(needles, const_cast<void*>(reinterpret_cast<const void*>(needle)));
 
         auto* db            = reinterpret_cast<alpm_db_t*>(i->data);
         const char* db_name = alpm_db_get_name(db);
@@ -185,9 +187,9 @@ std::vector<Kernel> Kernel::get_kernels(alpm_handle_t* handle) noexcept {
             pkg = alpm_db_get_pkg(db, pkg_name.c_str());
 
             // Skip if the actual kernel package is not found
-            if (!pkg) {
-                continue;
-            }
+            /* clang-format off */
+            if (!pkg) { continue; }
+            /* clang-format on */
 
             auto kernel_obj = Kernel{handle, pkg, headers, db_name, fmt::format(FMT_COMPILE("{}/{}"), db_name, pkg_name)};
 

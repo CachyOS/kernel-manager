@@ -17,19 +17,23 @@ Checks: '-*,
          -cert-err58-cpp,
          -cert-env33-c,
          -cert-err33-c,
+         -cppcoreguidelines-avoid-c-arrays,
          -cppcoreguidelines-owning-memory,
          -cppcoreguidelines-avoid-magic-numbers,
          -cppcoreguidelines-pro-bounds-constant-array-index,
          -cppcoreguidelines-pro-type-reinterpret-cast,
+         -hicpp-avoid-c-arrays,
          -hicpp-uppercase-literal-suffix,
          -misc-include-cleaner,
+         -modernize-avoid-c-arrays,
          -modernize-use-trailing-return-type,
          -readability-else-after-return,
          -readability-function-cognitive-complexity,
          -readability-identifier-length,
          -readability-implicit-bool-conversion,
          -readability-magic-numbers,
-         -readability-uppercase-literal-suffix'
+         -readability-uppercase-literal-suffix,
+         -readability-use-anyofallof'
 FormatStyle: 'file'
 
 WarningsAsErrors: '*'

@@ -170,7 +170,7 @@ inline constexpr auto convert_to_var_assign_empty_wrapped(std::string_view optio
     return std::string{};
 }
 
-void child_watch_cb(GPid pid, [[maybe_unused]] gint status, gpointer user_data) {
+void child_watch_cb(GPid pid, [[maybe_unused]] gint status, gpointer user_data) noexcept {
 #if !defined(NDEBUG)
     fmt::print(stderr, "Child {} exited {}\n", pid,
         g_spawn_check_wait_status(status, nullptr) ? "normally" : "abnormally");
@@ -188,7 +188,7 @@ void child_watch_cb(GPid pid, [[maybe_unused]] gint status, gpointer user_data) 
     *data      = false;
 }
 
-void run_cmd_async(std::string&& cmd, bool* data) {
+void run_cmd_async(std::string cmd, bool* data) noexcept {
     cmd += "; read -p 'Press enter to exit'";
     const gchar* const argv[] = {"/usr/lib/cachyos-kernel-manager/terminal-helper", cmd.c_str(), nullptr};
     gint child_stdout{};
@@ -197,6 +197,7 @@ void run_cmd_async(std::string&& cmd, bool* data) {
     g_autoptr(GError) error = nullptr;
 
     // Spawn child process.
+    // NOLINTNEXTLINE
     g_spawn_async_with_pipes(nullptr, const_cast<gchar**>(argv), nullptr, G_SPAWN_DO_NOT_REAP_CHILD, nullptr,
         nullptr, &child_pid, nullptr, &child_stdout,
         &child_stderr, &error);

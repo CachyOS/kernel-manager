@@ -16,6 +16,8 @@
 // with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+// NOLINTBEGIN(bugprone-unhandled-exception-at-new)
+
 #include "km-window.hpp"
 #include "conf-window.hpp"
 #include "kernel.hpp"
@@ -371,3 +373,5 @@ void MainWindow::on_execute() noexcept {
     m_cv.notify_all();
     m_worker_th->start();
 }
+
+// NOLINTEND(bugprone-unhandled-exception-at-new)
