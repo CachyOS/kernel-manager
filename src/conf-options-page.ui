@@ -609,35 +609,6 @@
          </widget>
         </item>
         <item>
-         <widget class="QWidget" name="debug_widget" native="true">
-          <layout class="QHBoxLayout" name="debug_horizontal_layout">
-           <item>
-            <widget class="QLabel" name="debug_label">
-             <property name="text">
-              <string>Disable debug to lower the size of the kernel</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="debug_horizontal_spacer">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="debug_check"/>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
          <widget class="QWidget" name="lto_widget" native="true">
           <layout class="QHBoxLayout" name="lto_horizontal_layout">
            <item>

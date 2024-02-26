@@ -19,7 +19,6 @@
         "lrng": "_lrng_enable",
         "cpu_opt": "_processor_opt",
         "auto_optim": "_use_auto_optimization",
-        "debug": "_disable_debug",
         "lto": "_use_llvm_lto",
         "builtin_zfs": "_build_zfs",
         "builtin_nvidia": "_build_nvidia",
