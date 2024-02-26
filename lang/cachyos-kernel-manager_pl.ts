@@ -56,14 +56,6 @@
         <translation>Wybierz &quot;preempt&quot;</translation>
     </message>
     <message>
-        <source>Disable MQ-Deadline I/O scheduler</source>
-        <translation type="vanished">Wyłącz planistę I/O MQ-Deadline </translation>
-    </message>
-    <message>
-        <source>Disable Kyber I/O scheduler</source>
-        <translation type="vanished">Wyłącz planistę I/O Kyber</translation>
-    </message>
-    <message>
         <source>Enable multigenerational LRU</source>
         <translation>Aktywuj Multigenerational LRU</translation>
     </message>
@@ -86,10 +78,6 @@
     <message>
         <source>Apply automatic CPU Optimization</source>
         <translation>Zastosuj automatyczne optymalizacje CPU</translation>
-    </message>
-    <message>
-        <source>Disable debug to lower the size of the kernel</source>
-        <translation>Wyłącz debugowanie w celu zmniejszenia rozmiaru kernela</translation>
     </message>
     <message>
         <source>Enable LTO</source>
@@ -154,32 +142,12 @@
         <translation>Patches</translation>
     </message>
     <message>
-        <source>BMQ - BitMap Queue CPU scheduler</source>
-        <translation type="vanished">Planista BMQ - BitMap Queue CPU scheduler</translation>
-    </message>
-    <message>
         <source>Bore - Burst-Oriented Response Enhancer</source>
         <translation>Planista BORE- Burst-Oriented Response Enhancer</translation>
     </message>
     <message>
-        <source>CFS - Completely Fair Scheduler</source>
-        <translation type="vanished">Planista CFS - Completely Fair Scheduler</translation>
-    </message>
-    <message>
-        <source>Hardened - Hardened kernel with the BORE Scheduler</source>
-        <translation type="vanished">Hardened - Hardened kernel with the BORE Scheduler</translation>
-    </message>
-    <message>
-        <source>PDS - Priority and Deadline based Skip list multiple queue CPU scheduler</source>
-        <translation type="vanished">Planista PDS - Priority and Deadline based Skip list multiple queue CPU scheduler</translation>
-    </message>
-    <message>
         <source>RC - Release Candidate</source>
         <translation>RC - Release Candidate</translation>
-    </message>
-    <message>
-        <source>TT - Task Type Scheduler</source>
-        <translation type="vanished">Planista TT - Task Type Scheduler</translation>
     </message>
     <message>
         <source>Select one or more patch files</source>
@@ -196,10 +164,6 @@
     <message>
         <source>Patch URL:</source>
         <translation>Patch URL:</translation>
-    </message>
-    <message>
-        <source>CachyOS - Bore + EEVDF</source>
-        <translation type="vanished">Planista CachyOS - BORE + EEVDF</translation>
     </message>
     <message>
         <source>RT - Realtime kernel</source>

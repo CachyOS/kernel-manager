@@ -56,14 +56,6 @@
         <translation>Wählen Sie preempt</translation>
     </message>
     <message>
-        <source>Disable MQ-Deadline I/O scheduler</source>
-        <translation type="vanished">MQ-Deadline I/O-Scheduler deaktivieren</translation>
-    </message>
-    <message>
-        <source>Disable Kyber I/O scheduler</source>
-        <translation type="vanished">Kyber I/O scheduler deaktivieren</translation>
-    </message>
-    <message>
         <source>Enable multigenerational LRU</source>
         <translation>Multigenerational LRU aktivieren</translation>
     </message>
@@ -86,10 +78,6 @@
     <message>
         <source>Apply automatic CPU Optimization</source>
         <translation>Automatische CPU Optimierung anwenden</translation>
-    </message>
-    <message>
-        <source>Disable debug to lower the size of the kernel</source>
-        <translation>Debugging deaktivieren, um die Größe des Kernels zu verringern</translation>
     </message>
     <message>
         <source>Enable LTO</source>
