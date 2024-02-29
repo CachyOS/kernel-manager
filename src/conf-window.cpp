@@ -150,11 +150,12 @@ inline bool checkstate_checked(QCheckBox* checkbox) noexcept {
     return (checkbox->checkState() == Qt::Checked);
 }
 
-inline const char* convert_checkstate(QCheckBox* checkbox) noexcept {
-    return checkstate_checked(checkbox) ? "y" : "n";
+inline auto convert_checkstate(QCheckBox* checkbox) noexcept {
+    using namespace std::string_view_literals;
+    return checkstate_checked(checkbox) ? "y"sv : "n"sv;
 }
 
-inline constexpr auto convert_to_varname(std::string_view option) noexcept {
+constexpr auto convert_to_varname(std::string_view option) noexcept {
     // force constexpr call with lambda
     return [option] { return detail::option_map.at(option); }();
 }
@@ -163,9 +164,10 @@ inline auto convert_to_var_assign(std::string_view option, std::string_view valu
     return fmt::format(FMT_COMPILE("{}={}\n"), convert_to_varname(option), value);
 }
 
-inline constexpr auto convert_to_var_assign_empty_wrapped(std::string_view option_name, bool option_enabled) noexcept {
+constexpr auto convert_to_var_assign_empty_wrapped(std::string_view option_name, bool option_enabled) noexcept {
+    using namespace std::string_view_literals;
     if (option_enabled) {
-        return convert_to_var_assign(option_name, "y");
+        return convert_to_var_assign(option_name, "y"sv);
     }
     return std::string{};
 }
@@ -570,9 +572,9 @@ void ConfWindow::on_execute() noexcept {
 
     const auto& all_set_values = get_all_set_values();
     fmt::print("all_set_values :=\n{}\n", all_set_values);
-    const auto& set_values_list = utils::make_multiline_view(all_set_values, '\n');
-    for (const auto& expr : set_values_list) {
-        const auto& expr_split = utils::make_multiline(expr, '=');
+    auto set_values_list = utils::make_multiline_view(all_set_values, '\n');
+    for (auto&& expr : set_values_list) {
+        const auto& expr_split = utils::make_multiline(std::move(expr), '=');
         const auto& var_name   = expr_split[0];
         const auto& var_val    = expr_split[1];
 
@@ -589,7 +591,8 @@ void ConfWindow::on_execute() noexcept {
     // are considered as patches.
     const auto& orig_src_array          = get_source_array_from_pkgbuild(cpusched_path, all_set_values);
     [[maybe_unused]] auto insert_status = insert_new_source_array_into_pkgbuild(cpusched_path, patches_page_ui_obj->list_widget, orig_src_array);
-    insert_status                       = set_custom_name_in_pkgbuild(cpusched_path, options_page_ui_obj->custom_name_edit->text().toStdString());
+    const auto& custom_name             = options_page_ui_obj->custom_name_edit->text().toUtf8();
+    insert_status                       = set_custom_name_in_pkgbuild(cpusched_path, std::string_view{custom_name.constData(), static_cast<size_t>(custom_name.size())});
     fs::current_path(cpusched_path);
 
     // Run our build command!
