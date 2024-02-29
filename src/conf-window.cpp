@@ -382,7 +382,7 @@ ConfWindow::ConfWindow(QWidget* parent)
 
     // Selecting the CPU scheduler
     QStringList kernel_names;
-    kernel_names << tr("CachyOS - Bore")
+    kernel_names << tr("CachyOS - BORE + SCHED-EXT")
                  << tr("Bore - Burst-Oriented Response Enhancer")
                  << tr("RC - Release Candidate")
                  << tr("RT - Realtime kernel")
@@ -404,9 +404,6 @@ ConfWindow::ConfWindow(QWidget* parent)
              << "250Hz"
              << "100Hz";
     options_page_ui_obj->hzticks_combo_box->addItems(hz_ticks);
-
-    // Set to 500HZ
-    options_page_ui_obj->hzticks_combo_box->setCurrentIndex(3);
 
     QStringList tickless_modes;
     tickless_modes << "Full"
