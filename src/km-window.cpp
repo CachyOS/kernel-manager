@@ -27,6 +27,9 @@
 #include <span>
 #include <thread>
 
+#include <range/v3/algorithm/any_of.hpp>
+#include <range/v3/algorithm/find_if.hpp>
+
 #include <fmt/core.h>
 
 #include <QCoreApplication>
@@ -70,18 +73,13 @@ bool is_kernels_change_state(alpm_handle_t* handle, std::span<std::string_view> 
     }
     auto* local_db = alpm_get_localdb(handle);
 
-    for (auto&& kernel_install : kernel_install_list) {
-        auto* pkg = alpm_db_get_pkg(local_db, kernel_install.data());
-        if (pkg != nullptr) {
-            return true;
-        }
+    if (ranges::any_of(kernel_install_list, [local_db](auto&& kernel_install) { return nullptr != alpm_db_get_pkg(local_db, kernel_install.data()); })) {
+        return true;
     }
-    for (auto&& kernel_removal : kernel_removal_list) {
-        auto* pkg = alpm_db_get_pkg(local_db, kernel_removal.data());
-        if (pkg == nullptr) {
-            return true;
-        }
+    if (ranges::any_of(kernel_removal_list, [local_db](auto&& kernel_removal) { return nullptr == alpm_db_get_pkg(local_db, kernel_removal.data()); })) {
+        return true;
     }
+
     return false;
 }
 
