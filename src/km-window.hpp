@@ -75,7 +75,7 @@ class Work final : public QObject {
       : m_func(std::move(func)) { }
     ~Work() = default;
 
- public slots:
+ public:
     void doHeavyCalculations();
 
  private:
@@ -98,7 +98,10 @@ class MainWindow final : public QMainWindow {
     explicit MainWindow(QWidget* parent = nullptr);
     ~MainWindow();
 
- private slots:
+ protected:
+    void closeEvent(QCloseEvent* event) override;
+
+ private:
     void on_cancel() noexcept;
     void on_execute() noexcept;
     void on_configure() noexcept;
@@ -109,10 +112,6 @@ class MainWindow final : public QMainWindow {
 
     void init_kernels() noexcept;
 
- protected:
-    void closeEvent(QCloseEvent* event) override;
-
- private:
     std::atomic_bool m_running{};
     std::atomic_bool m_thread_running{true};
     std::mutex m_mutex{};

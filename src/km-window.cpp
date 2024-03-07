@@ -221,13 +221,13 @@ MainWindow::MainWindow(QWidget* parent)
     }
 
     // Connect buttons signal
-    connect(m_ui->cancel, SIGNAL(clicked()), this, SLOT(on_cancel()));
-    connect(m_ui->ok, SIGNAL(clicked()), this, SLOT(on_execute()));
-    connect(m_ui->configure, SIGNAL(clicked()), this, SLOT(on_configure()));
+    connect(m_ui->cancel, &QPushButton::clicked, this, &MainWindow::on_cancel);
+    connect(m_ui->ok, &QPushButton::clicked, this, &MainWindow::on_execute);
+    connect(m_ui->configure, &QPushButton::clicked, this, &MainWindow::on_configure);
 
     // Connect worker thread signals
-    connect(m_worker_th, SIGNAL(finished()), m_worker, SLOT(deleteLater()));
-    connect(m_worker_th, SIGNAL(started()), m_worker, SLOT(doHeavyCalculations()), Qt::QueuedConnection);
+    connect(m_worker_th, &QThread::finished, m_worker, &QObject::deleteLater);
+    connect(m_worker_th, &QThread::started, m_worker, &Work::doHeavyCalculations, Qt::QueuedConnection);
 
     // check/uncheck tree items space-bar press or double-click
     auto* shortcutToggle = new QShortcut(Qt::Key_Space, this);
@@ -235,7 +235,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     // Connect tree widget
     connect(tree_kernels, &QTreeWidget::itemChanged, this, &MainWindow::item_changed);
-    connect(tree_kernels, &QTreeWidget::itemDoubleClicked, [&](QTreeWidgetItem* item) { m_ui->treeKernels->setCurrentItem(item); });
+    connect(tree_kernels, &QTreeWidget::itemDoubleClicked, [tree_kernels](QTreeWidgetItem* item) { tree_kernels->setCurrentItem(item); });
     connect(tree_kernels, &QTreeWidget::itemDoubleClicked, this, &MainWindow::check_uncheck_item);
 
     // Wait for async function to finish

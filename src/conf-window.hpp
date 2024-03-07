@@ -61,14 +61,13 @@ class ConfWindow final : public QMainWindow {
 
     void reset_patches_data_tab() noexcept;
 
- private slots:
-    void on_cancel() noexcept;
-    void on_execute() noexcept;
-
  protected:
     void closeEvent(QCloseEvent* event) override;
 
  private:
+    void on_cancel() noexcept;
+    void on_execute() noexcept;
+
     bool m_running{};
     std::vector<std::string> m_previously_set_options{};
     std::unique_ptr<Ui::ConfWindow> m_ui = std::make_unique<Ui::ConfWindow>();

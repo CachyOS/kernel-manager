@@ -457,8 +457,8 @@ ConfWindow::ConfWindow(QWidget* parent)
     options_page_ui_obj->hugepage_combo_box->addItems(hugepage_modes);
 
     // Connect buttons signal
-    connect(options_page_ui_obj->cancel_button, SIGNAL(clicked()), this, SLOT(on_cancel()));
-    connect(options_page_ui_obj->ok_button, SIGNAL(clicked()), this, SLOT(on_execute()));
+    connect(options_page_ui_obj->cancel_button, &QPushButton::clicked, this, &ConfWindow::on_cancel);
+    connect(options_page_ui_obj->ok_button, &QPushButton::clicked, this, &ConfWindow::on_execute);
     connect(options_page_ui_obj->main_combo_box, &QComboBox::currentIndexChanged, this, [this](std::int32_t) {
         reset_patches_data_tab();
     });
