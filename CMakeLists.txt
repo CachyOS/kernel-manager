@@ -90,7 +90,7 @@ file(GLOB TS_FILES "${PROJECT_SOURCE_DIR}/lang/*.ts")
 file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lang")
 
 set_source_files_properties(${TS_FILES} PROPERTIES OUTPUT_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/lang") # set qm files output directory
-qt5_add_translation(QM_FILES ${TS_FILES})   # generate qm files
+qt_add_translation(QM_FILES ${TS_FILES})   # generate qm files
 
 add_custom_command(
     DEPENDS "${QM_FILES}"
