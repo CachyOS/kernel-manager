@@ -108,7 +108,7 @@ add_custom_command(
     COMMAND ${Python3_EXECUTABLE} "${CMAKE_SOURCE_DIR}/src/mkoptions.py" "${CMAKE_CURRENT_BINARY_DIR}" "${CMAKE_SOURCE_DIR}"
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
 )
-add_executable(${PROJECT_NAME}
+qt_add_executable(${PROJECT_NAME}
     src/ini.hpp
     src/utils.hpp src/utils.cpp
     src/kernel.hpp src/kernel.cpp

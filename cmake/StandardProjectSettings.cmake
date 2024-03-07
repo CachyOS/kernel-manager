@@ -25,8 +25,8 @@ add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x050F00)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
-  add_compile_options(-nostdlib++ -stdlib=libc++ -nodefaultlibs -fexperimental-library)
-  add_link_options(-stdlib=libc++)
+  #add_compile_options(-nostdlib++ -stdlib=libc++ -nodefaultlibs -fexperimental-library)
+  #add_link_options(-stdlib=libc++)
 
   add_compile_options(-fstrict-vtable-pointers)
 
