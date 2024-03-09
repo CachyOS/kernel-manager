@@ -203,4 +203,29 @@ void prepare_build_environment() noexcept {
     }
 }
 
+void restore_clean_environment(std::vector<std::string>& previously_set_options, std::string_view all_set_values) noexcept {
+    // Unset env variables before appplying new ones.
+    for (auto&& previous_option : previously_set_options) {
+        if (unsetenv(previous_option.c_str()) != 0) {
+            fmt::print(stderr, "Cannot unset environment variable!: {}\n", std::strerror(errno));
+        }
+    }
+    previously_set_options.clear();
+
+    auto set_values_list = utils::make_multiline_view(all_set_values, '\n');
+    for (auto&& expr : set_values_list) {
+        const auto& expr_split = utils::make_multiline(std::move(expr), '=');
+        const auto& var_name   = expr_split[0];
+        const auto& var_val    = expr_split[1];
+
+        if (setenv(var_name.c_str(), var_val.c_str(), 1) != 0) {
+            fmt::print(stderr, "Cannot set environment variable!: {}\n", std::strerror(errno));
+            continue;
+        }
+
+        // Save env name to unset it before running the next compilation.
+        previously_set_options.push_back(var_name);
+    }
+}
+
 }  // namespace utils

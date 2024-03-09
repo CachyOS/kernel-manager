@@ -164,6 +164,7 @@ inline auto convert_to_var_assign(std::string_view option, std::string_view valu
     return fmt::format(FMT_COMPILE("{}={}\n"), convert_to_varname(option), value);
 }
 
+/// return flag to enable if the option is enabled, otherwise do nothing
 constexpr auto convert_to_var_assign_empty_wrapped(std::string_view option_name, bool option_enabled) noexcept {
     using namespace std::string_view_literals;
     if (option_enabled) {
@@ -298,7 +299,7 @@ void ConfWindow::connect_all_checkboxes() noexcept {
     }
 }
 
-std::string ConfWindow::get_all_set_values() noexcept {
+std::string ConfWindow::get_all_set_values() const noexcept {
     std::string result{};
     auto* options_page_ui_obj = m_ui->conf_options_page_widget->get_ui_obj();
 
@@ -562,30 +563,8 @@ void ConfWindow::on_execute() noexcept {
     utils::prepare_build_environment();
 
     // Restore clean environment.
-    // Unset env variables before appplying new ones.
-    for (auto&& previous_option : m_previously_set_options) {
-        if (unsetenv(previous_option.c_str()) != 0) {
-            fmt::print(stderr, "Cannot unset environment variable!: {}\n", std::strerror(errno));
-        }
-    }
-    m_previously_set_options.clear();
-
     const auto& all_set_values = get_all_set_values();
-    fmt::print("all_set_values :=\n{}\n", all_set_values);
-    auto set_values_list = utils::make_multiline_view(all_set_values, '\n');
-    for (auto&& expr : set_values_list) {
-        const auto& expr_split = utils::make_multiline(std::move(expr), '=');
-        const auto& var_name   = expr_split[0];
-        const auto& var_val    = expr_split[1];
-
-        if (setenv(var_name.c_str(), var_val.c_str(), 1) != 0) {
-            fmt::print(stderr, "Cannot set environment variable!: {}\n", std::strerror(errno));
-            continue;
-        }
-
-        // Save env name to unset it before running the next compilation.
-        m_previously_set_options.push_back(var_name);
-    }
+    utils::restore_clean_environment(m_previously_set_options, all_set_values);
 
     // Only files which end with .patch,
     // are considered as patches.

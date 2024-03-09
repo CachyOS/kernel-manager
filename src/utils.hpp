@@ -69,6 +69,7 @@ std::int32_t release_alpm(alpm_handle_t* handle, alpm_errno_t* err) noexcept;
 int runCmdTerminal(QString cmd, bool escalate) noexcept;
 
 void prepare_build_environment() noexcept;
+void restore_clean_environment(std::vector<std::string>& previously_set_options, std::string_view all_set_values) noexcept;
 
 inline constexpr std::size_t replace_all(std::string& inout, std::string_view what, std::string_view with) noexcept {
     std::size_t count{};
