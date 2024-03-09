@@ -589,10 +589,20 @@ void ConfWindow::on_execute() noexcept {
 
     // Only files which end with .patch,
     // are considered as patches.
-    const auto& orig_src_array          = get_source_array_from_pkgbuild(cpusched_path, all_set_values);
-    [[maybe_unused]] auto insert_status = insert_new_source_array_into_pkgbuild(cpusched_path, patches_page_ui_obj->list_widget, orig_src_array);
-    const auto& custom_name             = options_page_ui_obj->custom_name_edit->text().toUtf8();
-    insert_status                       = set_custom_name_in_pkgbuild(cpusched_path, std::string_view{custom_name.constData(), static_cast<size_t>(custom_name.size())});
+    const auto& orig_src_array = get_source_array_from_pkgbuild(cpusched_path, all_set_values);
+    auto insert_status         = insert_new_source_array_into_pkgbuild(cpusched_path, patches_page_ui_obj->list_widget, orig_src_array);
+    if (!insert_status) {
+        m_running = false;
+        fmt::print(stderr, "Failed to insert new source array into pkgbuild\n");
+        return;
+    }
+    const auto& custom_name = options_page_ui_obj->custom_name_edit->text().toUtf8();
+    insert_status           = set_custom_name_in_pkgbuild(cpusched_path, std::string_view{custom_name.constData(), static_cast<size_t>(custom_name.size())});
+    if (!insert_status) {
+        m_running = false;
+        fmt::print(stderr, "Failed to set custom name in pkgbuild\n");
+        return;
+    }
     fs::current_path(cpusched_path);
 
     // Run our build command!
