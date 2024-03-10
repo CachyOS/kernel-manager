@@ -303,19 +303,15 @@ std::string ConfWindow::get_all_set_values() const noexcept {
     std::string result{};
     auto* options_page_ui_obj = m_ui->conf_options_page_widget->get_ui_obj();
 
-    // checkboxes values
-    result += convert_to_var_assign("hardly", convert_checkstate(options_page_ui_obj->hardly_check));
-    result += convert_to_var_assign("per_gov", convert_checkstate(options_page_ui_obj->perfgovern_check));
-    result += convert_to_var_assign("tcp_bbr3", convert_checkstate(options_page_ui_obj->tcpbbr_check));
-    result += convert_to_var_assign("auto_optim", convert_checkstate(options_page_ui_obj->autooptim_check));
-
-    // Execute 'sed' with checkboxes values,
+    // checkboxes values,
     // which becomes enabled with any value passed,
     // and if nothing passed means it's disabled.
-    const auto& is_cachyconfig_enabled = checkstate_checked(options_page_ui_obj->cachyconfig_check);
-    if (!is_cachyconfig_enabled) {
-        result += convert_to_var_assign("cachy_config", "'no'");
-    }
+    result += convert_to_var_assign_empty_wrapped("hardly", checkstate_checked(options_page_ui_obj->hardly_check));
+    result += convert_to_var_assign_empty_wrapped("per_gov", checkstate_checked(options_page_ui_obj->perfgovern_check));
+    result += convert_to_var_assign_empty_wrapped("tcp_bbr3", checkstate_checked(options_page_ui_obj->tcpbbr_check));
+    result += convert_to_var_assign_empty_wrapped("auto_optim", checkstate_checked(options_page_ui_obj->autooptim_check));
+
+    result += convert_to_var_assign_empty_wrapped("cachy_config", checkstate_checked(options_page_ui_obj->cachyconfig_check));
     result += convert_to_var_assign_empty_wrapped("nconfig", checkstate_checked(options_page_ui_obj->nconfig_check));
     result += convert_to_var_assign_empty_wrapped("menuconfig", checkstate_checked(options_page_ui_obj->menuconfig_check));
     result += convert_to_var_assign_empty_wrapped("xconfig", checkstate_checked(options_page_ui_obj->xconfig_check));
@@ -328,7 +324,7 @@ std::string ConfWindow::get_all_set_values() const noexcept {
     result += convert_to_var_assign_empty_wrapped("builtin_nvidia", checkstate_checked(options_page_ui_obj->builtin_nvidia_check));
     result += convert_to_var_assign_empty_wrapped("builtin_bcachefs", checkstate_checked(options_page_ui_obj->builtin_bcachefs_check));
 
-    // Execute 'sed' with combobox values
+    // combobox values
     result += convert_to_var_assign("HZ_ticks", get_hz_tick(static_cast<size_t>(options_page_ui_obj->hzticks_combo_box->currentIndex())));
     result += convert_to_var_assign("tickrate", get_tickless_mode(static_cast<size_t>(options_page_ui_obj->tickless_combo_box->currentIndex())));
     result += convert_to_var_assign("preempt", get_preempt_mode(static_cast<size_t>(options_page_ui_obj->preempt_combo_box->currentIndex())));
