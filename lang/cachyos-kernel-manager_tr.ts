@@ -9,19 +9,19 @@
     </message>
     <message>
         <source>Tweak kernel options prior to a build via nconfig</source>
-        <translation>nconfig aracılığıyla yapılandırmadan önce çekirdek ayarlarını iyileştir</translation>
+        <translation>nconfig ile yapılandırmadan önce çekirdek ayarlarına ince ayar yap</translation>
     </message>
     <message>
         <source>Tweak kernel options prior to a build via menuconfig</source>
-        <translation>menuconfig aracılığıyla yapılandırmadan önce çekirdek ayarlarını iyileştir</translation>
+        <translation>menuconfig ile yapılandırmadan önce çekirdek ayarlarına ince ayar yap</translation>
     </message>
     <message>
         <source>Tweak kernel options prior to a build via xconfig</source>
-        <translation>xconfig aracılığıyla yapılandırmadan önce çekirdek ayarlarını iyileştir</translation>
+        <translation>xconfig ile yapılandırmadan önce çekirdek ayarlarına ince ayar yap</translation>
     </message>
     <message>
         <source>Tweak kernel options prior to a build via gconfig</source>
-        <translation>gconfig aracılığıyla yapılandırmadan önce çekirdek ayarlarını iyileştir</translation>
+        <translation>gconfig ile yapılandırmadan önce çekirdek ayarlarına ince ayar yap</translation>
     </message>
     <message>
         <source>Disable NUMA</source>
@@ -37,7 +37,7 @@
     </message>
     <message>
         <source>Set performance governor as default</source>
-        <translation>Performans odaklı işlemci yöneticisi varsayılan kabul edilsin</translation>
+        <translation>Performans odaklı işlemci yöneticisini varsayılan yap</translation>
     </message>
     <message>
         <source>Enable TCP_CONG_BBR3</source>
@@ -69,7 +69,7 @@
     </message>
     <message>
         <source>Enable Linux Random Number Generator</source>
-        <translation>Linux Rastgele Sayı Üreteci etkinleştirilsin</translation>
+        <translation>Linux Rastgele Sayı Üretecini etkinleştir</translation>
     </message>
     <message>
         <source>CPU compiler optimizations</source>
@@ -131,7 +131,7 @@
     <name>ConfWindow</name>
     <message>
         <source>CachyOS Kernel Manager Configure</source>
-        <translation>CachyOS Çekirdek Yöneticisi Biçimleme</translation>
+        <translation>CachyOS Çekirdek Yöneticisi Yapılandırma</translation>
     </message>
     <message>
         <source>Options</source>
@@ -143,11 +143,11 @@
     </message>
     <message>
         <source>Bore - Burst-Oriented Response Enhancer</source>
-        <translation type="unfinished"></translation>
+        <translation>BORE - Ani Yüke Odaklı Tepki Arttırıcı</translation>
     </message>
     <message>
         <source>RC - Release Candidate</source>
-        <translatio>Çıkış sürümü adayı</translation>
+        <translatio>RC - Çıkış sürümü adayı</translation>
     </message>
     <message>
         <source>Select one or more patch files</source>
@@ -244,7 +244,7 @@ Uygulamanın düzgün çalışabilmesi için bu gereklidir.</translation>
         <source>Failed to clone repository!
 Please check your internet connection and try again</source>
         <translation>Repoyu klonlama başarısız oldu!
-Lütfen internet bağlantınızı kontrol edin ve tekrar deneyin.</translation>
+Lütfen internet bağlantınızı kontrol edip tekrar deneyin.</translation>
     </message>
     <message>
         <source>Please wait...
