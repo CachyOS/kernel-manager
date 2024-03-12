@@ -175,52 +175,52 @@
         <translation>Патчи</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="386"/>
+        <location filename="../src/conf-window.cpp" line="385"/>
         <source>Bore - Burst-Oriented Response Enhancer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="387"/>
+        <location filename="../src/conf-window.cpp" line="386"/>
         <source>RC - Release Candidate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="388"/>
+        <location filename="../src/conf-window.cpp" line="387"/>
         <source>RT - Realtime kernel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="385"/>
-        <source>CachyOS - Bore</source>
+        <location filename="../src/conf-window.cpp" line="384"/>
+        <source>CachyOS - BORE + SCHED-EXT</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="389"/>
+        <location filename="../src/conf-window.cpp" line="388"/>
         <source>RT-Bore</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="390"/>
+        <location filename="../src/conf-window.cpp" line="389"/>
         <source>Sched-Ext - BPF extensible scheduler class</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="482"/>
+        <location filename="../src/conf-window.cpp" line="478"/>
         <source>Select one or more patch files</source>
         <translation>Выберите один или несколько файлов патчей</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="484"/>
+        <location filename="../src/conf-window.cpp" line="480"/>
         <source>Patch file (*.patch)</source>
         <translation>Файл патча (*.patch)</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="504"/>
+        <location filename="../src/conf-window.cpp" line="500"/>
         <source>Enter URL patch</source>
         <translation>Введите URL патча</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="505"/>
+        <location filename="../src/conf-window.cpp" line="501"/>
         <source>Patch URL:</source>
         <translation>URL патча:</translation>
     </message>
@@ -285,31 +285,31 @@
         <translation>Отменить</translation>
     </message>
     <message>
-        <location filename="../src/km-window.cpp" line="143"/>
+        <location filename="../src/km-window.cpp" line="141"/>
         <source>Failed to initialize alpm handle (%1)</source>
         <translation>Не удалось инициализировать хэндл alpm (%1)</translation>
     </message>
     <message>
-        <location filename="../src/km-window.cpp" line="156"/>
+        <location filename="../src/km-window.cpp" line="154"/>
         <source>Failed to release alpm handle (%1)</source>
         <translation>Не удалось освободить хэндл alpm (%1)</translation>
     </message>
     <message>
-        <location filename="../src/km-window.cpp" line="353"/>
+        <location filename="../src/km-window.cpp" line="351"/>
         <source>Please wait...
 Initializing kernels..</source>
         <translation>Пожалуйста, подождите...
 Инициализация ядер..</translation>
     </message>
     <message>
-        <location filename="../src/km-window.cpp" line="196"/>
+        <location filename="../src/km-window.cpp" line="194"/>
         <source>Failed to clone repository!
 Please check your internet connection and try again</source>
         <translation>Не удалось клонировать репозиторий!
 Пожалуйста, проверьте подключение к Интернету и повторите попытку</translation>
     </message>
     <message>
-        <location filename="../src/km-window.cpp" line="222"/>
+        <location filename="../src/km-window.cpp" line="220"/>
         <source>No kernels found!
 Please run `pacman -Sy` to update DB!
 This is needed for the app to work properly</source>
@@ -318,8 +318,8 @@ This is needed for the app to work properly</source>
 Это необходимо для правильной работы приложения</translation>
     </message>
     <message>
-        <location filename="../src/km-window.cpp" line="270"/>
-        <location filename="../src/km-window.cpp" line="332"/>
+        <location filename="../src/km-window.cpp" line="268"/>
+        <location filename="../src/km-window.cpp" line="330"/>
         <source>Please wait...
 We are preparing configuration window for you
 cloning PKGBUILDs..</source>

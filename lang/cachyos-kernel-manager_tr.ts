@@ -93,7 +93,7 @@
     </message>
     <message>
         <source>Transparent Hugepages</source>
-        <translation>Saydam HugePage'ler</translation>
+        <translation>Saydam HugePage&apos;ler</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -170,16 +170,16 @@
         <translation>RT - Gerçek zamanlı çekirdek</translation>
     </message>
     <message>
-        <source>CachyOS - Bore</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>RT-Bore</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Sched-Ext - BPF extensible scheduler class</source>
         <translation>Sched-Ext - BPF genişletilebilir zamanlayıcı sınıfı</translation>
+    </message>
+    <message>
+        <source>CachyOS - BORE + SCHED-EXT</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -252,7 +252,7 @@ We are preparing configuration window for you
 cloning PKGBUILDs..</source>
         <translation>Lütfen bekleyin…
 Biçimleme penceresini sizin için hazırlıyoruz
-PKGBUILD'ler klonlanıyor…</translation>
+PKGBUILD&apos;ler klonlanıyor…</translation>
     </message>
     <message>
         <source>Failed to initialize alpm handle (%1)</source>

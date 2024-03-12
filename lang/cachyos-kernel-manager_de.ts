@@ -170,15 +170,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>CachyOS - Bore</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>RT-Bore</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Sched-Ext - BPF extensible scheduler class</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>CachyOS - BORE + SCHED-EXT</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
