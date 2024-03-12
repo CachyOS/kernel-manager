@@ -5,7 +5,7 @@
     <name>ConfOptionsPage</name>
     <message>
         <source>Enable CachyOS config</source>
-        <translation>CachyOS yapı biçimleyiciyi etkinleştir</translation>
+        <translation>CachyOS ayarlamayı etkinleştir</translation>
     </message>
     <message>
         <source>Tweak kernel options prior to a build via nconfig</source>
@@ -147,7 +147,7 @@
     </message>
     <message>
         <source>RC - Release Candidate</source>
-        <translatio>RC - Çıkış sürümü adayı</translation>
+        <translation>RC - Çıkış sürümü adayı</translation>
     </message>
     <message>
         <source>Select one or more patch files</source>
