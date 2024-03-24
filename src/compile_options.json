@@ -21,7 +21,6 @@
         "lto": "_use_llvm_lto",
         "builtin_zfs": "_build_zfs",
         "builtin_nvidia": "_build_nvidia",
-        "builtin_bcachefs": "_bcachefs",
         "hugepage": "_hugepage"
     }
 }
