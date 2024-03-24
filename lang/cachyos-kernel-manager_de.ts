@@ -68,10 +68,6 @@
         <translation>DAMON aktivieren</translation>
     </message>
     <message>
-        <source>Enable Linux Random Number Generator</source>
-        <translation>LRNG aktivieren</translation>
-    </message>
-    <message>
         <source>CPU compiler optimizations</source>
         <translation>CPU Compiler Optimierungen</translation>
     </message>
@@ -86,10 +82,6 @@
     <message>
         <source>Build the ZFS module</source>
         <translation>ZFS Module kompilieren</translation>
-    </message>
-    <message>
-        <source>Build the BCACHEFS module</source>
-        <translation>BCACHEFS Module kompilieren</translation>
     </message>
     <message>
         <source>Transparent Hugepages</source>

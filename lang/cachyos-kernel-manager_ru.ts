@@ -95,51 +95,41 @@
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="530"/>
-        <source>Enable Linux Random Number Generator</source>
-        <translation>Включить генератор случайных чисел Linux</translation>
-    </message>
-    <message>
-        <location filename="../src/conf-options-page.ui" line="559"/>
         <source>CPU compiler optimizations</source>
         <translation>Оптимизация для процессора</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="588"/>
+        <location filename="../src/conf-options-page.ui" line="559"/>
         <source>Apply automatic CPU Optimization</source>
         <translation>Применяйте автоматическую оптимизацию процессора</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="617"/>
+        <location filename="../src/conf-options-page.ui" line="588"/>
         <source>Enable LTO</source>
         <translation>Включить LTO</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="646"/>
+        <location filename="../src/conf-options-page.ui" line="617"/>
         <source>Build the ZFS module</source>
         <translation>Собрать модуль ZFS</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="675"/>
+        <location filename="../src/conf-options-page.ui" line="646"/>
         <source>Build the NVIDIA module</source>
         <translation>Собрать модуль NVIDIA</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="704"/>
-        <source>Build the BCACHEFS module</source>
-        <translation>Собрать модуль BCACHEFS</translation>
-    </message>
-    <message>
-        <location filename="../src/conf-options-page.ui" line="733"/>
+        <location filename="../src/conf-options-page.ui" line="675"/>
         <source>Transparent Hugepages</source>
         <translation>Установить режим работы для THP (Transparent Hugepages)</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="792"/>
+        <location filename="../src/conf-options-page.ui" line="734"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="799"/>
+        <location filename="../src/conf-options-page.ui" line="741"/>
         <source>Execute</source>
         <translation>Выполнить</translation>
     </message>
@@ -175,52 +165,52 @@
         <translation>Патчи</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="385"/>
+        <location filename="../src/conf-window.cpp" line="381"/>
         <source>Bore - Burst-Oriented Response Enhancer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="386"/>
+        <location filename="../src/conf-window.cpp" line="382"/>
         <source>RC - Release Candidate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="387"/>
+        <location filename="../src/conf-window.cpp" line="383"/>
         <source>RT - Realtime kernel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="384"/>
+        <location filename="../src/conf-window.cpp" line="380"/>
         <source>CachyOS - BORE + SCHED-EXT</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="388"/>
+        <location filename="../src/conf-window.cpp" line="384"/>
         <source>RT-Bore</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="389"/>
+        <location filename="../src/conf-window.cpp" line="385"/>
         <source>Sched-Ext - BPF extensible scheduler class</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="478"/>
+        <location filename="../src/conf-window.cpp" line="474"/>
         <source>Select one or more patch files</source>
         <translation>Выберите один или несколько файлов патчей</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="480"/>
+        <location filename="../src/conf-window.cpp" line="476"/>
         <source>Patch file (*.patch)</source>
         <translation>Файл патча (*.patch)</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="500"/>
+        <location filename="../src/conf-window.cpp" line="496"/>
         <source>Enter URL patch</source>
         <translation>Введите URL патча</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="501"/>
+        <location filename="../src/conf-window.cpp" line="497"/>
         <source>Patch URL:</source>
         <translation>URL патча:</translation>
     </message>

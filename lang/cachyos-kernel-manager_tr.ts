@@ -68,10 +68,6 @@
         <translation>DAMON etkinleştirilsin</translation>
     </message>
     <message>
-        <source>Enable Linux Random Number Generator</source>
-        <translation>Linux Rastgele Sayı Üretecini etkinleştir</translation>
-    </message>
-    <message>
         <source>CPU compiler optimizations</source>
         <translation>İşlemci derleme iyileştirmeleri</translation>
     </message>
@@ -86,10 +82,6 @@
     <message>
         <source>Build the ZFS module</source>
         <translation>ZFS modülünü yapılandır</translation>
-    </message>
-    <message>
-        <source>Build the BCACHEFS module</source>
-        <translation>BCACHEFS modülünü yapılandır</translation>
     </message>
     <message>
         <source>Transparent Hugepages</source>
