@@ -16,7 +16,6 @@
         "lru_config": "_lru_config",
         "vma_config": "_vma_config",
         "damon": "_damon",
-        "lrng": "_lrng_enable",
         "cpu_opt": "_processor_opt",
         "auto_optim": "_use_auto_optimization",
         "lto": "_use_llvm_lto",
