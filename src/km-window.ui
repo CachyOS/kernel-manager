@@ -28,8 +28,8 @@
        <string>&lt;html&gt;
 &lt;body&gt;
 &lt;p&gt;Here you'll see information about currently installed and available Linux kernels.&lt;/p&gt;
-&lt;p&gt;You can install and/or uninstall kernel packages using the checkboxes on the leftmost column.&lt;/p&gt;
-&lt;p&gt;This app won't work, if you are already running a pacman instance.&lt;/p&gt;
+&lt;p&gt;You can install/uninstall kernel packages using the checkboxes on the leftmost column.&lt;/p&gt;
+&lt;p&gt;This app won't work if you are already running a pacman instance.&lt;/p&gt;
 &lt;/body&gt;
 &lt;/html&gt;</string>
       </property>
