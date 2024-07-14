@@ -105,12 +105,9 @@ SchedExtWindow::SchedExtWindow(QWidget* parent)
     QStringList sched_names;
     sched_names << "scx_bpfland"
                 << "scx_central"
-                << "scx_flatcg"
                 << "scx_lavd"
                 << "scx_layered"
-                << "scx_mitosis"
                 << "scx_nest"
-                << "scx_pair"
                 << "scx_qmap"
                 << "scx_rlfifo"
                 << "scx_rustland"
