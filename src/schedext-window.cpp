@@ -19,11 +19,13 @@
 // NOLINTBEGIN(bugprone-unhandled-exception-at-new)
 
 #include "schedext-window.hpp"
+#include "scx_utils.hpp"
 #include "utils.hpp"
 
 #include <fstream>
 #include <string>
 #include <string_view>
+#include <thread>
 
 #if defined(__clang__)
 #pragma clang diagnostic push
@@ -38,6 +40,7 @@
 #pragma GCC diagnostic ignored "-Wconversion"
 #endif
 
+#include <QMessageBox>
 #include <QProcess>
 #include <QStringList>
 
@@ -83,61 +86,50 @@ auto get_current_scheduler() noexcept -> std::string {
     return current_sched;
 }
 
-auto is_scx_service_enabled() noexcept -> bool {
+auto is_scx_loader_service_enabled() noexcept -> bool {
     using namespace std::string_view_literals;
-    return utils::exec("systemctl is-enabled scx"sv) == "enabled"sv;
+    return utils::exec("systemctl is-enabled scx_loader"sv) == "enabled"sv;
 }
 
-auto is_scx_service_active() noexcept -> bool {
+auto is_scx_loader_service_active() noexcept -> bool {
     using namespace std::string_view_literals;
-    return utils::exec("systemctl is-active scx"sv) == "active"sv;
+    return utils::exec("systemctl is-active scx_loader"sv) == "active"sv;
 }
 
-enum class SchedMode : std::uint8_t {
-    /// Default values for the scheduler
-    Auto = 0,
-    /// Applies flags for better gaming experience
-    Gaming = 1,
-    /// Applies flags for lower power usage
-    PowerSave = 2,
-    /// Starts scheduler in low latency mode
-    LowLatency = 3,
-};
-
-constexpr auto get_scx_mode_from_str(std::string_view scx_mode) noexcept -> SchedMode {
+constexpr auto get_scx_mode_from_str(std::string_view scx_mode) noexcept -> scx::SchedMode {
     using namespace std::string_view_literals;
 
     if (scx_mode == "gaming"sv) {
-        return SchedMode::Gaming;
+        return scx::SchedMode::Gaming;
     } else if (scx_mode == "lowlatency"sv) {
-        return SchedMode::LowLatency;
+        return scx::SchedMode::LowLatency;
     } else if (scx_mode == "powersave"sv) {
-        return SchedMode::PowerSave;
+        return scx::SchedMode::PowerSave;
     }
-    return SchedMode::Auto;
+    return scx::SchedMode::Auto;
 }
 
-constexpr auto get_scx_flags(std::string_view scx_sched, SchedMode scx_mode) noexcept -> std::string_view {
+constexpr auto get_scx_flags(std::string_view scx_sched, scx::SchedMode scx_mode) noexcept -> std::string_view {
     using namespace std::string_view_literals;
 
     // Map the selected performance profile to the different scheduler
     // options.
     //
     // NOTE: only scx_bpfland and scx_lavd are supported for now.
-    if (scx_mode == SchedMode::Auto) {
-    } else if (scx_mode == SchedMode::Gaming) {
+    if (scx_mode == scx::SchedMode::Auto) {
+    } else if (scx_mode == scx::SchedMode::Gaming) {
         if (scx_sched == "scx_bpfland"sv) {
             return "-k -m performance"sv;
         } else if (scx_sched == "scx_lavd"sv) {
             return "--performance"sv;
         }
-    } else if (scx_mode == SchedMode::LowLatency) {
+    } else if (scx_mode == scx::SchedMode::LowLatency) {
         if (scx_sched == "scx_bpfland"sv) {
             return "--lowlatency"sv;
         } else if (scx_sched == "scx_lavd"sv) {
             return "--performance"sv;
         }
-    } else if (scx_mode == SchedMode::PowerSave) {
+    } else if (scx_mode == scx::SchedMode::PowerSave) {
         if (scx_sched == "scx_bpfland"sv) {
             return "-m powersave"sv;
         } else if (scx_sched == "scx_lavd"sv) {
@@ -157,19 +149,22 @@ SchedExtWindow::SchedExtWindow(QWidget* parent)
     setWindowFlags(Qt::Window);  // for the close, min and max buttons
 
     // Selecting the scheduler
-    QStringList sched_names;
-    sched_names << "scx_bpfland"
-                << "scx_central"
-                << "scx_lavd"
-                << "scx_layered"
-                << "scx_nest"
-                << "scx_qmap"
-                << "scx_rlfifo"
-                << "scx_rustland"
-                << "scx_rusty"
-                << "scx_simple"
-                << "scx_userland";
-    m_ui->schedext_combo_box->addItems(sched_names);
+    auto supported_scheds = scx::loader::get_supported_scheds();
+    if (supported_scheds.has_value()) {
+        m_ui->schedext_combo_box->addItems(*supported_scheds);
+    } else {
+        QMessageBox::critical(this, "CachyOS Kernel Manager", tr("Cannot get information from scx_loader!\nIs it working?\nThis is needed for the app to work properly"));
+
+        // hide all components which depends on scheduler management
+        m_ui->schedext_combo_box->setHidden(true);
+        m_ui->scheduler_select_label->setHidden(true);
+
+        m_ui->schedext_profile_combo_box->setHidden(true);
+        m_ui->scheduler_profile_select_label->setHidden(true);
+
+        m_ui->schedext_flags_edit->setHidden(true);
+        m_ui->scheduler_set_flags_label->setHidden(true);
+    }
 
     // Selecting the performance profile
     QStringList sched_profiles;
@@ -213,11 +208,11 @@ void SchedExtWindow::on_disable() noexcept {
 
     using namespace std::string_view_literals;
     // TODO(vnepogodin): refactor that
-    if (is_scx_service_enabled()) {
-        QProcess::startDetached("/usr/bin/pkexec", {"/usr/bin/systemctl", "disable", "--now", "scx"});
+    if (is_scx_loader_service_enabled()) {
+        QProcess::startDetached("/usr/bin/pkexec", {"/usr/bin/systemctl", "disable", "--now", "scx_loader"});
         fmt::print("Disabling scx\n");
-    } else if (is_scx_service_active()) {
-        QProcess::startDetached("/usr/bin/pkexec", {"/usr/bin/systemctl", "stop", "scx"});
+    } else if (is_scx_loader_service_active()) {
+        QProcess::startDetached("/usr/bin/pkexec", {"/usr/bin/systemctl", "stop", "scx_loader"});
         fmt::print("Stoping scx\n");
     }
 
@@ -245,33 +240,36 @@ void SchedExtWindow::on_apply() noexcept {
     m_ui->disable_button->setEnabled(false);
     m_ui->apply_button->setEnabled(false);
 
-    const auto service_cmd = []() -> std::string_view {
-        using namespace std::string_view_literals;
-        if (!is_scx_service_enabled()) {
-            return "enable --now"sv;
-        }
-        return "restart"sv;
-    }();
-
-    static constexpr auto get_scx_flags_sed = [](std::string_view scx_sched,
-                                                  SchedMode scx_mode,
-                                                  std::string_view scx_extra_flags) -> std::string {
-        const auto scx_base_flags = get_scx_flags(scx_sched, scx_mode);
-        return fmt::format(R"(-e 's/^\s*#\?\s*SCX_FLAGS=.*$/SCX_FLAGS="{} {}"/')", scx_base_flags, scx_extra_flags);
-    };
-
     // TODO(vnepogodin): refactor that
     const auto& current_selected = m_ui->schedext_combo_box->currentText().toStdString();
     const auto& current_profile  = m_ui->schedext_profile_combo_box->currentText().toStdString();
     const auto& extra_flags      = m_ui->schedext_flags_edit->text().trimmed().toStdString();
 
-    const auto& scx_mode      = get_scx_mode_from_str(current_profile);
-    const auto& scx_flags_sed = get_scx_flags_sed(current_selected, scx_mode, extra_flags);
+    const auto& scx_mode = get_scx_mode_from_str(current_profile);
 
-    const auto& sed_cmd = fmt::format("sed -e 's/SCX_SCHEDULER=.*/SCX_SCHEDULER={}/' {} -i /etc/default/scx && systemctl {} scx", current_selected, scx_flags_sed, service_cmd);
+    auto sched_args = QStringList();
+    {
+        const auto scx_base_flags = get_scx_flags(current_selected, scx_mode);
+        if (!scx_base_flags.empty()) {
+            sched_args << QString::fromStdString(std::string{scx_base_flags}).split(' ');
+        }
+    }
+    if (!extra_flags.empty()) {
+        sched_args << QString::fromStdString(extra_flags).split(' ');
+    }
 
-    QProcess::startDetached("/usr/bin/pkexec", {"/usr/bin/bash", "-c", QString::fromStdString(sed_cmd)});
-    fmt::print("Applying scx {}\n", current_selected);
+    fmt::print("Applying scx '{}' with args: {}\n", current_selected, sched_args.join(' ').toStdString());
+    auto sched_reply = scx::loader::switch_scheduler_with_args(current_selected, sched_args);
+    if (!sched_reply) {
+        qDebug() << "Failed to switch '" << current_selected << "' with args:" << sched_args;
+    }
+
+    // NOTE: with the current setup it doesn't make any sense, but in future the loader saves information about scx setup(scx and mode/flags).
+    // also the scx_loader replace scx.service in the sense that it will pre-start using saved information
+    if (!is_scx_loader_service_enabled()) {
+        fmt::print("Enabling scx_loader service\n");
+        QProcess::startDetached("/usr/bin/pkexec", {"/usr/bin/systemctl", "enable", "scx_loader"});
+    }
 
     m_ui->disable_button->setEnabled(true);
     m_ui->apply_button->setEnabled(true);
