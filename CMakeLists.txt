@@ -27,7 +27,7 @@ include(CPM)
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
 find_package(Threads REQUIRED)
 find_package(PkgConfig REQUIRED)
-find_package(Qt6 COMPONENTS Widgets LinguistTools Concurrent REQUIRED)
+find_package(Qt6 COMPONENTS Widgets LinguistTools Concurrent DBus REQUIRED)
 pkg_check_modules(
   LIBALPM
   REQUIRED
@@ -119,6 +119,7 @@ qt_add_executable(${PROJECT_NAME}
     "${CMAKE_BINARY_DIR}/compile_options.hpp"
     src/config-options.hpp src/config-options.cpp
     src/conf-window.hpp src/conf-window.cpp
+    src/scx_utils.hpp src/scx_utils.cpp
     src/schedext-window.hpp src/schedext-window.cpp
     src/conf-patches-page.hpp src/conf-patches-page.ui
     src/conf-options-page.hpp src/conf-options-page.ui
@@ -140,9 +141,9 @@ enable_sanitizers(project_options)
 include_directories(${CMAKE_SOURCE_DIR}/src ${CMAKE_BINARY_DIR})
 
 corrosion_import_crate(MANIFEST_PATH "config-option-lib/Cargo.toml" FLAGS "${CARGO_FLAGS}")
-corrosion_add_cxxbridge(config-option-lib-cxxbridge CRATE config_option_lib MANIFEST_PATH "config-option-lib/Cargo.toml" FILES lib.rs)
+corrosion_add_cxxbridge(config-option-lib-cxxbridge CRATE config_option_lib MANIFEST_PATH "config-option-lib/Cargo.toml" FILES lib.rs scx_loader_config.rs)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE project_warnings project_options Qt6::Widgets Qt6::Concurrent Threads::Threads fmt::fmt frozen::frozen config-option-lib-cxxbridge PkgConfig::LIBALPM PkgConfig::LIBGLIB)
+target_link_libraries(${PROJECT_NAME} PRIVATE project_warnings project_options Qt6::Widgets Qt6::Concurrent Qt6::DBus Threads::Threads fmt::fmt frozen::frozen config-option-lib-cxxbridge PkgConfig::LIBALPM PkgConfig::LIBGLIB)
 
 option(ENABLE_UNITY "Enable Unity builds of projects" OFF)
 if(ENABLE_UNITY)

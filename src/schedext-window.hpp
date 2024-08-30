@@ -39,6 +39,8 @@
 
 #include <ui_schedext-window.h>
 
+#include "scx_utils.hpp"
+
 #include <functional>
 #include <memory>
 #include <string>
@@ -68,6 +70,8 @@ class SchedExtWindow final : public QMainWindow {
     void on_disable() noexcept;
     void on_sched_changed() noexcept;
 
+    const std::string_view m_config_path{"/etc/scx_loader.toml"};
+    scx::loader::ConfigPtr m_scx_config;
     std::vector<std::string> m_previously_set_options{};
     std::unique_ptr<Ui::SchedExtWindow> m_ui = std::make_unique<Ui::SchedExtWindow>();
     QTimer* m_sched_timer                    = nullptr;

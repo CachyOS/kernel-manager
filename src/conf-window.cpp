@@ -212,7 +212,6 @@ auto get_pkgext_value_from_makepkgconf() noexcept -> std::string {
     return pkgext_val;
 }
 
-
 auto prepare_func_names(std::vector<std::string> parse_lines, std::string_view pkgver_str) noexcept -> std::vector<std::string> {
     using namespace std::string_view_literals;
 
