@@ -127,13 +127,13 @@ constexpr auto get_scx_flags(std::string_view scx_sched, SchedMode scx_mode) noe
     if (scx_mode == SchedMode::Auto) {
     } else if (scx_mode == SchedMode::Gaming) {
         if (scx_sched == "scx_bpfland"sv) {
-            return "-k -m performance"sv;
+            return "-m performance"sv;
         } else if (scx_sched == "scx_lavd"sv) {
             return "--performance"sv;
         }
     } else if (scx_mode == SchedMode::LowLatency) {
         if (scx_sched == "scx_bpfland"sv) {
-            return "--lowlatency"sv;
+            return "-k -s 5000 -l 5000"sv;
         } else if (scx_sched == "scx_lavd"sv) {
             return "--performance"sv;
         }
