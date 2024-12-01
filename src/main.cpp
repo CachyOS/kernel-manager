@@ -124,6 +124,7 @@ auto main(int argc, char** argv) -> std::int32_t {
     QApplication::setOrganizationName("CachyOS");
     QApplication::setOrganizationDomain("cachyos.org");
     QApplication::setApplicationName("CachyOS-KM");
+    QApplication::setDesktopFileName("org.cachyos.KernelManager");
 
     // Set application attributes
     const QApplication app(argc, argv);

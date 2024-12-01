@@ -6,7 +6,7 @@
   <vendor>cachyos-kernel-manager</vendor>
   <vendor_url>https://github.com/CachyOS/kernel-manager</vendor_url>
 
-  <action id="org.cachyos.cachyos-kernel-manager.pkexec.policy.run-root-terminal">
+  <action id="org.cachyos.KernelManager.pkexec.policy.run-root-terminal">
     <description>Run kernel installation/removal</description>
     <message>Authentication is required to run the instalation/removal</message>
     <icon_name>cachyos-kernel-manager</icon_name>

@@ -167,15 +167,51 @@ install(
 )
 
 install(
-   FILES org.cachyos.cachyos-kernel-manager.pkexec.policy
+   FILES org.cachyos.KernelManager.pkexec.policy
    DESTINATION "${POLKITQT-1_POLICY_FILES_INSTALL_DIR}"
 )
 
 install(
-   FILES cachyos-kernel-manager.desktop
+   FILES org.cachyos.KernelManager.desktop
    DESTINATION ${CMAKE_INSTALL_DATADIR}/applications
 )
 install(
-   FILES cachyos-kernel-manager.png
-   DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps
+   FILES ${CMAKE_SOURCE_DIR}/icons/16x16/org.cachyos.KernelManager.png
+   DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/16x16/apps
+)
+install(
+   FILES ${CMAKE_SOURCE_DIR}/icons/22x22/org.cachyos.KernelManager.png
+   DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/22x22/apps
+)
+install(
+   FILES ${CMAKE_SOURCE_DIR}/icons/32x32/org.cachyos.KernelManager.png
+   DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/32x32/apps
+)
+install(
+   FILES ${CMAKE_SOURCE_DIR}/icons/44x44/org.cachyos.KernelManager.png
+   DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/44x44/apps
+)
+install(
+   FILES ${CMAKE_SOURCE_DIR}/icons/48x48/org.cachyos.KernelManager.png
+   DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/48x48/apps
+)
+install(
+   FILES ${CMAKE_SOURCE_DIR}/icons/64x64/org.cachyos.KernelManager.png
+   DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/64x64/apps
+)
+install(
+   FILES ${CMAKE_SOURCE_DIR}/icons/128x128/org.cachyos.KernelManager.png
+   DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/128x128/apps
+)
+install(
+   FILES ${CMAKE_SOURCE_DIR}/icons/150x150/org.cachyos.KernelManager.png
+   DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/150x150/apps
+)
+install(
+   FILES ${CMAKE_SOURCE_DIR}/icons/256x256/org.cachyos.KernelManager.png
+   DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/256x256/apps
+)
+install(
+   FILES ${CMAKE_SOURCE_DIR}/icons/310x310/org.cachyos.KernelManager.png
+   DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/310x310/apps
 )
