@@ -176,9 +176,9 @@ inline auto convert_to_var_assign(std::string_view option, std::string_view valu
 constexpr auto convert_to_var_assign_empty_wrapped(std::string_view option_name, bool option_enabled) noexcept {
     using namespace std::string_view_literals;
     if (option_enabled) {
-        return convert_to_var_assign(option_name, "y"sv);
+        return convert_to_var_assign(option_name, "yes"sv);
     }
-    return std::string{};
+    return convert_to_var_assign(option_name, "no"sv);
 }
 
 auto get_source_array_from_pkgbuild(std::string_view kernel_name_path, std::string_view options_set) noexcept {
