@@ -8,7 +8,7 @@
 
   <action id="org.cachyos.KernelManager.pkexec.policy.run-root-terminal">
     <description>Run kernel installation/removal</description>
-    <message>Authentication is required to run the instalation/removal</message>
+    <message>Authentication is required to run the installation/removal</message>
     <icon_name>cachyos-kernel-manager</icon_name>
     <defaults>
       <allow_any>no</allow_any>
