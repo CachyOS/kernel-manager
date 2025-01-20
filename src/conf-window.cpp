@@ -102,7 +102,7 @@ namespace {
 GENERATE_CONST_LOOKUP_OPTION_VALUES(kernel_name, "cachyos", "bore", "rc", "rt", "rt-bore", "eevdf", "bmq")
 GENERATE_CONST_LOOKUP_OPTION_VALUES(hz_tick, "1000", "750", "600", "500", "300", "250", "100")
 GENERATE_CONST_LOOKUP_OPTION_VALUES(tickless_mode, "full", "idle", "perodic")
-GENERATE_CONST_LOOKUP_OPTION_VALUES(preempt_mode, "full", "voluntary", "server")
+GENERATE_CONST_LOOKUP_OPTION_VALUES(preempt_mode, "full", "lazy", "voluntary", "none")
 GENERATE_CONST_LOOKUP_OPTION_VALUES(lto_mode, "none", "full", "thin")
 GENERATE_CONST_LOOKUP_OPTION_VALUES(hugepage_mode, "always", "madvise")
 GENERATE_CONST_LOOKUP_OPTION_VALUES(cpu_opt_mode, "manual", "generic", "native_amd", "native_intel", "zen", "zen2", "zen3", "sandybridge", "ivybridge", "haswell", "icelake", "tigerlake", "alderlake")
@@ -511,8 +511,9 @@ ConfWindow::ConfWindow(QWidget* parent)
 
     QStringList preempt_modes;
     preempt_modes << "Full"
+                  << "Lazy"
                   << "Voluntary"
-                  << "Server";
+                  << "None";
     options_page_ui_obj->preempt_combo_box->addItems(preempt_modes);
 
     /* clang-format off */
