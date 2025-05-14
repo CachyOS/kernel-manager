@@ -48,6 +48,7 @@ declare -A terminals=(
     ["kitty"]="kitty $cmd"
     ["ptyxis"]="ptyxis -- $cmd"
     ["konsole"]="konsole -e $cmd"
+    ["kgx"]="kgx --wait -- $cmd"
     ["gnome-terminal"]="gnome-terminal --wait -- $cmd"
     ["xfce4-terminal"]="xfce4-terminal --disable-server --command '$cmd'"
     ["lxterminal"]="lxterminal -e $cmd"
@@ -56,11 +57,14 @@ declare -A terminals=(
     ["foot"]="foot $cmd"
     ["rio"]="rio -e $cmd"
 )
-declare -a term_order=("alacritty" "kitty" "ptyxis" "konsole" "gnome-terminal" "xfce4-terminal" "lxterminal" "xterm" "st" "foot" "rio")
+declare -a term_order=("alacritty" "kitty" "ptyxis" "konsole" "kgx" "gnome-terminal" "xfce4-terminal" "lxterminal" "xterm" "st" "foot" "rio")
 
 if [ -z "$terminal" ] || ! command -v "$terminal" &> /dev/null; then
 for entry in ${term_order[@]}; do
     if command -v "$entry" > /dev/null 2>&1; then
+        # gnome-console does not exit on command completion so we need to kill
+        # it manually
+        [[ "$entry" == "kgx" ]] && echo "kill -SIGQUIT \$PPID 2>/dev/null" >> "$file"
         terminal="$entry"
         break;
     fi
@@ -72,5 +76,5 @@ if [ -z "$terminal" ]; then
     exit 1
 fi
 
-eval "${terminals[${terminal}]}" || { rm "$file"; exit 2; }
+eval "${terminals[${terminal}]}" 2>/dev/null || [[ "$terminal" != "kgx" ]] && { rm "$file"; exit 2; }
 rm "$file"
