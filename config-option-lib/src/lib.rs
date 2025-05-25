@@ -28,7 +28,6 @@ mod ffi {
         pub hardly_check: bool,
         pub per_gov_check: bool,
         pub tcp_bbr3_check: bool,
-        pub auto_optim_check: bool,
 
         pub cachy_config_check: bool,
         pub nconfig_check: bool,

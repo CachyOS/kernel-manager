@@ -54,7 +54,6 @@ auto ConfigOptions::parse_from_file(std::string_view filepath) noexcept -> std::
         .hardly_check     = rust_config_options.hardly_check,
         .per_gov_check    = rust_config_options.per_gov_check,
         .tcp_bbr3_check   = rust_config_options.tcp_bbr3_check,
-        .auto_optim_check = rust_config_options.auto_optim_check,
 
         .cachy_config_check        = rust_config_options.cachy_config_check,
         .nconfig_check             = rust_config_options.nconfig_check,
@@ -86,7 +85,6 @@ auto ConfigOptions::write_config_file(const ConfigOptions& config_options, std::
         .hardly_check     = config_options.hardly_check,
         .per_gov_check    = config_options.per_gov_check,
         .tcp_bbr3_check   = config_options.tcp_bbr3_check,
-        .auto_optim_check = config_options.auto_optim_check,
 
         .cachy_config_check        = config_options.cachy_config_check,
         .nconfig_check             = config_options.nconfig_check,

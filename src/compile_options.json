@@ -16,7 +16,6 @@
         "hugepage": "_hugepage",
         "damon": "_damon",
         "cpu_opt": "_processor_opt",
-        "auto_optim": "_use_auto_optimization",
         "lto": "_use_llvm_lto",
         "builtin_zfs": "_build_zfs",
         "builtin_nvidia": "_build_nvidia",

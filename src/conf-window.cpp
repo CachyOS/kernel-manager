@@ -409,7 +409,6 @@ std::string ConfWindow::get_all_set_values() const noexcept {
     result += convert_to_var_assign_empty_wrapped("hardly", checkstate_checked(options_page_ui_obj->hardly_check));
     result += convert_to_var_assign_empty_wrapped("per_gov", checkstate_checked(options_page_ui_obj->perfgovern_check));
     result += convert_to_var_assign_empty_wrapped("tcp_bbr3", checkstate_checked(options_page_ui_obj->tcpbbr_check));
-    result += convert_to_var_assign_empty_wrapped("auto_optim", checkstate_checked(options_page_ui_obj->autooptim_check));
 
     result += convert_to_var_assign_empty_wrapped("cachy_config", checkstate_checked(options_page_ui_obj->cachyconfig_check));
     result += convert_to_var_assign_empty_wrapped("nconfig", checkstate_checked(options_page_ui_obj->nconfig_check));
@@ -527,8 +526,6 @@ ConfWindow::ConfWindow(QWidget* parent)
                << "Icelake" << "Tiger Lake" << "Alder Lake";
     options_page_ui_obj->processor_opt_combo_box->addItems(cpu_optims);
     /* clang-format on */
-
-    options_page_ui_obj->autooptim_check->setCheckState(Qt::Checked);
 
     QStringList lto_modes;
     lto_modes << "No"
@@ -680,7 +677,6 @@ void ConfWindow::on_save() noexcept {
     config_options.hardly_check     = checkstate_checked(options_page_ui_obj->hardly_check);
     config_options.per_gov_check    = checkstate_checked(options_page_ui_obj->perfgovern_check);
     config_options.tcp_bbr3_check   = checkstate_checked(options_page_ui_obj->tcpbbr_check);
-    config_options.auto_optim_check = checkstate_checked(options_page_ui_obj->autooptim_check);
 
     config_options.cachy_config_check        = checkstate_checked(options_page_ui_obj->cachyconfig_check);
     config_options.nconfig_check             = checkstate_checked(options_page_ui_obj->nconfig_check);
@@ -744,7 +740,6 @@ void ConfWindow::on_load() noexcept {
     set_checkstate(options_page_ui_obj->hardly_check, config_options->hardly_check);
     set_checkstate(options_page_ui_obj->perfgovern_check, config_options->per_gov_check);
     set_checkstate(options_page_ui_obj->tcpbbr_check, config_options->tcp_bbr3_check);
-    set_checkstate(options_page_ui_obj->autooptim_check, config_options->auto_optim_check);
 
     set_checkstate(options_page_ui_obj->cachyconfig_check, config_options->cachy_config_check);
     set_checkstate(options_page_ui_obj->nconfig_check, config_options->nconfig_check);

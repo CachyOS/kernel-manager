@@ -27,7 +27,6 @@ struct ConfigOptions {
     bool hardly_check{};
     bool per_gov_check{};
     bool tcp_bbr3_check{};
-    bool auto_optim_check{};
 
     bool cachy_config_check{};
     bool nconfig_check{};
