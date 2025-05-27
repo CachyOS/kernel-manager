@@ -103,7 +103,7 @@ GENERATE_CONST_LOOKUP_OPTION_VALUES(kernel_name, "cachyos", "bore", "rc", "rt", 
 GENERATE_CONST_LOOKUP_OPTION_VALUES(hz_tick, "1000", "750", "600", "500", "300", "250", "100")
 GENERATE_CONST_LOOKUP_OPTION_VALUES(tickless_mode, "full", "idle", "perodic")
 GENERATE_CONST_LOOKUP_OPTION_VALUES(preempt_mode, "full", "lazy", "voluntary", "none")
-GENERATE_CONST_LOOKUP_OPTION_VALUES(lto_mode, "none", "full", "thin")
+GENERATE_CONST_LOOKUP_OPTION_VALUES(lto_mode, "none", "full", "thin", "thin-dist")
 GENERATE_CONST_LOOKUP_OPTION_VALUES(hugepage_mode, "always", "madvise")
 GENERATE_CONST_LOOKUP_OPTION_VALUES(cpu_opt_mode, "manual", "native", "generic", "generic_v2", "generic_v3", "generic_v4", "zen4")
 
@@ -516,7 +516,8 @@ ConfWindow::ConfWindow(QWidget* parent)
     QStringList lto_modes;
     lto_modes << "No"
               << "Full"
-              << "Thin";
+              << "Thin"
+              << "Thin-dist";
     options_page_ui_obj->lto_combo_box->addItems(lto_modes);
     // ThinLTO is enabled by default for defaultkernel,rckernel in the PKGBUILD
     options_page_ui_obj->lto_combo_box->setCurrentIndex(2);
