@@ -56,8 +56,9 @@ declare -A terminals=(
     ["st"]="st $cmd"
     ["foot"]="foot $cmd"
     ["rio"]="rio -e $cmd"
+    ["ghostty"]="ghostty -e $cmd"
 )
-declare -a term_order=("alacritty" "kitty" "ptyxis" "konsole" "kgx" "gnome-terminal" "xfce4-terminal" "lxterminal" "xterm" "st" "foot" "rio")
+declare -a term_order=("alacritty" "kitty" "ptyxis" "konsole" "kgx" "gnome-terminal" "xfce4-terminal" "lxterminal" "xterm" "st" "foot" "rio" "ghostty")
 
 if [ -z "$terminal" ] || ! command -v "$terminal" &> /dev/null; then
 for entry in ${term_order[@]}; do
