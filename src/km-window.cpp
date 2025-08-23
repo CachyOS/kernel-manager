@@ -305,11 +305,13 @@ void MainWindow::build_change_list(QTreeWidgetItem* item) noexcept {
     auto immutable = item->text(TreeCol::Immutable);
     if (immutable == "true" && item->checkState(0) == Qt::Unchecked) {
         m_ui->ok->setEnabled(true);
+        m_ui->ok->setText("Uninstall");
         m_change_list.append(item_text);
         return;
     }
 
     if (immutable == "true" && item->checkState(0) == Qt::Checked) {
+        m_ui->ok->setText("Install");
         m_change_list.removeOne(item_text);
     } else if (item->checkState(0) == Qt::Checked) {
         m_ui->ok->setEnabled(true);
