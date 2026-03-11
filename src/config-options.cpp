@@ -61,7 +61,6 @@ auto ConfigOptions::parse_from_file(std::string_view filepath) noexcept -> std::
         .localmodcfg_check         = rust_config_options.localmodcfg_check,
         .use_current_check         = rust_config_options.use_current_check,
         .builtin_zfs_check         = rust_config_options.builtin_zfs_check,
-        .builtin_nvidia_check      = rust_config_options.builtin_nvidia_check,
         .builtin_nvidia_open_check = rust_config_options.builtin_nvidia_open_check,
         .build_debug_check         = rust_config_options.build_debug_check,
 
@@ -89,7 +88,6 @@ auto ConfigOptions::write_config_file(const ConfigOptions& config_options, std::
         .localmodcfg_check         = config_options.localmodcfg_check,
         .use_current_check         = config_options.use_current_check,
         .builtin_zfs_check         = config_options.builtin_zfs_check,
-        .builtin_nvidia_check      = config_options.builtin_nvidia_check,
         .builtin_nvidia_open_check = config_options.builtin_nvidia_open_check,
         .build_debug_check         = config_options.build_debug_check,
 

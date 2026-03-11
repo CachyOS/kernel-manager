@@ -34,7 +34,6 @@ struct ConfigOptions {
     bool localmodcfg_check{};
     bool use_current_check{};
     bool builtin_zfs_check{};
-    bool builtin_nvidia_check{};
     bool builtin_nvidia_open_check{};
     bool build_debug_check{};
 

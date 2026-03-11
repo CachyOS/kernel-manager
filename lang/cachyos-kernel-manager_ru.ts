@@ -122,11 +122,6 @@
         <translation>Собрать модуль ZFS</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="617"/>
-        <source>Build the NVIDIA module</source>
-        <translation>Собрать модуль NVIDIA</translation>
-    </message>
-    <message>
         <location filename="../src/conf-options-page.ui" line="675"/>
         <source>Include vmlinux with debug informations/symbols</source>
         <translation>Включить vmlinux с отладочной информацией/символами</translation>
@@ -193,7 +188,7 @@
     </message>
     <message>
         <location filename="../src/conf-window.cpp" line="482"/>
-        <source>CachyOS default scheduler (BORE+Cachy Sauce)</source>
+        <source>CachyOS default Scheduler (tuned EEVDF)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

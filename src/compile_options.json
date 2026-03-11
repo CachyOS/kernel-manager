@@ -15,7 +15,6 @@
         "cpu_opt": "_processor_opt",
         "lto": "_use_llvm_lto",
         "builtin_zfs": "_build_zfs",
-        "builtin_nvidia": "_build_nvidia",
         "builtin_nvidia_open": "_build_nvidia_open",
         "build_debug": "_build_debug"
     }

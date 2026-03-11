@@ -380,7 +380,6 @@ void ConfWindow::connect_all_checkboxes() noexcept {
     auto* options_page_ui_obj = m_ui->conf_options_page_widget->get_ui_obj();
 
     const std::array checkbox_list{
-        options_page_ui_obj->builtin_nvidia_check,
         options_page_ui_obj->builtin_nvidia_open_check,
     };
 
@@ -408,7 +407,6 @@ std::string ConfWindow::get_all_set_values() const noexcept {
     result += convert_to_var_assign_empty_wrapped("localmodcfg", checkstate_checked(options_page_ui_obj->localmodcfg_check));
     result += convert_to_var_assign_empty_wrapped("use_current", checkstate_checked(options_page_ui_obj->use_current_check));
     result += convert_to_var_assign_empty_wrapped("builtin_zfs", checkstate_checked(options_page_ui_obj->builtin_zfs_check));
-    result += convert_to_var_assign_empty_wrapped("builtin_nvidia", checkstate_checked(options_page_ui_obj->builtin_nvidia_check));
     result += convert_to_var_assign_empty_wrapped("builtin_nvidia_open", checkstate_checked(options_page_ui_obj->builtin_nvidia_open_check));
     result += convert_to_var_assign_empty_wrapped("build_debug", checkstate_checked(options_page_ui_obj->build_debug_check));
 
@@ -467,7 +465,7 @@ ConfWindow::ConfWindow(QWidget* parent)
 
     // Selecting the CPU scheduler
     QStringList kernel_names;
-    kernel_names << tr("CachyOS default scheduler (BORE+Cachy Sauce)")
+    kernel_names << tr("CachyOS default Scheduler (tuned EEVDF)")
                  << tr("BORE - Burst-Oriented Response Enhancer")
                  << tr("RC - Release Candidate")
                  << tr("RT - Realtime kernel")
@@ -691,7 +689,6 @@ void ConfWindow::on_save() noexcept {
     config_options.localmodcfg_check         = checkstate_checked(options_page_ui_obj->localmodcfg_check);
     config_options.use_current_check         = checkstate_checked(options_page_ui_obj->use_current_check);
     config_options.builtin_zfs_check         = checkstate_checked(options_page_ui_obj->builtin_zfs_check);
-    config_options.builtin_nvidia_check      = checkstate_checked(options_page_ui_obj->builtin_nvidia_check);
     config_options.builtin_nvidia_open_check = checkstate_checked(options_page_ui_obj->builtin_nvidia_open_check);
     config_options.build_debug_check         = checkstate_checked(options_page_ui_obj->build_debug_check);
 
@@ -751,7 +748,6 @@ void ConfWindow::on_load() noexcept {
     set_checkstate(options_page_ui_obj->localmodcfg_check, config_options->localmodcfg_check);
     set_checkstate(options_page_ui_obj->use_current_check, config_options->use_current_check);
     set_checkstate(options_page_ui_obj->builtin_zfs_check, config_options->builtin_zfs_check);
-    set_checkstate(options_page_ui_obj->builtin_nvidia_check, config_options->builtin_nvidia_check);
     set_checkstate(options_page_ui_obj->builtin_nvidia_open_check, config_options->builtin_nvidia_open_check);
     set_checkstate(options_page_ui_obj->build_debug_check, config_options->build_debug_check);
 

@@ -35,7 +35,6 @@ mod ffi {
         pub localmodcfg_check: bool,
         pub use_current_check: bool,
         pub builtin_zfs_check: bool,
-        pub builtin_nvidia_check: bool,
         pub builtin_nvidia_open_check: bool,
         pub build_debug_check: bool,
 

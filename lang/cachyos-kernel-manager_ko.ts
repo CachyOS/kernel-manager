@@ -135,11 +135,6 @@
         <source>$pkgbase</source>
         <translation>$pkgbase</translation>
     </message>
-    <message>
-        <location filename="../src/conf-options-page.ui" line="617"/>
-        <source>Build the NVIDIA module</source>
-        <translation>NVIDIA 모듈 빌드</translation>
-    </message>
 </context>
 <context>
     <name>ConfPatchesPage</name>
@@ -249,7 +244,7 @@
     </message>
     <message>
         <location filename="../src/conf-window.cpp" line="482"/>
-        <source>CachyOS default scheduler (BORE+Cachy Sauce)</source>
+        <source>CachyOS default Scheduler (tuned EEVDF)</source>
         <translation>CachyOS 기본 스케줄러 (BORE+Cachy Sauce)</translation>
     </message>
     <message>

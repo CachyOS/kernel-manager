@@ -84,11 +84,6 @@
         <translation>ZFS-module bouwen</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="617"/>
-        <source>Build the NVIDIA module</source>
-        <translation>NVIDIA-module bouwen</translation>
-    </message>
-    <message>
         <location filename="../src/conf-options-page.ui" line="646"/>
         <source>Build the open NVIDIA module</source>
         <translation>Open NVIDIA-module bouwen</translation>
@@ -168,7 +163,7 @@
     </message>
     <message>
         <location filename="../src/conf-window.cpp" line="482"/>
-        <source>CachyOS default scheduler (BORE+Cachy Sauce)</source>
+        <source>CachyOS default Scheduler (tuned EEVDF)</source>
         <translation>CachyOS-standaardplanner (BORE+Cachy Sauce)</translation>
     </message>
     <message>
