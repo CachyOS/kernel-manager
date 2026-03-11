@@ -50,7 +50,7 @@
            <item>
             <widget class="QLineEdit" name="custom_name_edit">
              <property name="text">
-              <string>$pkgbase</string>
+              <string>$pkgbase-custom</string>
              </property>
             </widget>
            </item>

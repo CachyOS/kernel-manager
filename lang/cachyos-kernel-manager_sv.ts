@@ -18,8 +18,8 @@
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="53"/>
-        <source>$pkgbase</source>
-        <translation>$pkgbase</translation>
+        <source>$pkgbase-custom</source>
+        <translation>$pkgbase-custom</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="66"/>

@@ -10,7 +10,7 @@
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="53"/>
-        <source>$pkgbase</source>
+        <source>$pkgbase-custom</source>
         <translation></translation>
     </message>
     <message>
