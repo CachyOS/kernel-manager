@@ -4,6 +4,7 @@
         <file alias="ca">lang/cachyos-kernel-manager_ca.qm</file>
         <file alias="cs">lang/cachyos-kernel-manager_cs.qm</file>
         <file alias="de">lang/cachyos-kernel-manager_de.qm</file>
+        <file alias="ja">lang/cachyos-kernel-manager_ja.qm</file>
         <file alias="ko">lang/cachyos-kernel-manager_ko.qm</file>
         <file alias="pl">lang/cachyos-kernel-manager_pl.qm</file>
         <file alias="ru">lang/cachyos-kernel-manager_ru.qm</file>
