@@ -78,11 +78,11 @@
         <source>Build kernel</source>
         <translation>Зібрати ядро</translation>
     </message>
-    <message>
+    <message type="vanished">
         <source>Enable multigenerational LRU</source>
         <translation>Увімкнути багатопоколінний LRU</translation>
     </message>
-    <message>
+    <message type="vanished">
         <source>Enable per-VMA locking</source>
         <translation>Увімкнути блокування для кожного VMA</translation>
     </message>
@@ -126,7 +126,7 @@
         <source>Cancel</source>
         <translation>Скасувати</translation>
     </message>
-    <message>
+    <message type="vanished">
         <source>Execute</source>
         <translation>Виконати</translation>
     </message>
@@ -178,7 +178,7 @@
     </message>
     <message>
         <source>Bore - Burst-Oriented Response Enhancer</source>
-        <translation>BORE - планувальник імпульсної відповіді</translation>
+        <translation type="vanished">BORE - планувальник імпульсної відповіді</translation>
     </message>
     <message>
         <location filename="../src/conf-window.cpp" line="484"/>
@@ -271,11 +271,11 @@
         <source>RT-Bore</source>
         <translation>RT-Bore</translation>
     </message>
-    <message>
+    <message type="vanished">
         <source>Sched-Ext - BPF extensible scheduler class</source>
         <translation>Sched-Ext – розширюваний планувальник BPF</translation>
     </message>
-    <message>
+    <message type="vanished">
         <source>CachyOS - BORE + SCHED-EXT</source>
         <translation>CachyOS - BORE + SCHED-EXT</translation>
     </message>
@@ -349,7 +349,7 @@
 Please run `pacman -Sy` to update DB!
 This is needed for the app to work properly</source>
         <translation>Ядра не знайдено!
-Виконайте pacman -Sy для оновлення БД.
+Виконайте `pacman -Sy` для оновлення БД.
 Це необхідно для коректної роботи застосунку.</translation>
     </message>
     <message>
@@ -414,7 +414,7 @@ Initializing kernels..</source>
     <message>
         <location filename="../src/schedext-window.ui" line="40"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Configure sched-ext scheduler:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>Налаштування планувальника sched-ext:</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Налаштування планувальника sched-ext:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../src/schedext-window.ui" line="82"/>
