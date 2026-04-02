@@ -1,6 +1,7 @@
 <!DOCTYPE RCC>
 <RCC version="1.0">
     <qresource prefix="/translations">
+        <file alias="bg">lang/cachyos-kernel-manager_bg.qm</file>
         <file alias="ca">lang/cachyos-kernel-manager_ca.qm</file>
         <file alias="cs">lang/cachyos-kernel-manager_cs.qm</file>
         <file alias="de">lang/cachyos-kernel-manager_de.qm</file>
