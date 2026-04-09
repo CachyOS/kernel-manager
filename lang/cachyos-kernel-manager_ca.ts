@@ -124,7 +124,7 @@
     <message>
         <location filename="../src/conf-options-page.ui" line="675"/>
         <source>Include vmlinux with debug informations/symbols</source>
-        <translation>Inclou vmlinux amb informació/símbols de depuració</translation>
+        <translation>Inclou vmlinux amb informació / símbols de depuració</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="443"/>
