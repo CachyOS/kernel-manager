@@ -12,5 +12,6 @@
         <file alias="sv">lang/cachyos-kernel-manager_sv.qm</file>
         <file alias="tr">lang/cachyos-kernel-manager_tr.qm</file>
         <file alias="nl">lang/cachyos-kernel-manager_nl.qm</file>
+        <file alias="zh-CN">lang/cachyos-kernel-manager_zh-CN.qm</file>
     </qresource>
 </RCC>
