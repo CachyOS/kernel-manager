@@ -11,22 +11,22 @@
     <message>
         <location filename="../src/conf-options-page.ui" line="95"/>
         <source>Tweak kernel options prior to a build via nconfig</source>
-        <translation>Ajusteu les opcions del nucli abans d&apos;una compilació mitjançant nconfig</translation>
+        <translation>Ajusteu les opcions del nucli abans d&apos;una compilació amb nconfig</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="124"/>
         <source>Tweak kernel options prior to a build via menuconfig</source>
-        <translation>Ajusteu les opcions del nucli abans d&apos;una compilació mitjançant menuconfig</translation>
+        <translation>Ajusteu les opcions del nucli abans d&apos;una compilació amb menuconfig</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="153"/>
         <source>Tweak kernel options prior to a build via xconfig</source>
-        <translation>Ajusteu les opcions del nucli abans d&apos;una compilació mitjançant xconfig</translation>
+        <translation>Ajusteu les opcions del nucli abans d&apos;una compilació amb xconfig</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="182"/>
         <source>Tweak kernel options prior to a build via gconfig</source>
-        <translation>Ajusteu les opcions del nucli abans d&apos;una compilació mitjançant gconfig</translation>
+        <translation>Ajusteu les opcions del nucli abans d&apos;una compilació amb gconfig</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="211"/>
@@ -37,6 +37,11 @@
         <location filename="../src/conf-options-page.ui" line="240"/>
         <source>Use Modprobed-db</source>
         <translation>Usa Modprobed-db</translation>
+    </message>
+        <message>
+        <location filename="../src/conf-options-page.ui" line="182"/>
+        <source>Use the current kernel&apos;s config</source>
+        <translation>Usa la configuració del nucli actual</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="269"/>
@@ -61,12 +66,12 @@
     <message>
         <location filename="../src/conf-options-page.ui" line="385"/>
         <source>Select tickless</source>
-        <translation>Selecciona tickless</translation>
+        <translation>Seleccioneu el funcionament sense tic-tac</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="414"/>
         <source>Select preempt</source>
-        <translation>Selecciona preempt</translation>
+        <translation>Seleccioneu la preempció</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="646"/>
@@ -119,12 +124,12 @@
     <message>
         <location filename="../src/conf-options-page.ui" line="588"/>
         <source>Build the ZFS module</source>
-        <translation>Construeix el mòdul ZFS</translation>
+        <translation>Construeix el mòdul de ZFS</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="675"/>
         <source>Include vmlinux with debug informations/symbols</source>
-        <translation>Inclou vmlinux amb informació/símbols de depuració</translation>
+        <translation>Inclou vmlinux amb informació / símbols de depuració</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="443"/>
@@ -264,17 +269,17 @@
     <message>
         <location filename="../src/conf-window.cpp" line="482"/>
         <source>CachyOS default Scheduler (tuned EEVDF)</source>
-        <translation type="unfinished"></translation>
+        <translation>Planificador per defecte del CachyOS (EEVDF amb modificacions)</translation>
     </message>
     <message>
         <location filename="../src/conf-window.cpp" line="483"/>
         <source>BORE - Burst-Oriented Response Enhancer</source>
-        <translation type="unfinished"></translation>
+        <translation>BORE - Potenciador de resposta orientat a ràfegues</translation>
     </message>
     <message>
         <location filename="../src/conf-window.cpp" line="486"/>
         <source>RT-Bore</source>
-        <translation>RT-Bore</translation>
+        <translation>Bore en temps real</translation>
     </message>
     <message>
         <source>Sched-Ext - BPF extensible scheduler class</source>
