@@ -46,7 +46,7 @@
     <message>
         <location filename="../src/conf-options-page.ui" line="240"/>
         <source>Set performance governor as default</source>
-        <translation>Imposta il profilo prestazionale massimo come predefinito</translation>
+        <translation>Imposta il profilo prestazionale come predefinito</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="269"/>
@@ -71,7 +71,7 @@
     <message>
         <location filename="../src/conf-options-page.ui" line="385"/>
         <source>Transparent Hugepages</source>
-        <translation>Transparent Hugepages</translation>
+        <translation>Transparent hugepages</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="414"/>
@@ -86,12 +86,12 @@
     <message>
         <location filename="../src/conf-options-page.ui" line="472"/>
         <source>Build the ZFS module</source>
-        <translation>Compilare il modulo ZFS</translation>
+        <translation>Compila il modulo ZFS</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="501"/>
         <source>Build the open NVIDIA module</source>
-        <translation>Compilare il modulo NVIDIA open</translation>
+        <translation>Compila il modulo NVIDIA open</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="530"/>
@@ -339,7 +339,7 @@ We are preparing configuration window for you
 cloning PKGBUILDs..</source>
         <translation>Per favore attendi...
 Stiamo preparando la finestra di configurazione per te
-clonazione PKGBUILDs in corso...</translation>
+clonazione dei PKGBUILD in corso...</translation>
     </message>
     <message>
         <location filename="../src/km-window.cpp" line="363"/>
