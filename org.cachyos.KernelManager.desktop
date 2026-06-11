@@ -2,13 +2,17 @@
 Type=Application
 Version=1.0
 Name=CachyOS Kernel Manager
+Name[it]=Gestore del Kernel di CachyOS
 Name[ja]=CachyOS カーネルマネージャー
 GenericName=Kernel Manager
+GenericName[it]=Gestore del Kernel
 GenericName[ja]=カーネルマネージャー
 Keywords=cachyos;system;kernel;
+Keywords[it]=cachyos;sistema;kernel;
 Keywords[ja]=cachyos;system;kernel;システム;カーネル
 Exec=cachyos-kernel-manager
 Comment=Manage kernels
+Comment[it]=Gestisci i kernel
 Comment[ja]=カーネルを管理
 Icon=org.cachyos.KernelManager
 Terminal=false
