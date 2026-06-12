@@ -167,7 +167,7 @@
     <message>
         <location filename="../src/conf-window.cpp" line="470"/>
         <source>RC - Release Candidate</source>
-        <translation>RC - Candidata al rilascio</translation>
+        <translation>RC - Candidato al rilascio</translation>
     </message>
     <message>
         <location filename="../src/conf-window.cpp" line="471"/>
@@ -329,7 +329,7 @@ Please run `pacman -Sy` to update DB!
 This is needed for the app to work properly</source>
         <translation>Nessun kernel trovato!
 Per favore, esegui `pacman -Sy` per aggiornare il database!
-Questo è necessario affinchè l&apos;applicazione funzioni correttamente</translation>
+Questo è necessario affinché l&apos;applicazione funzioni correttamente</translation>
     </message>
     <message>
         <location filename="../src/km-window.cpp" line="278"/>
