@@ -193,12 +193,12 @@
     <message>
         <location filename="../src/conf-window.cpp" line="487"/>
         <source>EEVDF</source>
-        <translation type="unfinished"></translation>
+        <translation>EEVDF</translation>
     </message>
     <message>
         <location filename="../src/conf-window.cpp" line="488"/>
         <source>BMQ (BitMap Queue)</source>
-        <translation type="unfinished"></translation>
+        <translation>BMQ (Cua de mapa de bits)</translation>
     </message>
     <message>
         <location filename="../src/conf-window.cpp" line="563"/>
@@ -264,12 +264,12 @@
     <message>
         <location filename="../src/conf-window.cpp" line="482"/>
         <source>CachyOS default Scheduler (tuned EEVDF)</source>
-        <translation type="unfinished"></translation>
+        <translation>Planificador per defecte del CachyOS (EEVDF ajustat)</translation>
     </message>
     <message>
         <location filename="../src/conf-window.cpp" line="483"/>
         <source>BORE - Burst-Oriented Response Enhancer</source>
-        <translation type="unfinished"></translation>
+        <translation>BORE - Potenciador de resposta orientat a ràfegues</translation>
     </message>
     <message>
         <location filename="../src/conf-window.cpp" line="486"/>
@@ -454,7 +454,7 @@ S&apos;inicien els nuclis...</translation>
     <message>
         <location filename="../src/schedext-window.ui" line="183"/>
         <source>Apply</source>
-        <translation>Aplica</translation>
+        <translation>Aplica-ho</translation>
     </message>
 </context>
 </TS>
