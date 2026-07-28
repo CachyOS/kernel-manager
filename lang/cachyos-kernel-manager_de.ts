@@ -6,7 +6,7 @@
     <message>
         <location filename="../src/conf-options-page.ui" line="66"/>
         <source>Enable CachyOS config</source>
-        <translation>CachyOS-Konfiguration einschalten</translation>
+        <translation>CachyOS-Konfiguration aktivieren</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="95"/>
@@ -31,7 +31,7 @@
     <message>
         <location filename="../src/conf-options-page.ui" line="298"/>
         <source>Set performance governor as default</source>
-        <translation>Performance Governor aktivieren als Standard</translation>
+        <translation>Performance Governor als Standard setzen</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="327"/>
@@ -46,40 +46,40 @@
     <message>
         <location filename="../src/conf-options-page.ui" line="385"/>
         <source>Select tickless</source>
-        <translation>Wählen Sie tickless</translation>
+        <translation>Tickless auswählen</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="414"/>
         <source>Select preempt</source>
-        <translation>Wählen Sie preempt</translation>
+        <translation>Preempt auswählen</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="646"/>
         <source>Build the open NVIDIA module</source>
-        <translation type="unfinished"></translation>
+        <translation>Das open NVIDIA module kompilieren</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="721"/>
         <source>Load</source>
-        <translation type="unfinished"></translation>
+        <translation>Laden</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="728"/>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Speichern</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="755"/>
         <source>Build kernel</source>
-        <translation type="unfinished"></translation>
+        <translation>Kernel kompilieren</translation>
     </message>
     <message>
         <source>Enable multigenerational LRU</source>
-        <translation type="vanished">Multigenerational LRU aktivieren</translation>
+        <translation type="vanished">Multigenerationale LRU aktivieren</translation>
     </message>
     <message>
         <source>Enable per-VMA locking</source>
-        <translation type="vanished">per-VMA locking aktivieren</translation>
+        <translation type="vanished">Per-VMA locking aktivieren</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="472"/>
@@ -109,7 +109,7 @@
     <message>
         <location filename="../src/conf-options-page.ui" line="675"/>
         <source>Include vmlinux with debug informations/symbols</source>
-        <translation type="unfinished"></translation>
+        <translation>Vmlinux mit Debug Informationen/Symbolen hinzufügen</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="443"/>
@@ -128,7 +128,7 @@
     <message>
         <location filename="../src/conf-options-page.ui" line="33"/>
         <source>Custom package name</source>
-        <translation type="unfinished"></translation>
+        <translation>Custom Paket Name</translation>
     </message>
     <message>
         <location filename="../src/conf-options-page.ui" line="53"/>
@@ -154,7 +154,7 @@
     <message>
         <location filename="../src/conf-window.ui" line="17"/>
         <source>CachyOS Kernel Manager Configure</source>
-        <translation></translation>
+        <translation>CachyOS Kernel Manager Konfigurator</translation>
     </message>
     <message>
         <location filename="../src/conf-window.ui" line="40"/>
@@ -184,7 +184,7 @@
     <message>
         <location filename="../src/conf-window.cpp" line="563"/>
         <source>Select one or more patch files</source>
-        <translation>Wählen Sie eine oder mehrere Patch-Dateien</translation>
+        <translation>Eine oder mehrere Patch-Dateien auswählen</translation>
     </message>
     <message>
         <location filename="../src/conf-window.cpp" line="565"/>
@@ -204,33 +204,33 @@
     <message>
         <location filename="../src/conf-window.cpp" line="709"/>
         <source>Save file as</source>
-        <translation type="unfinished"></translation>
+        <translation>Datei speichern als</translation>
     </message>
     <message>
         <location filename="../src/conf-window.cpp" line="711"/>
         <location filename="../src/conf-window.cpp" line="728"/>
         <source>Config file (*.toml)</source>
-        <translation type="unfinished"></translation>
+        <translation>Config Datei (*.toml)</translation>
     </message>
     <message>
         <location filename="../src/conf-window.cpp" line="718"/>
         <source>Failed to save config options to file: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Speichern der Config Optionen fehlgeschlagen in: %1</translation>
     </message>
     <message>
         <location filename="../src/conf-window.cpp" line="726"/>
         <source>Load from</source>
-        <translation type="unfinished"></translation>
+        <translation>Laden von</translation>
     </message>
     <message>
         <location filename="../src/conf-window.cpp" line="736"/>
         <source>Failed to load config options from file: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Laden der Config Optionen fehlgeschlagen in: %1</translation>
     </message>
     <message>
         <location filename="../src/conf-window.cpp" line="772"/>
         <source>Config file(%1) is outdated</source>
-        <translation type="unfinished"></translation>
+        <translation>Config Datei(%1) ist veraltet</translation>
     </message>
     <message>
         <location filename="../src/conf-window.cpp" line="485"/>
@@ -240,12 +240,12 @@
     <message>
         <location filename="../src/conf-window.cpp" line="370"/>
         <source>Do you want to install build packages?</source>
-        <translation type="unfinished"></translation>
+        <translation>Möchten Sie die build Pakete installieren</translation>
     </message>
     <message>
         <location filename="../src/conf-window.cpp" line="482"/>
         <source>CachyOS default Scheduler (tuned EEVDF)</source>
-        <translation type="unfinished"></translation>
+        <translation>Standard CachyOS Scheduler (tuned EEVDF)</translation>
     </message>
     <message>
         <location filename="../src/conf-window.cpp" line="483"/>
@@ -277,7 +277,7 @@
         <translation>&lt;html&gt;
 &lt;body&gt;
 &lt;p&gt;Hier finden Sie Informationen über die derzeit installierten und verfügbaren Linux-Kernel.&lt;/p&gt;
-&lt;p&gt;Sie können Kernel-Pakete installieren/deinstallieren, indem Sie die Kontrollkästchen in der Spalte ganz links aktivieren.&lt;/p&gt;
+&lt;p&gt;Sie können Kernel-Pakete installieren/deinstallieren, indem Sie die Kontrollkästchen in der Spalte ganz links auswählen.&lt;/p&gt;
 &lt;p&gt;Diese Anwendung wird nicht funktionieren, wenn Sie bereits eine pacman-Instanz verwenden.&lt;/p&gt;
 &lt;/body&gt;
 &lt;/html&gt;</translation>
@@ -285,7 +285,7 @@
     <message>
         <location filename="../src/km-window.ui" line="64"/>
         <source>Choose</source>
-        <translation>Wählen Sie</translation>
+        <translation>Auswählen</translation>
     </message>
     <message>
         <location filename="../src/km-window.ui" line="69"/>
@@ -310,7 +310,7 @@
     <message>
         <location filename="../src/km-window.ui" line="123"/>
         <source>Configure</source>
-        <translation>Konfigurieren Sie</translation>
+        <translation>Konfigurieren</translation>
     </message>
     <message>
         <location filename="../src/km-window.ui" line="130"/>
@@ -335,7 +335,8 @@ Dies ist notwendig, damit die Anwendung richtig funktioniert</translation>
         <location filename="../src/km-window.cpp" line="201"/>
         <source>Failed to clone repository!
 Please check your internet connection and try again</source>
-        <translation type="unfinished"></translation>
+        <translation>Klonen des Repositories fehlgeschlagen!
+Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut</translation>
     </message>
     <message>
         <location filename="../src/km-window.cpp" line="276"/>
@@ -343,23 +344,26 @@ Please check your internet connection and try again</source>
         <source>Please wait...
 We are preparing configuration window for you
 cloning PKGBUILDs..</source>
-        <translation type="unfinished"></translation>
+        <translation>Bitte warten...
+Wir bereiten das Konfigurationsfenster für Sie vor
+PKGBUILDs klonen..</translation>
     </message>
     <message>
         <location filename="../src/km-window.cpp" line="143"/>
         <source>Failed to initialize alpm handle (%1)</source>
-        <translation type="unfinished"></translation>
+        <translation>Initialisieren des alpm handle (%1) fehlgeschlagen</translation>
     </message>
     <message>
         <location filename="../src/km-window.cpp" line="156"/>
         <source>Failed to release alpm handle (%1)</source>
-        <translation type="unfinished"></translation>
+        <translation>Freigeben des alpm handle (%1) fehlgeschlagen</translation>
     </message>
     <message>
         <location filename="../src/km-window.cpp" line="361"/>
         <source>Please wait...
 Initializing kernels..</source>
-        <translation type="unfinished"></translation>
+        <translation>Bitte warten...
+Initialisiere Kernels..</translation>
     </message>
 </context>
 <context>
@@ -367,22 +371,22 @@ Initializing kernels..</source>
     <message>
         <location filename="../src/schedext-window.ui" line="17"/>
         <source>CachyOS Configure sched-ext</source>
-        <translation type="unfinished"></translation>
+        <translation>CachyOS sched-ext Konfigurator</translation>
     </message>
     <message>
         <location filename="../src/schedext-window.ui" line="40"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Configure sched-ext scheduler:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Sched-ext scheduler konfigurieren:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../src/schedext-window.ui" line="82"/>
         <source>Select sched-ext scheduler:</source>
-        <translation type="unfinished"></translation>
+        <translation>Sched-ext scheduler auswählen:</translation>
     </message>
     <message>
         <location filename="../src/schedext-window.ui" line="92"/>
         <source>Select scheduler profile:</source>
-        <translation type="unfinished"></translation>
+        <translation>Scheduler Profil auswählen:</translation>
     </message>
     <message>
         <location filename="../src/schedext-window.ui" line="115"/>
@@ -392,22 +396,22 @@ Initializing kernels..</source>
     <message>
         <location filename="../src/schedext-window.ui" line="75"/>
         <source>Running sched-ext scheduler:</source>
-        <translation type="unfinished"></translation>
+        <translation>Laufender sched-ext scheduler:</translation>
     </message>
     <message>
         <location filename="../src/schedext-window.ui" line="122"/>
         <source>Set sched-ext extra scheduler flags:</source>
-        <translation type="unfinished"></translation>
+        <translation>Sched-ext extra scheduler flags setzen:</translation>
     </message>
     <message>
         <location filename="../src/schedext-window.ui" line="176"/>
         <source>Disable</source>
-        <translation type="unfinished"></translation>
+        <translation>Deaktivieren</translation>
     </message>
     <message>
         <location filename="../src/schedext-window.ui" line="183"/>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Anwenden</translation>
     </message>
 </context>
 </TS>
