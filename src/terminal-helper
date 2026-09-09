@@ -77,8 +77,8 @@ if [ -z "$terminal" ]; then
     exit 1
 fi
 
-printf 'rm -f -- %q\n' "$file" >> "$file"
+printf 'rm -f -- "$0"\n' >> "$file"
 if ! eval "${terminals[${terminal}]}" 2>/dev/null && [[ "$terminal" != "kgx" ]]; then
-    rm "$file"
+    rm -f -- "$file"
     exit 2
 fi
