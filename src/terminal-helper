@@ -37,7 +37,7 @@ done
 shift $(($OPTIND - 1))
 
 file="$(mktemp)"
-echo "$1" > "$file"
+printf '%s\n' "$1" > "$file"
 cmd="${LAUNCHER_CMD} \"$file\""
 echo $cmd
 
@@ -77,5 +77,8 @@ if [ -z "$terminal" ]; then
     exit 1
 fi
 
-eval "${terminals[${terminal}]}" 2>/dev/null || [[ "$terminal" != "kgx" ]] && { rm "$file"; exit 2; }
-rm "$file"
+printf 'rm -f -- "$0"\n' >> "$file"
+if ! eval "${terminals[${terminal}]}" 2>/dev/null && [[ "$terminal" != "kgx" ]]; then
+    rm -f -- "$file"
+    exit 2
+fi
