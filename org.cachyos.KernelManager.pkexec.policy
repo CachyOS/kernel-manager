@@ -9,8 +9,10 @@
   <action id="org.cachyos.KernelManager.pkexec.policy.run-root-terminal">
     <description>Run kernel installation/removal</description>
     <description xml:lang="ja">カーネルのインストール・削除を実行</description>
+    <description xml:lang="tr">Çekirdek kurma/kaldırma işlemini çalıştır</description>
     <message>Authentication is required to run the installation/removal</message>
     <message xml:lang="ja">インストール・削除の実行には認証が必要です</message>
+    <message xml:lang="tr">Kurma/kaldırma işlemini çalıştırmak için kimlik doğrulaması gerekiyor</message>
     <icon_name>cachyos-kernel-manager</icon_name>
     <defaults>
       <allow_any>no</allow_any>
