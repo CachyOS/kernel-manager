@@ -14,69 +14,73 @@
         <translation>nconfig ile yapılandırmadan önce çekirdek ayarlarına ince ayar yap</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="153"/>
+        <location filename="../src/conf-options-page.ui" line="124"/>
         <source>Tweak kernel options prior to a build via xconfig</source>
         <translation>xconfig ile yapılandırmadan önce çekirdek ayarlarına ince ayar yap</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="211"/>
         <source>Disable NUMA</source>
-        <translation>NUMA devre dışı bırakılsın</translation>
+        <translation type="vanished">NUMA devre dışı bırakılsın</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="240"/>
+        <location filename="../src/conf-options-page.ui" line="153"/>
         <source>Use Modprobed-db</source>
         <translation>Modprobed-db kullanılsın</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="269"/>
+        <location filename="../src/conf-options-page.ui" line="182"/>
+        <source>Use the current kernel&apos;s config</source>
+        <translation>Mevcut çekirdeğin yapılandırması kullanılsın</translation>
+    </message>
+    <message>
+        <location filename="../src/conf-options-page.ui" line="211"/>
         <source>Enable KBUILD_CFLAGS -O3</source>
         <translation>KBUILD_CFLAGS -O3 etkinleştirilsin</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="298"/>
+        <location filename="../src/conf-options-page.ui" line="240"/>
         <source>Set performance governor as default</source>
         <translation>Performans odaklı işlemci yöneticisini varsayılan yap</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="327"/>
+        <location filename="../src/conf-options-page.ui" line="269"/>
         <source>Enable TCP_CONG_BBR3</source>
         <translation>TCP_CONG_BBR3 etkinleştirilsin</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="356"/>
+        <location filename="../src/conf-options-page.ui" line="298"/>
         <source>Running tick rate</source>
         <translation>Çalışılan tik oranı</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="385"/>
+        <location filename="../src/conf-options-page.ui" line="327"/>
         <source>Select tickless</source>
         <translation>Tiksiz seçim yap</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="414"/>
+        <location filename="../src/conf-options-page.ui" line="356"/>
         <source>Select preempt</source>
         <translation>preempt belirle</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="646"/>
+        <location filename="../src/conf-options-page.ui" line="501"/>
         <source>Build the open NVIDIA module</source>
-        <translation type="unfinished"></translation>
+        <translation>Açık kaynaklı NVIDIA modülü derlensin</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="721"/>
+        <location filename="../src/conf-options-page.ui" line="576"/>
         <source>Load</source>
-        <translation type="unfinished"></translation>
+        <translation>Yükle</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="728"/>
+        <location filename="../src/conf-options-page.ui" line="583"/>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Kaydet</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="755"/>
+        <location filename="../src/conf-options-page.ui" line="610"/>
         <source>Build kernel</source>
-        <translation type="unfinished"></translation>
+        <translation>Çekirdeği derle</translation>
     </message>
     <message>
         <source>Enable multigenerational LRU</source>
@@ -87,42 +91,40 @@
         <translation type="vanished">per-VMA locking etkinleştirilsin</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="472"/>
         <source>Enable DAMON</source>
-        <translation>DAMON etkinleştirilsin</translation>
+        <translation type="vanished">DAMON etkinleştirilsin</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="501"/>
+        <location filename="../src/conf-options-page.ui" line="414"/>
         <source>CPU compiler optimizations</source>
         <translation>İşlemci derleme iyileştirmeleri</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="530"/>
         <source>Apply automatic CPU Optimization</source>
-        <translation>Otomatik işlemci iyileştirmeleri uygulansın</translation>
+        <translation type="vanished">Otomatik işlemci iyileştirmeleri uygulansın</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="559"/>
+        <location filename="../src/conf-options-page.ui" line="443"/>
         <source>Enable LTO</source>
         <translation>LTO etkinleştirilsin</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="588"/>
+        <location filename="../src/conf-options-page.ui" line="472"/>
         <source>Build the ZFS module</source>
-        <translation>ZFS modülünü yapılandır</translation>
+        <translation>ZFS modülü derlensin</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="675"/>
+        <location filename="../src/conf-options-page.ui" line="530"/>
         <source>Include vmlinux with debug informations/symbols</source>
-        <translation type="unfinished"></translation>
+        <translation>Hata ayıklama bilgilerini/sembollerini içeren vmlinux eklensin</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="443"/>
+        <location filename="../src/conf-options-page.ui" line="385"/>
         <source>Transparent Hugepages</source>
         <translation>Saydam HugePage&apos;ler</translation>
     </message>
     <message>
-        <location filename="../src/conf-options-page.ui" line="748"/>
+        <location filename="../src/conf-options-page.ui" line="603"/>
         <source>Cancel</source>
         <translation>Vazgeç</translation>
     </message>
@@ -138,7 +140,7 @@
     <message>
         <location filename="../src/conf-options-page.ui" line="53"/>
         <source>$pkgbase-custom</source>
-        <translation type="unfinished"></translation>
+        <translation>$pkgbase-custom</translation>
     </message>
 </context>
 <context>
@@ -176,95 +178,110 @@
         <translation type="vanished">BORE - Ani Yüke Odaklı Tepki Arttırıcı</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="484"/>
+        <location filename="../src/conf-window.cpp" line="489"/>
         <source>RC - Release Candidate</source>
         <translation>RC - Çıkış sürümü adayı</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="487"/>
+        <location filename="../src/conf-window.cpp" line="491"/>
+        <source>LTS - Long-term support kernel</source>
+        <translation>LTS - Uzun süreli destek çekirdeği</translation>
+    </message>
+    <message>
+        <location filename="../src/conf-window.cpp" line="492"/>
         <source>EEVDF</source>
-        <translation type="unfinished"></translation>
+        <translation>EEVDF</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="488"/>
+        <location filename="../src/conf-window.cpp" line="493"/>
         <source>BMQ (BitMap Queue)</source>
-        <translation type="unfinished"></translation>
+        <translation>BMQ (BitMap Queue)</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="563"/>
+        <location filename="../src/conf-window.cpp" line="494"/>
+        <source>Hardened - Hardened Linux kernel</source>
+        <translation>Hardened - Güçlendirilmiş Linux çekirdeği</translation>
+    </message>
+    <message>
+        <location filename="../src/conf-window.cpp" line="495"/>
+        <source>Deckify - Handheld optimized kernel</source>
+        <translation>Deckify - El konsolları için iyileştirilmiş çekirdek</translation>
+    </message>
+    <message>
+        <location filename="../src/conf-window.cpp" line="496"/>
+        <source>Server - Server optimized kernel</source>
+        <translation>Server - Sunucular için iyileştirilmiş çekirdek</translation>
+    </message>
+    <message>
+        <location filename="../src/conf-window.cpp" line="618"/>
         <source>Select one or more patch files</source>
         <translation>Bir veya daha fazla yama dosyası seç</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="565"/>
+        <location filename="../src/conf-window.cpp" line="620"/>
         <source>Patch file (*.patch)</source>
         <translation>Yama dosyası (*.patch)</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="585"/>
+        <location filename="../src/conf-window.cpp" line="640"/>
         <source>Enter URL patch</source>
         <translation>URL yaması gir</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="586"/>
+        <location filename="../src/conf-window.cpp" line="641"/>
         <source>Patch URL:</source>
         <translation>Yama için URL:</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="709"/>
+        <location filename="../src/conf-window.cpp" line="759"/>
         <source>Save file as</source>
-        <translation type="unfinished"></translation>
+        <translation>Dosyayı farklı kaydet</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="711"/>
-        <location filename="../src/conf-window.cpp" line="728"/>
+        <location filename="../src/conf-window.cpp" line="761"/>
+        <location filename="../src/conf-window.cpp" line="778"/>
         <source>Config file (*.toml)</source>
-        <translation type="unfinished"></translation>
+        <translation>Yapılandırma dosyası (*.toml)</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="718"/>
+        <location filename="../src/conf-window.cpp" line="768"/>
         <source>Failed to save config options to file: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Yapılandırma seçenekleri dosyaya kaydedilemedi: %1</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="726"/>
+        <location filename="../src/conf-window.cpp" line="776"/>
         <source>Load from</source>
-        <translation type="unfinished"></translation>
+        <translation>Şuradan yükle</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="736"/>
+        <location filename="../src/conf-window.cpp" line="786"/>
         <source>Failed to load config options from file: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Yapılandırma seçenekleri dosyadan yüklenemedi: %1</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="772"/>
+        <location filename="../src/conf-window.cpp" line="808"/>
         <source>Config file(%1) is outdated</source>
-        <translation type="unfinished"></translation>
+        <translation>Yapılandırma dosyası (%1) güncel değil</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="485"/>
+        <location filename="../src/conf-window.cpp" line="490"/>
         <source>RT - Realtime kernel</source>
         <translation>RT - Gerçek zamanlı çekirdek</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="370"/>
+        <location filename="../src/conf-window.cpp" line="390"/>
         <source>Do you want to install build packages?</source>
-        <translation type="unfinished"></translation>
+        <translation>Derleme için gereken paketler kurulsun mu?</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="482"/>
+        <location filename="../src/conf-window.cpp" line="487"/>
         <source>CachyOS default Scheduler (tuned EEVDF)</source>
-        <translation type="unfinished"></translation>
+        <translation>CachyOS varsayılan zamanlayıcısı (ayarlanmış EEVDF)</translation>
     </message>
     <message>
-        <location filename="../src/conf-window.cpp" line="483"/>
+        <location filename="../src/conf-window.cpp" line="488"/>
         <source>BORE - Burst-Oriented Response Enhancer</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/conf-window.cpp" line="486"/>
-        <source>RT-Bore</source>
-        <translation type="unfinished"></translation>
+        <translation>BORE - Ani Yüke Odaklı Tepki Arttırıcı</translation>
     </message>
     <message>
         <source>Sched-Ext - BPF extensible scheduler class</source>
@@ -295,47 +312,47 @@
 &lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../src/km-window.ui" line="64"/>
+        <location filename="../src/km-window.ui" line="66"/>
         <source>Choose</source>
         <translation>Seç</translation>
     </message>
     <message>
-        <location filename="../src/km-window.ui" line="69"/>
+        <location filename="../src/km-window.ui" line="71"/>
         <source>PkgName</source>
         <translation>Paket ismi</translation>
     </message>
     <message>
-        <location filename="../src/km-window.ui" line="74"/>
+        <location filename="../src/km-window.ui" line="76"/>
         <source>Version</source>
         <translation>Sürüm</translation>
     </message>
     <message>
-        <location filename="../src/km-window.ui" line="79"/>
+        <location filename="../src/km-window.ui" line="81"/>
         <source>Category</source>
         <translation>Kategori</translation>
     </message>
     <message>
-        <location filename="../src/km-window.ui" line="116"/>
+        <location filename="../src/km-window.ui" line="118"/>
         <source>sched-ext scheduler config</source>
-        <translation type="unfinished"></translation>
+        <translation>sched-ext zamanlayıcı yapılandırması</translation>
     </message>
     <message>
-        <location filename="../src/km-window.ui" line="123"/>
+        <location filename="../src/km-window.ui" line="125"/>
         <source>Configure</source>
         <translation>Yapılandır</translation>
     </message>
     <message>
-        <location filename="../src/km-window.ui" line="130"/>
+        <location filename="../src/km-window.ui" line="132"/>
         <source>Cancel</source>
         <translation>Vazgeç</translation>
     </message>
     <message>
-        <location filename="../src/km-window.ui" line="137"/>
+        <location filename="../src/km-window.ui" line="139"/>
         <source>Execute</source>
         <translation>Gerçekleştir</translation>
     </message>
     <message>
-        <location filename="../src/km-window.cpp" line="227"/>
+        <location filename="../src/km-window.cpp" line="229"/>
         <source>No kernels found!
 Please run `pacman -Sy` to update DB!
 This is needed for the app to work properly</source>
@@ -344,15 +361,15 @@ Lütfen `pacman -Sy` komutuyla veri tabanını güncelleyin!
 Uygulamanın düzgün çalışabilmesi için bu gereklidir.</translation>
     </message>
     <message>
-        <location filename="../src/km-window.cpp" line="201"/>
+        <location filename="../src/km-window.cpp" line="203"/>
         <source>Failed to clone repository!
 Please check your internet connection and try again</source>
         <translation>Repoyu klonlama başarısız oldu!
 Lütfen internet bağlantınızı kontrol edip tekrar deneyin.</translation>
     </message>
     <message>
-        <location filename="../src/km-window.cpp" line="276"/>
-        <location filename="../src/km-window.cpp" line="340"/>
+        <location filename="../src/km-window.cpp" line="278"/>
+        <location filename="../src/km-window.cpp" line="342"/>
         <source>Please wait...
 We are preparing configuration window for you
 cloning PKGBUILDs..</source>
@@ -361,24 +378,24 @@ Biçimleme penceresini sizin için hazırlıyoruz
 PKGBUILD&apos;ler klonlanıyor…</translation>
     </message>
     <message>
-        <location filename="../src/km-window.cpp" line="143"/>
+        <location filename="../src/km-window.cpp" line="144"/>
         <source>Failed to initialize alpm handle (%1)</source>
         <translation>ALPM işleyicisini başlatım başarısız oldu (%1)</translation>
     </message>
     <message>
-        <location filename="../src/km-window.cpp" line="156"/>
+        <location filename="../src/km-window.cpp" line="157"/>
         <source>Failed to release alpm handle (%1)</source>
         <translation>ALPM işleyicisini salım başarısız oldu (%1)</translation>
     </message>
     <message>
-        <location filename="../src/km-window.cpp" line="361"/>
+        <location filename="../src/km-window.cpp" line="363"/>
         <source>Please wait...
 Initializing kernels..</source>
         <translation>Lütfen bekleyin…
 Çekirdekler ilk kullanıma hazırlandırılıyor…</translation>
     </message>
     <message>
-        <location filename="../src/km-window.ui" line="28"/>
+        <location filename="../src/km-window.ui" line="27"/>
         <source>&lt;html&gt;
 &lt;body&gt;
 &lt;p&gt;Here you&apos;ll see information about currently installed and available Linux kernels.&lt;/p&gt;
@@ -386,55 +403,13 @@ Initializing kernels..</source>
 &lt;p&gt;This app won&apos;t work if you are already running a pacman instance.&lt;/p&gt;
 &lt;/body&gt;
 &lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>SchedExtWindow</name>
-    <message>
-        <location filename="../src/schedext-window.ui" line="17"/>
-        <source>CachyOS Configure sched-ext</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/schedext-window.ui" line="40"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Configure sched-ext scheduler:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/schedext-window.ui" line="82"/>
-        <source>Select sched-ext scheduler:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/schedext-window.ui" line="92"/>
-        <source>Select scheduler profile:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/schedext-window.ui" line="115"/>
-        <source>unknown</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/schedext-window.ui" line="75"/>
-        <source>Running sched-ext scheduler:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/schedext-window.ui" line="122"/>
-        <source>Set sched-ext extra scheduler flags:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/schedext-window.ui" line="176"/>
-        <source>Disable</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/schedext-window.ui" line="183"/>
-        <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;
+&lt;body&gt;
+&lt;p&gt;Burada mevcut kurulu ve kurulmaya müsait tüm Linux çekirdekleri hakkında bilgiler bulabilirsiniz.&lt;/p&gt;
+&lt;p&gt;Sol sütundaki kutucuklara tıklayarak çekirdek paketlerini kurabilir ve/ya kaldırabilirsiniz.&lt;/p&gt;
+&lt;p&gt;Halihazırda bir diğer pacman görevi çalışıyorsa, bu uygulama kullanılamaz veya çalışmaz.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</translation>
     </message>
 </context>
 </TS>
